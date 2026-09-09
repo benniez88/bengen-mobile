@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>BenGen — พร้อมโพสต์</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0614;--bg2:#1a1025;--bg3:#120c1e;--bg4:#221535;
+  --border:#3a2550;--border2:#5a3570;
+  --p:#8a50b0;--pn:#c87dff;--pk:#ff6ec7;
+  --green:#10b981;--red:#ef4444;--amber:#f59e0b;--blue:#3b82f6;
+  --text:#eef0f8;--text2:#9080b0;--text3:#5a4a70;
+  --font:'Sarabun',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);
+  overflow-x:hidden;}
+body{display:flex;flex-direction:column;}
+
+/* ── HEADER ── */
+.hdr{position:sticky;top:0;z-index:20;background:var(--bg2);
+  border-bottom:1px solid var(--border);padding:14px 16px;
+  display:flex;align-items:center;gap:10px;}
+.hdr-title{font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--pn),var(--pk));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;flex:1;}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg3);color:var(--text2);font-size:16px;display:flex;
+  align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.icon-btn:active{background:var(--bg4);}
+
+/* ── SETTINGS PANEL ── */
+.settings-panel{display:none;flex-direction:column;gap:12px;padding:16px;}
+.settings-panel.show{display:flex;}
+label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;}
+input[type=text],input[type=password]{width:100%;background:var(--bg3);
+  border:1px solid var(--border);border-radius:10px;color:var(--text);
+  font-family:var(--font);font-size:14px;padding:12px 14px;outline:none;}
+input:focus{border-color:var(--pn);}
+
+/* ── BUTTONS ── */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 18px;border-radius:12px;font-family:var(--font);
+  font-size:15px;font-weight:700;cursor:pointer;border:none;width:100%;
+  transition:transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,var(--p),var(--pn));color:#fff;}
+.btn-ghost{background:var(--bg3);color:var(--text);border:1px solid var(--border);}
+.btn-green{background:linear-gradient(135deg,#059669,#10b981);color:#fff;}
+.btn-red{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;}
+.btn-sm{padding:9px 14px;font-size:13px;}
+.btn:disabled{opacity:.4;}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;overflow-y:auto;padding-bottom:24px;}
+
+/* ── LIST VIEW ── */
+.list-wrap{display:flex;flex-direction:column;gap:10px;padding:14px;}
+.list-count{font-size:13px;color:var(--text2);padding:0 2px 4px;}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;
+  padding:12px;display:flex;gap:12px;cursor:pointer;transition:border-color .15s;}
+.card:active{border-color:var(--pn);background:var(--bg3);}
+
+.card-img{width:76px;height:76px;border-radius:12px;object-fit:cover;
+  background:var(--bg3);flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;font-size:28px;}
+.card-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
+.card-name{font-size:14px;font-weight:700;line-height:1.35;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-badges{display:flex;gap:5px;flex-wrap:wrap;}
+.badge{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;}
+.b-star{background:rgba(245,158,11,.15);color:#f59e0b;}
+.b-price{background:rgba(200,125,255,.15);color:var(--pn);}
+.b-comm{background:rgba(16,185,129,.15);color:#10b981;}
+.card-arrow{align-self:center;color:var(--text3);font-size:20px;flex-shrink:0;}
+
+/* ── EMPTY / LOADING ── */
+.empty{text-align:center;padding:60px 24px;color:var(--text2);}
+.empty-icon{font-size:48px;margin-bottom:14px;}
+.empty-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.empty-desc{font-size:13px;line-height:1.6;}
+
+.spin{display:inline-block;width:16px;height:16px;border:2.5px solid var(--border);
+  border-top-color:var(--pn);border-radius:50%;animation:rot .6s linear infinite;}
+@keyframes rot{to{transform:rotate(360deg)}}
+.loading-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:60px 24px;}
+.loading-text{font-size:13px;color:var(--text2);}
+
+/* ── DETAIL VIEW ── */
+.detail{display:none;flex-direction:column;}
+.detail.show{display:flex;}
+.detail-hero{width:100%;aspect-ratio:1;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;font-size:48px;
+  position:relative;overflow:hidden;}
+.detail-hero img{width:100%;height:100%;object-fit:cover;}
+.detail-gallery{display:flex;gap:6px;padding:10px 14px;overflow-x:auto;}
+.detail-gallery img{width:56px;height:56px;border-radius:8px;object-fit:cover;
+  flex-shrink:0;border:2px solid var(--border);cursor:pointer;}
+.detail-gallery img.active{border-color:var(--pn);}
+
+.detail-body{padding:16px;display:flex;flex-direction:column;gap:14px;}
+.detail-name{font-size:18px;font-weight:800;line-height:1.4;}
+.detail-shop{font-size:13px;color:var(--text2);}
+
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:12px;}
+.stat-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+.stat-value{font-size:16px;font-weight:800;color:var(--pn);}
+.stat-value.green{color:var(--green);}
+
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.section-title{font-size:12px;font-weight:700;color:var(--pn);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;
+  display:flex;justify-content:space-between;align-items:center;}
+.section-text{font-size:14px;line-height:1.7;color:var(--text);white-space:pre-wrap;
+  word-break:break-word;}
+.copy-btn{font-size:11px;padding:5px 10px;border-radius:7px;background:var(--bg3);
+  border:1px solid var(--border);color:var(--text2);cursor:pointer;}
+.copy-btn:active{background:var(--bg4);}
+
+.video-wrap{width:100%;border-radius:14px;overflow:hidden;background:#000;}
+.video-wrap video{width:100%;display:block;max-height:480px;}
+
+.link-row{display:flex;gap:8px;align-items:center;background:var(--bg3);
+  border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.link-text{flex:1;font-size:12px;color:var(--text2);overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;}
+
+.action-bar{position:sticky;bottom:0;background:var(--bg2);border-top:1px solid var(--border);
+  padding:14px 16px;display:flex;gap:10px;}
+
+/* ── STATUS ROWS ── */
+.row-info,.row-ok,.row-err{display:flex;gap:8px;border-radius:10px;padding:10px 12px;
+  font-size:13px;line-height:1.5;margin:0 14px;}
+.row-info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#93c5fd;}
+.row-ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:#6ee7b7;}
+.row-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#fca5a5;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:20px;left:16px;right:16px;background:var(--bg2);
+  border:1px solid var(--pn);border-radius:12px;padding:13px 16px;
+  font-size:14px;z-index:999;opacity:0;transform:translateY(10px);
+  transition:all .25s;pointer-events:none;box-shadow:0 4px 24px rgba(200,125,255,.25);
+  text-align:center;}
+#toast.show{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-title" id="hdr-title">📱 พร้อมโพสต์</div>
+  <button class="icon-btn" id="btn-refresh">🔄</button>
+  <button class="icon-btn" id="btn-settings">⚙️</button>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-panel" id="settings-panel">
+  <div>
+    <label>Apps Script URL</label>
+    <input type="text" id="apps-url" placeholder="https://script.google.com/macros/s/.../exec">
+  </div>
+  <button class="btn btn-primary" id="btn-save-settings">💾 บันทึก</button>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+  <!-- LIST VIEW -->
+  <div id="list-view">
+    <div id="list-status"></div>
+    <div class="list-wrap" id="list-wrap"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div class="detail" id="detail-view">
+    <div class="hdr" style="position:static;">
+      <button class="icon-btn" id="btn-back">←</button>
+      <div class="hdr-title" style="font-size:14px;">รายละเอียดสินค้า</div>
+    </div>
+
+    <div class="detail-hero" id="detail-hero">🛍️</div>
+    <div class="detail-gallery" id="detail-gallery"></div>
+
+    <div class="detail-body">
+      <div>
+        <div class="detail-name" id="d-name">—</div>
+        <div class="detail-shop" id="d-shop"></div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-label">⭐ Rating</div>
+          <div class="stat-value" id="d-rating">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">📦 ยอดขาย</div>
+          <div class="stat-value" id="d-sales">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">💰 ราคา</div>
+          <div class="stat-value" id="d-price">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">🎯 Commission</div>
+          <div class="stat-value green" id="d-comm">—</div>
+        </div>
+      </div>
+
+      <div class="video-wrap" id="video-wrap" style="display:none;">
+        <video id="d-video" controls playsinline></video>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btn-download-mp4" style="display:none;">
+        📥 ดาวน์โหลด MP4
+      </button>
+
+      <div class="section" id="caption-section" style="display:none;">
+        <div class="section-title">
+          <span>📝 Caption</span>
+          <button class="copy-btn" id="copy-caption">คัดลอก</button>
+        </div>
+        <div class="section-text" id="d-caption"></div>
+      </div>
+
+      <div class="section" id="hook-section" style="display:none;">
+        <div class="section-title">
+          <span>🎯 Hook</span>
+          <button class="copy-btn" id="copy-hook">คัดลอก</button>
+        </div>
+        <div class="section-text" id="d-hook"></div>
+      </div>
+
+      <div class="section" id="script-section" style="display:none;">
+        <div class="section-title">
+          <span>🎬 Script</span>
+          <button class="copy-btn" id="copy-script">คัดลอก</button>
+        </div>
+        <div class="section-text" id="d-script"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span>🔗 Affiliate Link</span>
+          <div style="display:flex;gap:6px;">
+            <button class="copy-btn" id="btn-open-link">🔗 เปิด</button>
+            <button class="copy-btn" id="copy-link">คัดลอก</button>
+          </div>
+        </div>
+        <div class="link-row">
+          <div class="link-text" id="d-link">—</div>
+        </div>
+      </div>
+
+      <div style="height:8px;"></div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn btn-ghost btn-sm" id="btn-open-drive" style="flex:1;">📂 เปิด Drive</button>
+      <button class="btn btn-green" id="btn-mark-posted" style="flex:2;">✅ โพสต์แล้ว</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let appsUrl     = '';
+let readyItems  = [];
+let currentItem = null;
+let currentImgs = [];
+
+// ═══════════════════════════════════════
+// XHR HELPER
+// ═══════════════════════════════════════
+function xhrGet(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload  = () => resolve(xhr.response || {});
+    xhr.onerror = () => reject(new Error('เชื่อมต่อไม่ได้'));
+    xhr.send();
+  });
+}
+
+function xhrPost(url, body) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    // ใช้ text/plain หลีกเลี่ยง CORS preflight (Apps Script ไม่รองรับ OPTIONS)
+    xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
+    xhr.responseType = 'json';
+    xhr.onload  = () => resolve(xhr.response || {});
+    xhr.onerror = () => reject(new Error('เชื่อมต่อไม่ได้'));
+    xhr.send(JSON.stringify(body));
+  });
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  appsUrl = localStorage.getItem('bengen_apps_url') || '';
+  document.getElementById('apps-url').value = appsUrl;
+  bindEvents();
+
+  if (appsUrl) {
+    loadReadyList();
+  } else {
+    toggleSettings(true);
+    showListStatus('info', '⚙️ ใส่ Apps Script URL ก่อนเริ่มใช้งานครับ');
+  }
+});
+
+function bindEvents() {
+  document.getElementById('btn-refresh').addEventListener('click', loadReadyList);
+  document.getElementById('btn-settings').addEventListener('click', () => toggleSettings());
+  document.getElementById('btn-save-settings').addEventListener('click', saveSettings);
+  document.getElementById('btn-back').addEventListener('click', showListView);
+  document.getElementById('btn-mark-posted').addEventListener('click', markAsPosted);
+  document.getElementById('btn-open-drive').addEventListener('click', openInDrive);
+  document.getElementById('copy-caption').addEventListener('click', () => copyText('d-caption','Caption'));
+  document.getElementById('copy-hook').addEventListener('click', () => copyText('d-hook','Hook'));
+  document.getElementById('copy-script').addEventListener('click', () => copyText('d-script','Script'));
+  document.getElementById('copy-link').addEventListener('click', () => copyText('d-link','Affiliate Link'));
+  document.getElementById('btn-open-link').addEventListener('click', openAffiliateLink);
+  document.getElementById('btn-download-mp4').addEventListener('click', downloadVideo);
+}
+
+function toggleSettings(forceShow) {
+  const panel = document.getElementById('settings-panel');
+  const show  = forceShow !== undefined ? forceShow : !panel.classList.contains('show');
+  panel.classList.toggle('show', show);
+}
+
+function saveSettings() {
+  appsUrl = document.getElementById('apps-url').value.trim();
+  if (!appsUrl) { toast('⚠️ กรอก Apps Script URL ก่อนครับ'); return; }
+  localStorage.setItem('bengen_apps_url', appsUrl);
+  toggleSettings(false);
+  toast('✅ บันทึกแล้ว');
+  loadReadyList();
+}
+
+// ═══════════════════════════════════════
+// LOAD READY-TO-POST LIST
+// ═══════════════════════════════════════
+async function loadReadyList() {
+  if (!appsUrl) { toast('⚠️ ตั้งค่า Apps Script URL ก่อนครับ'); toggleSettings(true); return; }
+
+  showLoading();
+
+  try {
+    const [productsRes, contentRes] = await Promise.all([
+      xhrGet(`${appsUrl}?action=read&sheet=Products`),
+      xhrGet(`${appsUrl}?action=read&sheet=Content`)
+    ]);
+
+    const products = productsRes.rows || [];
+    const contents = contentRes.rows || [];
+
+    // Filter: videoStatus = done AND ยังไม่ได้ postedAt
+    const ready = contents.filter(c =>
+      c.videoStatus === 'done' && !c.postedAt
+    );
+
+    // Join กับ Products
+    readyItems = ready.map(c => {
+      const p = products.find(pr => pr.id === c.productId) || {};
+      return { content: c, product: p };
+    }).sort((a, b) =>
+      new Date(b.content.createdAt || 0) - new Date(a.content.createdAt || 0)
+    );
+
+    renderList();
+
+  } catch (err) {
+    showListStatus('err', '❌ โหลดข้อมูลไม่สำเร็จ: ' + err.message);
+    document.getElementById('list-wrap').innerHTML = '';
+  }
+}
+
+function showLoading() {
+  document.getElementById('list-status').innerHTML = '';
+  document.getElementById('list-wrap').innerHTML = `
+    <div class="loading-wrap">
+      <div class="spin"></div>
+      <div class="loading-text">กำลังโหลดรายการ...</div>
+    </div>`;
+}
+
+function showListStatus(type, msg) {
+  const el = document.getElementById('list-status');
+  const cls = { info: 'row-info', ok: 'row-ok', err: 'row-err' };
+  el.innerHTML = `<div class="${cls[type]||'row-info'}" style="margin:14px 14px 0;">${msg}</div>`;
+}
+
+function renderList() {
+  const wrap = document.getElementById('list-wrap');
+
+  if (!readyItems.length) {
+    wrap.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📭</div>
+        <div class="empty-title">ยังไม่มีสินค้าพร้อมโพสต์</div>
+        <div class="empty-desc">สินค้าที่วิดีโอเสร็จแล้ว<br>จะมาแสดงที่นี่โดยอัตโนมัติ</div>
+      </div>`;
+    document.getElementById('list-status').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('list-status').innerHTML =
+    `<div style="padding:14px 14px 0;font-size:13px;color:var(--text2);">พบ ${readyItems.length} รายการพร้อมโพสต์</div>`;
+
+  wrap.innerHTML = readyItems.map((item, i) => {
+    const p = item.product;
+    const c = item.content;
+    const img = p.driveImageUrl || '';
+    const price = p.priceSale || p.price || 0;
+    const comm  = p.commissionRate || 0;
+    const commBaht = p.commissionBaht || 0;
+
+    return `
+      <div class="card" data-idx="${i}">
+        ${img
+          ? `<img class="card-img" src="${img}" onerror="this.outerHTML='<div class=&quot;card-img&quot;>🛍️</div>'">`
+          : `<div class="card-img">🛍️</div>`
+        }
+        <div class="card-body">
+          <div class="card-name">${escapeHtml(p.name || c.productName || 'ไม่ทราบชื่อ')}</div>
+          <div class="card-badges">
+            ${p.rating ? `<span class="badge b-star">⭐ ${p.rating}</span>` : ''}
+            ${price ? `<span class="badge b-price">฿${Number(price).toLocaleString()}</span>` : ''}
+            ${comm ? `<span class="badge b-comm">💰 ${comm}% (฿${commBaht})</span>` : ''}
+          </div>
+        </div>
+        <div class="card-arrow">›</div>
+      </div>`;
+  }).join('');
+
+  wrap.querySelectorAll('.card').forEach(el => {
+    el.addEventListener('click', () => openDetail(parseInt(el.dataset.idx)));
+  });
+}
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ═══════════════════════════════════════
+// DETAIL VIEW
+// ═══════════════════════════════════════
+async function openDetail(idx) {
+  currentItem = readyItems[idx];
+  const { product: p, content: c } = currentItem;
+
+  document.getElementById('list-view').style.display = 'none';
+  document.getElementById('detail-view').classList.add('show');
+  window.scrollTo(0, 0);
+
+  // Hero image
+  const heroEl = document.getElementById('detail-hero');
+  currentImgs = [p.driveImageUrl].filter(Boolean);
+  if (currentImgs.length) {
+    heroEl.innerHTML = `<img src="${currentImgs[0]}" onerror="this.style.display='none'">`;
+  } else {
+    heroEl.innerHTML = '🛍️';
+  }
+
+  // Gallery (โหลดเพิ่มจาก Drive folder ถ้ามี)
+  document.getElementById('detail-gallery').innerHTML = '';
+  if (p.driveFolderUrl) {
+    loadGalleryImages(p.driveFolderUrl);
+  }
+
+  // Info
+  document.getElementById('d-name').textContent = p.name || c.productName || '—';
+  document.getElementById('d-shop').textContent = p.shopName
+    ? `🏪 ${p.shopName}${p.shopType==='mall'?' · Shopee Mall':p.shopType==='preferred'?' · Preferred':''}`
+    : '';
+
+  document.getElementById('d-rating').textContent = p.rating ? `⭐ ${p.rating}` : '—';
+  document.getElementById('d-sales').textContent   = p.sales ? formatNum(p.sales) + ' ชิ้น' : '—';
+
+  const price = p.priceSale || p.price || 0;
+  const orig  = p.price || 0;
+  document.getElementById('d-price').textContent = price ? `฿${Number(price).toLocaleString()}` : '—';
+
+  const comm     = p.commissionRate || 0;
+  const commBaht = p.commissionBaht || 0;
+  document.getElementById('d-comm').textContent = comm ? `${comm}% · ฿${commBaht}` : '—';
+
+  // Video
+  const videoWrap = document.getElementById('video-wrap');
+  const videoEl   = document.getElementById('d-video');
+  const dlBtn     = document.getElementById('btn-download-mp4');
+  if (c.mp4DriveUrl) {
+    videoEl.src = c.mp4DriveUrl;
+    videoWrap.style.display = 'block';
+    dlBtn.style.display = 'flex';
+    dlBtn.dataset.downloadUrl = toDriveDownloadUrl(c.mp4DriveUrl);
+  } else {
+    videoWrap.style.display = 'none';
+    dlBtn.style.display = 'none';
+  }
+
+  // Caption / Hook / Script
+  setSection('caption-section', 'd-caption', c.caption);
+  setSection('hook-section', 'd-hook', c.hook);
+  setSection('script-section', 'd-script', c.script);
+
+  // Affiliate Link
+  document.getElementById('d-link').textContent = p.affiliateLink || 'ไม่มีลิงก์';
+}
+
+function setSection(sectionId, textId, value) {
+  const section = document.getElementById(sectionId);
+  const textEl  = document.getElementById(textId);
+  if (value && value.trim()) {
+    section.style.display = 'block';
+    textEl.textContent = value;
+  } else {
+    section.style.display = 'none';
+  }
+}
+
+async function loadGalleryImages(driveFolderUrl) {
+  try {
+    const folderId = driveFolderUrl.match(/folders\/([^?]+)/)?.[1];
+    if (!folderId) return;
+
+    const data = await xhrGet(`${appsUrl}?action=getDriveImages&folderId=${folderId}`);
+    const images = data.images || [];
+    if (!images.length) return;
+
+    currentImgs = images.map(img => img.base64);
+    const galleryEl = document.getElementById('detail-gallery');
+    galleryEl.innerHTML = currentImgs.map((src, i) =>
+      `<img src="${src}" class="${i===0?'active':''}" data-i="${i}">`
+    ).join('');
+
+    galleryEl.querySelectorAll('img').forEach((el, i) => {
+      el.addEventListener('click', () => {
+        document.getElementById('detail-hero').innerHTML = `<img src="${currentImgs[i]}">`;
+        galleryEl.querySelectorAll('img').forEach(x => x.classList.remove('active'));
+        el.classList.add('active');
+      });
+    });
+  } catch (e) {
+    console.warn('Gallery load error:', e);
+  }
+}
+
+function showListView() {
+  document.getElementById('detail-view').classList.remove('show');
+  document.getElementById('list-view').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════
+async function markAsPosted() {
+  if (!currentItem) return;
+  const btn = document.getElementById('btn-mark-posted');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> กำลังบันทึก...';
+
+  try {
+    const res = await xhrPost(appsUrl, { action: 'markPosted', id: currentItem.content.id });
+    if (res.error) throw new Error(res.error);
+
+    toast('✅ ทำเครื่องหมายว่าโพสต์แล้ว!');
+    showListView();
+    loadReadyList();
+
+  } catch (err) {
+    toast('❌ ' + err.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '✅ โพสต์แล้ว';
+}
+
+function openInDrive() {
+  if (!currentItem) return;
+  const url = currentItem.product.driveFolderUrl || currentItem.content.mp4DriveUrl;
+  if (url) window.open(url, '_blank');
+  else toast('⚠️ ไม่พบลิงก์ Drive');
+}
+
+function openAffiliateLink() {
+  if (!currentItem) return;
+  const link = currentItem.product.affiliateLink;
+  if (!link) { toast('⚠️ ไม่มี Affiliate Link'); return; }
+  window.open(link, '_blank');
+}
+
+// แปลง Drive view URL → direct download URL
+// ไม่ต้องเปิดหน้า Drive — เบราว์เซอร์จะดาวน์โหลดไฟล์ทันที (ถ้าไฟล์เล็กพอ ไม่โดน virus-scan warning)
+function toDriveDownloadUrl(url) {
+  const fileId = url.match(/[?&]id=([^&]+)/)?.[1] || url.match(/\/d\/([^/]+)\//)?.[1];
+  if (!fileId) return url;
+  return `https://drive.google.com/uc?export=download&id=${fileId}`;
+}
+
+function downloadVideo() {
+  const btn = document.getElementById('btn-download-mp4');
+  const url = btn.dataset.downloadUrl;
+  if (!url) { toast('⚠️ ไม่พบลิงก์วิดีโอ'); return; }
+
+  toast('📥 กำลังดาวน์โหลด...');
+  window.open(url, '_blank');
+}
+
+function copyText(elId, label) {
+  const text = document.getElementById(elId).textContent.trim();
+  if (!text || text === '—') { toast('⚠️ ไม่มีข้อความ'); return; }
+  navigator.clipboard.writeText(text)
+    .then(() => toast(`📋 คัดลอก ${label} แล้ว`))
+    .catch(() => toast('⚠️ คัดลอกไม่สำเร็จ'));
+}
+
+function formatNum(n) {
+  n = parseInt(n) || 0;
+  return n >= 1000 ? (n/1000).toFixed(1)+'K' : String(n);
+}
+
+function toast(msg, d = 2500) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(window._t);
+  window._t = setTimeout(() => el.classList.remove('show'), d);
+}
+</script>
+</body>
+</html>
