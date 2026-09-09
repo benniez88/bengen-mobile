@@ -507,7 +507,11 @@ async function openDetail(idx) {
     videoEl.src = c.mp4DriveUrl;
     videoWrap.style.display = 'block';
     dlBtn.style.display = 'flex';
-    dlBtn.dataset.downloadUrl = toDriveDownloadUrl(c.mp4DriveUrl);
+    dlBtn.innerHTML = '📥 ดาวน์โหลด MP4';
+    dlBtn.disabled = false;
+    const videoFileId = c.mp4DriveUrl.match(/[?&]id=([^&]+)/)?.[1] || c.mp4DriveUrl.match(/\/d\/([^/]+)\//)?.[1] || '';
+    dlBtn.dataset.fileId = videoFileId;
+    dlBtn.dataset.productName = p.name || c.productName || 'video';
   } else {
     videoWrap.style.display = 'none';
     dlBtn.style.display = 'none';
@@ -605,21 +609,69 @@ function openAffiliateLink() {
   window.open(link, '_blank');
 }
 
-// แปลง Drive view URL → direct download URL
-// ไม่ต้องเปิดหน้า Drive — เบราว์เซอร์จะดาวน์โหลดไฟล์ทันที (ถ้าไฟล์เล็กพอ ไม่โดน virus-scan warning)
+// แปลง Drive view URL → direct download URL (fallback สำหรับไฟล์ที่ใหญ่เกิน proxy limit)
 function toDriveDownloadUrl(url) {
   const fileId = url.match(/[?&]id=([^&]+)/)?.[1] || url.match(/\/d\/([^/]+)\//)?.[1];
   if (!fileId) return url;
   return `https://drive.google.com/uc?export=download&id=${fileId}`;
 }
 
-function downloadVideo() {
-  const btn = document.getElementById('btn-download-mp4');
-  const url = btn.dataset.downloadUrl;
-  if (!url) { toast('⚠️ ไม่พบลิงก์วิดีโอ'); return; }
+async function downloadVideo() {
+  const btn    = document.getElementById('btn-download-mp4');
+  const fileId = btn.dataset.fileId;
+  if (!fileId) { toast('⚠️ ไม่พบไฟล์วิดีโอ'); return; }
 
-  toast('📥 กำลังดาวน์โหลด...');
-  window.open(url, '_blank');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> กำลังโหลดไฟล์...';
+
+  try {
+    // ดึงไฟล์ผ่าน Apps Script เป็น Base64 → แปลงเป็น Blob จริง
+    // ทำให้ Browser รู้ขนาดไฟล์แน่นอน ไม่มีปัญหา "ไม่เต็มไฟล์" แบบ Drive link ตรงๆ
+    const resp = await xhrGet(`${appsUrl}?action=proxyVideo&fileId=${fileId}`);
+
+    if (resp.error) {
+      if (resp.tooLarge) {
+        // ไฟล์ใหญ่เกิน — fallback ไปใช้ Drive link ตรงแทน
+        toast('⚠️ ไฟล์ใหญ่ (' + resp.sizeMB + ' MB) — เปิดผ่าน Drive แทนครับ');
+        const driveUrl = toDriveDownloadUrl(currentItem.content.mp4DriveUrl);
+        window.open(driveUrl, '_blank');
+        return;
+      }
+      throw new Error(resp.error);
+    }
+
+    if (!resp.base64) throw new Error('ไม่ได้รับข้อมูลไฟล์');
+
+    // แปลง Base64 → Blob → Download จริง (มีขนาดไฟล์ชัดเจนแน่นอน)
+    const blob = base64ToBlob(resp.base64);
+    const url  = URL.createObjectURL(blob);
+    const name = (btn.dataset.productName || 'video').substring(0, 30).replace(/[^\wก-๙\-]/g, '-');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bengen-${name}-${Date.now()}.mp4`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+
+    toast(`✅ ดาวน์โหลดเสร็จแล้ว (${(blob.size/1024/1024).toFixed(1)} MB)`);
+
+  } catch (err) {
+    toast('❌ ดาวน์โหลดไม่สำเร็จ: ' + err.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '📥 ดาวน์โหลด MP4';
+}
+
+function base64ToBlob(b64src) {
+  const arr  = b64src.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  const u8   = new Uint8Array(bstr.length);
+  for (let i = 0; i < bstr.length; i++) u8[i] = bstr.charCodeAt(i);
+  return new Blob([u8], { type: mime });
 }
 
 function copyText(elId, label) {
