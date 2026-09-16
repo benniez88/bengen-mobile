@@ -160,8 +160,8 @@ input:focus{border-color:var(--pn);}
 <!-- SETTINGS -->
 <div class="settings-panel" id="settings-panel">
   <div>
-    <label>Apps Script URL</label>
-    <input type="text" id="apps-url" placeholder="https://script.google.com/macros/s/.../exec">
+    <label>Backend URL (Cloudflare Worker)</label>
+    <input type="text" id="apps-url" placeholder="https://your-worker.workers.dev">
   </div>
   <button class="btn btn-primary" id="btn-save-settings">💾 บันทึก</button>
 </div>
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadReadyList();
   } else {
     toggleSettings(true);
-    showListStatus('info', '⚙️ ใส่ Apps Script URL ก่อนเริ่มใช้งานครับ');
+    showListStatus('info', '⚙️ ใส่ Backend URL (Worker) ก่อนเริ่มใช้งานครับ');
   }
 });
 
@@ -342,7 +342,7 @@ function toggleSettings(forceShow) {
 
 function saveSettings() {
   appsUrl = document.getElementById('apps-url').value.trim();
-  if (!appsUrl) { toast('⚠️ กรอก Apps Script URL ก่อนครับ'); return; }
+  if (!appsUrl) { toast('⚠️ กรอก Backend URL ก่อนครับ'); return; }
   localStorage.setItem('bengen_apps_url', appsUrl);
   toggleSettings(false);
   toast('✅ บันทึกแล้ว');
@@ -353,7 +353,7 @@ function saveSettings() {
 // LOAD READY-TO-POST LIST
 // ═══════════════════════════════════════
 async function loadReadyList() {
-  if (!appsUrl) { toast('⚠️ ตั้งค่า Apps Script URL ก่อนครับ'); toggleSettings(true); return; }
+  if (!appsUrl) { toast('⚠️ ตั้งค่า Backend URL ก่อนครับ'); toggleSettings(true); return; }
 
   showLoading();
 
