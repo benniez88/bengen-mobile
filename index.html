@@ -439,6 +439,17 @@ body.hide-nav .bottom-nav{display:none;}
     <div class="tab-body">
       <div class="tab-intro">Shopee บล็อกการดึงข้อมูลอัตโนมัติจากลิงก์ (anti-bot) — ให้ Screenshot หน้าสินค้าจากแอป Shopee มาให้ AI อ่านชื่อ/ราคา/rating/ค่าคอม/คู่แข่งแทน แล้วแนบรูปสินค้าเองอีกที</div>
 
+      <div>
+        <label>Gemini Model (อ่านภาพ Screenshot)</label>
+        <select id="sp-ocr-model">
+          <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (Free/เร็ว)</option>
+          <option value="gemini-3.6-flash">gemini-3.6-flash</option>
+          <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+          <option value="custom">✏️ Custom...</option>
+        </select>
+        <input type="text" id="sp-ocr-model-custom" placeholder="model name" style="display:none;margin-top:6px;">
+      </div>
+
       <input type="file" accept="image/*" id="product-shot-input" style="display:none;">
       <button class="btn btn-primary" id="btn-product-shot">📷 อัพโหลด Screenshot หน้าสินค้า ให้ AI อ่านข้อมูลให้</button>
       <div class="settings-hint">อ่านชื่อ/ราคา/rating/ยอดขาย/ร้านค้า/ค่าคอม %/ยอดคอมบาท/จำนวนคู่แข่ง จากภาพเดียว — ตรวจสอบอีกครั้งก่อนบันทึกเสมอ</div>
@@ -595,6 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initTheme();
   bindEvents();
+  initOcrModelSelect();
 
   if (appsUrl) {
     loadReadyList();
@@ -637,6 +649,9 @@ function bindEvents() {
   $('product-shot-input').addEventListener('change', e => {
     if (e.target.files && e.target.files[0]) readProductScreenshot(e.target.files[0]);
     e.target.value = '';
+  });
+  $('sp-ocr-model').addEventListener('change', () => {
+    $('sp-ocr-model-custom').style.display = $('sp-ocr-model').value === 'custom' ? 'block' : 'none';
   });
   $('btn-add-photos').addEventListener('click', () => $('product-photos-input').click());
   $('product-photos-input').addEventListener('change', e => {
@@ -1471,8 +1486,8 @@ async function handlePhotoUpload(files) {
 // เรียก Gemini Vision พร้อม Retry อัตโนมัติเมื่อเจอ "high demand" / model overloaded
 // (ปัญหาฝั่ง Google ชั่วคราว มักหายเองใน 5-15 วิ) — ไม่ใช่ error ที่แก้ด้วยโค้ดได้ตรงๆ
 // แค่รอแล้วลองใหม่ก็มักผ่าน
-async function callGeminiVisionRetry(mime, base64, promptText, btnForStatus) {
-  const model = 'gemini-3.6-flash';
+async function callGeminiVisionRetry(mime, base64, promptText, btnForStatus, model) {
+  model = model || 'gemini-3.5-flash-lite';
   const maxRetries = 3;
   const waitSecs = [4, 8, 15];
 
@@ -1511,6 +1526,77 @@ async function callGeminiVisionRetry(mime, base64, promptText, btnForStatus) {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+// ตั้งค่า/จำโมเดล Gemini ที่ใช้อ่าน Screenshot ไว้ใน localStorage
+function initOcrModelSelect() {
+  const sel = $('sp-ocr-model');
+  const saved = localStorage.getItem('bengen_ocr_model') || 'gemini-3.5-flash-lite';
+  const known = [...sel.options].map(o => o.value).filter(v => v !== 'custom');
+  if (known.includes(saved)) {
+    sel.value = saved;
+    $('sp-ocr-model-custom').style.display = 'none';
+  } else {
+    sel.value = 'custom';
+    $('sp-ocr-model-custom').value = saved;
+    $('sp-ocr-model-custom').style.display = 'block';
+  }
+}
+
+function getOcrModel() {
+  const sel = $('sp-ocr-model').value;
+  const model = sel === 'custom'
+    ? ($('sp-ocr-model-custom').value.trim() || 'gemini-3.5-flash-lite')
+    : sel;
+  localStorage.setItem('bengen_ocr_model', model);
+  return model;
+}
+
+// ดึง shopId/itemId จาก URL ที่มี id ฝังอยู่ใน path อยู่แล้ว (เหมือน extractIds ใน content.js ของ Extension)
+function extractShopeeIds(link) {
+  if (!link) return null;
+
+  let m = link.match(/shopee\.co\.th\/(?:product|shop)\/(\d+)\/(\d+)/);
+  if (m) return { shopId: m[1], itemId: m[2] };
+
+  m = link.match(/shopee\.co\.th\/[^/?#]+\/(\d{6,})\/(\d{8,})/);
+  if (m) return { shopId: m[1], itemId: m[2] };
+
+  m = link.match(/-i\.(\d+)\.(\d+)/);
+  if (m) return { shopId: m[1], itemId: m[2] };
+
+  const qi = link.match(/[?&]itemid=(\d+)/i);
+  const qs = link.match(/[?&]shopid=(\d+)/i);
+  if (qi && qs) return { shopId: qs[1], itemId: qi[1] };
+
+  return null;
+}
+
+// แปลง affiliateLink ที่วางมา → productUrl ที่สะอาด (ตัด utm_source/gads_t_sig/tracking params ทิ้ง)
+// เคส 1: ลิงก์เต็ม shopee.co.th/... อยู่แล้ว (มี id อยู่ใน path) → ตัดเอา id มาสร้าง URL ใหม่เลย ไม่ต้องยิง network
+// เคส 2: ลิงก์สั้น s.shopee.co.th / shp.ee → ไม่มี id ให้ดึงตรงๆ ต้องขอ Worker ช่วย "ตามลิงก์" ให้
+// (แค่ตาม redirect ธรรมดา ไม่ใช่การเรียก API สินค้าที่โดน anti-bot บล็อก จึงยังปลอดภัยอยู่)
+async function deriveProductUrl(link) {
+  if (!link) return '';
+
+  const direct = extractShopeeIds(link);
+  if (direct) return `https://shopee.co.th/product/${direct.shopId}/${direct.itemId}`;
+
+  const isShortLink = /^https?:\/\/(s\.shopee\.co\.th|shp\.ee)\//i.test(link.trim());
+  if (isShortLink && appsUrl) {
+    try {
+      const res = await xhrGet(`${appsUrl}?action=resolveShopeeLink&link=${encodeURIComponent(link)}`);
+      if (res && res.resolvedUrl) {
+        const resolved = extractShopeeIds(res.resolvedUrl);
+        if (resolved) return `https://shopee.co.th/product/${resolved.shopId}/${resolved.itemId}`;
+        return res.resolvedUrl; // resolve ได้แต่ pattern ไม่ตรง ใช้ปลายทางที่ resolve ได้ไปก่อน
+      }
+    } catch (e) {
+      // resolve ไม่ได้ (Worker ยังไม่ได้เพิ่ม route หรือเชื่อมต่อไม่ได้) — ใช้ลิงก์เดิมไปก่อน ไม่ทำให้บันทึกล้มเหลว
+    }
+  }
+
+  return link;
+}
+
 async function readProductScreenshot(file) {
   if (!geminiKey) { toast('⚠️ ตั้งค่า Gemini API Key ก่อนครับ'); toggleSettings(true); return; }
 
@@ -1526,7 +1612,8 @@ async function readProductScreenshot(file) {
 
     const prompt = 'อ่านภาพหน้าจอนี้ซึ่งเป็นหน้าสินค้าจากแอป Shopee (หรือ Shopee Affiliate ฝั่ง Partner) หาข้อมูลทั้งหมดที่มีในภาพ: (1) name — ชื่อสินค้าเต็ม (2) price — ราคาปกติ/ก่อนลด ถ้ามี ถ้าไม่มีให้ใช้ราคาที่เห็น (3) priceSale — ราคาขายจริงที่แสดง (4) rating — คะแนนดาว เช่น 4.9 (5) sales — จำนวนที่ขายแล้ว (ถ้าเขียนว่า "ขายแล้ว 5 ชิ้น" ให้ตอบ 5, ถ้าเป็น "1พัน" หรือ "1k" ให้แปลงเป็นตัวเลขเต็ม) (6) shopName — ชื่อร้านค้า ถ้ามี (7) commissionRate — ตัวเลข % จาก badge "EXTRA COMM X%" หรือ "ค่าคอมมิชชั่น X%" (8) commissionBaht — ยอดเงินบาทของค่าคอมมิชชั่น ถ้าระบุไว้ชัดเจนในภาพเท่านั้น (9) promoterCount — จำนวนพาร์ทเนอร์ที่โปรโมต จากข้อความ "N พาร์ทเนอร์ที่โปรโมต" หรือ "N+พาร์ทเนอร์ที่โปรโมต" (ถ้าเป็น "10+" ให้ตอบ 10) กรณีหาค่าไหนไม่เจอในภาพให้ตอบ null สำหรับค่านั้น ห้ามเดาหรือคำนวณเอง ตอบกลับเป็น JSON เท่านั้น ห้ามมีข้อความอื่นใดๆ รูปแบบ: {"name": ข้อความหรือ null, "price": ตัวเลขหรือ null, "priceSale": ตัวเลขหรือ null, "rating": ตัวเลขหรือ null, "sales": ตัวเลขหรือ null, "shopName": ข้อความหรือ null, "commissionRate": ตัวเลขหรือ null, "commissionBaht": ตัวเลขหรือ null, "promoterCount": ตัวเลขหรือ null}';
 
-    const data = await callGeminiVisionRetry(mime, base64, prompt, btn);
+    const model = getOcrModel();
+    const data = await callGeminiVisionRetry(mime, base64, prompt, btn, model);
 
     let txt = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     txt = txt.replace(/```json/gi, '').replace(/```/g, '').trim();
@@ -1597,6 +1684,7 @@ async function saveShopeeProduct() {
     const priceSale = parseFloat($('sp-price-sale').value) || 0;
     const discount  = (price > priceSale && price > 0) ? Math.round((1 - priceSale / price) * 100) : 0;
     const link      = $('sp-link-input').value.trim();
+    const productUrl = await deriveProductUrl(link);
 
     // สำคัญ: Apps Script (handleRequest) อ่านข้อมูลจาก postData.data เท่านั้น
     // (action กับ sheet อยู่นอก แต่ฟิลด์ข้อมูลจริงต้องห่อด้วย data: {...} เหมือนที่ Extension ทำ)
@@ -1613,7 +1701,7 @@ async function saveShopeeProduct() {
         commissionRate: parseFloat($('sp-comm-rate').value) || 0,
         commissionBaht: parseFloat($('sp-comm-baht').value) || 0,
         affiliateLink: link,
-        productUrl: link,
+        productUrl,
         shopName: $('sp-shop').value.trim(),
         shopType: 'normal',
         rating: parseFloat($('sp-rating').value) || 0,
