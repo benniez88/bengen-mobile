@@ -640,8 +640,12 @@ function bindEvents() {
   });
   $('btn-add-photos').addEventListener('click', () => $('product-photos-input').click());
   $('product-photos-input').addEventListener('change', e => {
-    if (e.target.files && e.target.files.length) handlePhotoUpload(e.target.files);
+    // สำคัญ: ต้อง copy ออกมาเป็น Array ธรรมดาก่อน (ไม่ใช่ FileList ตรงๆ) แล้วค่อยเคลียร์ input
+    // เพราะ e.target.files เป็น FileList ที่ผูกกับ input ตัวเดิม — ถ้าสั่ง value='' ก่อนที่
+    // handlePhotoUpload (async) จะวนอ่านไฟล์ครบ FileList จะถูกล้างตามไปด้วย ทำให้ได้แค่รูปแรกรูปเดียว
+    const filesArr = Array.from(e.target.files || []);
     e.target.value = '';
+    if (filesArr.length) handlePhotoUpload(filesArr);
   });
 }
 
@@ -1594,25 +1598,32 @@ async function saveShopeeProduct() {
     const discount  = (price > priceSale && price > 0) ? Math.round((1 - priceSale / price) * 100) : 0;
     const link      = $('sp-link-input').value.trim();
 
+    // สำคัญ: Apps Script (handleRequest) อ่านข้อมูลจาก postData.data เท่านั้น
+    // (action กับ sheet อยู่นอก แต่ฟิลด์ข้อมูลจริงต้องห่อด้วย data: {...} เหมือนที่ Extension ทำ)
+    // ถ้าส่งฟิลด์แบบแบนๆ ไว้นอก data เหมือนเดิม ฝั่ง Apps Script จะได้ data = undefined
+    // แล้ว saveProduct() จะโยน error "ไม่มีข้อมูล" ทันที ทั้งที่ไม่เกี่ยวกับ product id เลย
     const payload = {
       action: 'saveProduct',
-      name,
-      price,
-      priceSale,
-      discount,
-      commissionRate: parseFloat($('sp-comm-rate').value) || 0,
-      commissionBaht: parseFloat($('sp-comm-baht').value) || 0,
-      affiliateLink: link,
-      productUrl: link,
-      shopName: $('sp-shop').value.trim(),
-      shopType: 'normal',
-      rating: parseFloat($('sp-rating').value) || 0,
-      ratingCount: 0,
-      sales: parseInt($('sp-sales').value) || 0,
-      description: '',
-      images,
-      introImageFile,
-      promoterCount: parseInt($('sp-partner-count').value) || 0,
+      data: {
+        id: Date.now().toString(),
+        name,
+        price,
+        priceSale,
+        discount,
+        commissionRate: parseFloat($('sp-comm-rate').value) || 0,
+        commissionBaht: parseFloat($('sp-comm-baht').value) || 0,
+        affiliateLink: link,
+        productUrl: link,
+        shopName: $('sp-shop').value.trim(),
+        shopType: 'normal',
+        rating: parseFloat($('sp-rating').value) || 0,
+        ratingCount: 0,
+        sales: parseInt($('sp-sales').value) || 0,
+        description: '',
+        images,
+        introImageFile,
+        promoterCount: parseInt($('sp-partner-count').value) || 0,
+      },
     };
 
     const json = await xhrPost(uploadUrl, payload);
