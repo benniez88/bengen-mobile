@@ -14,6 +14,13 @@
   --text:#eef0f8;--text2:#9080b0;--text3:#5a4a70;
   --font:'Sarabun',sans-serif;
 }
+:root[data-theme="light"]{
+  --bg:#f6f4fa;--bg2:#ffffff;--bg3:#f0ecf7;--bg4:#e6dff2;
+  --border:#ddd2ec;--border2:#c6adde;
+  --p:#8a50b0;--pn:#9a3fd0;--pk:#d6299a;
+  --green:#059669;--red:#dc2626;--amber:#c27803;--blue:#2563eb;
+  --text:#1e1630;--text2:#6a5b85;--text3:#a397b8;
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);
   overflow-x:hidden;}
@@ -22,22 +29,27 @@ body{display:flex;flex-direction:column;}
 /* ── HEADER ── */
 .hdr{position:sticky;top:0;z-index:20;background:var(--bg2);
   border-bottom:1px solid var(--border);padding:14px 16px;
-  display:flex;align-items:center;gap:10px;}
+  display:flex;align-items:center;gap:8px;}
 .hdr-title{font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--pn),var(--pk));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;flex:1;}
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);
   background:var(--bg3);color:var(--text2);font-size:16px;display:flex;
   align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
 .icon-btn:active{background:var(--bg4);}
 
 /* ── SETTINGS PANEL ── */
-.settings-panel{display:none;flex-direction:column;gap:12px;padding:16px;}
+.settings-panel{display:none;flex-direction:column;gap:12px;padding:16px;
+  border-bottom:1px solid var(--border);background:var(--bg2);}
 .settings-panel.show{display:flex;}
+.settings-hint{font-size:11.5px;color:var(--text3);line-height:1.5;margin-top:-4px;}
 label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;}
-input[type=text],input[type=password]{width:100%;background:var(--bg3);
+input[type=text],input[type=password],input[type=number]{width:100%;background:var(--bg3);
   border:1px solid var(--border);border-radius:10px;color:var(--text);
   font-family:var(--font);font-size:14px;padding:12px 14px;outline:none;}
-input:focus{border-color:var(--pn);}
+input:focus,select:focus{border-color:var(--pn);}
+select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:var(--font);font-size:14px;padding:11px 12px;outline:none;}
 
 /* ── BUTTONS ── */
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;
@@ -49,11 +61,27 @@ input:focus{border-color:var(--pn);}
 .btn-ghost{background:var(--bg3);color:var(--text);border:1px solid var(--border);}
 .btn-green{background:linear-gradient(135deg,#059669,#10b981);color:#fff;}
 .btn-red{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;}
+.btn-amber{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff;}
 .btn-sm{padding:9px 14px;font-size:13px;}
 .btn:disabled{opacity:.4;}
 
 /* ── MAIN CONTENT ── */
-.main{flex:1;overflow-y:auto;padding-bottom:24px;}
+.main{flex:1;overflow-y:auto;padding-bottom:82px;}
+body.hide-nav .main{padding-bottom:0;}
+.tab-page{display:none;}
+.tab-page.show{display:block;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));}
+body.hide-nav .bottom-nav{display:none;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 2px;border-radius:10px;color:var(--text3);cursor:pointer;}
+.nav-item .nav-ic{font-size:19px;}
+.nav-item .nav-lb{font-size:10.5px;font-weight:700;}
+.nav-item.active{color:var(--pn);}
+.nav-item:active{background:var(--bg3);}
 
 /* ── LIST VIEW ── */
 .list-wrap{display:flex;flex-direction:column;gap:10px;padding:14px;}
@@ -74,6 +102,7 @@ input:focus{border-color:var(--pn);}
 .b-star{background:rgba(245,158,11,.15);color:#f59e0b;}
 .b-price{background:rgba(200,125,255,.15);color:var(--pn);}
 .b-comm{background:rgba(16,185,129,.15);color:#10b981;}
+.b-partner{background:rgba(59,130,246,.15);color:#3b82f6;}
 .card-arrow{align-self:center;color:var(--text3);font-size:20px;flex-shrink:0;}
 
 /* ── EMPTY / LOADING ── */
@@ -83,7 +112,7 @@ input:focus{border-color:var(--pn);}
 .empty-desc{font-size:13px;line-height:1.6;}
 
 .spin{display:inline-block;width:16px;height:16px;border:2.5px solid var(--border);
-  border-top-color:var(--pn);border-radius:50%;animation:rot .6s linear infinite;}
+  border-top-color:var(--pn);border-radius:50%;animation:rot .6s linear infinite;flex-shrink:0;}
 @keyframes rot{to{transform:rotate(360deg)}}
 .loading-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:60px 24px;}
 .loading-text{font-size:13px;color:var(--text2);}
@@ -133,14 +162,50 @@ input:focus{border-color:var(--pn);}
   padding:14px 16px;display:flex;gap:10px;}
 
 /* ── STATUS ROWS ── */
-.row-info,.row-ok,.row-err{display:flex;gap:8px;border-radius:10px;padding:10px 12px;
+.row-info,.row-ok,.row-err,.row-warn{display:flex;gap:8px;border-radius:10px;padding:10px 12px;
   font-size:13px;line-height:1.5;margin:0 14px;}
 .row-info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#93c5fd;}
 .row-ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:#6ee7b7;}
 .row-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#fca5a5;}
+.row-warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#f8b84e;}
+
+/* ── SHARED TAB LAYOUT ── */
+.tab-body{padding:14px;display:flex;flex-direction:column;gap:14px;}
+.tab-intro{font-size:12.5px;color:var(--text2);line-height:1.6;padding:0 2px;}
+.field-row{display:flex;gap:8px;}
+.field-row > div{flex:1;}
+.inline-row{display:flex;gap:8px;align-items:center;}
+
+/* ── VOICE TAB ── */
+.voice-pick-item{padding:9px 10px;background:var(--bg3);border-radius:10px;
+  border:2px solid var(--border);display:flex;align-items:flex-start;gap:8px;}
+.voice-pick-item input[type=checkbox]{margin-top:2px;flex-shrink:0;width:18px;height:18px;}
+.voice-pick-name{font-size:12.5px;font-weight:700;margin-bottom:2px;}
+.voice-pick-meta{font-size:10.5px;color:var(--text2);}
+.batch-log{max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;}
+.batch-log-item{padding:6px 9px;background:var(--bg3);border-radius:7px;font-size:12px;}
+.progress-track{width:100%;height:8px;background:var(--bg3);border-radius:5px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--pn));width:0%;
+  transition:width .3s;}
+
+/* ── SHOPEE FETCH TAB ── */
+.img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.img-cell{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;
+  background:var(--bg3);border:2px solid var(--border);transition:opacity .15s,border-color .15s;}
+.img-cell.removed{opacity:.3;}
+.img-cell.intro{border-color:var(--amber);}
+.img-cell img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-cell .img-btns{position:absolute;top:4px;right:4px;display:flex;gap:4px;}
+.img-btn{width:23px;height:23px;border-radius:6px;border:none;font-size:11px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:rgba(0,0,0,.6);color:#fff;flex-shrink:0;}
+.img-btn.pin.active{background:var(--amber);color:#1a1204;}
+.img-btn.del.active{background:rgba(220,38,38,.9);}
+.intro-tag{position:absolute;bottom:4px;left:4px;background:var(--amber);color:#1a1204;
+  font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;}
 
 /* ── TOAST ── */
-#toast{position:fixed;bottom:20px;left:16px;right:16px;background:var(--bg2);
+#toast{position:fixed;bottom:76px;left:16px;right:16px;background:var(--bg2);
   border:1px solid var(--pn);border-radius:12px;padding:13px 16px;
   font-size:14px;z-index:999;opacity:0;transform:translateY(10px);
   transition:all .25s;pointer-events:none;box-shadow:0 4px 24px rgba(200,125,255,.25);
@@ -153,15 +218,26 @@ input:focus{border-color:var(--pn);}
 <!-- HEADER -->
 <div class="hdr">
   <div class="hdr-title" id="hdr-title">📱 พร้อมโพสต์</div>
-  <button class="icon-btn" id="btn-refresh">🔄</button>
-  <button class="icon-btn" id="btn-settings">⚙️</button>
+  <button class="icon-btn" id="btn-theme" title="สลับธีม">🌙</button>
+  <button class="icon-btn" id="btn-refresh" title="รีเฟรช">🔄</button>
+  <button class="icon-btn" id="btn-settings" title="ตั้งค่า">⚙️</button>
 </div>
 
 <!-- SETTINGS -->
 <div class="settings-panel" id="settings-panel">
   <div>
-    <label>Backend URL (Cloudflare Worker)</label>
+    <label>Backend URL (Cloudflare Worker) — สำหรับอ่านข้อมูล</label>
     <input type="text" id="apps-url" placeholder="https://your-worker.workers.dev">
+  </div>
+  <div>
+    <label>Apps Script URL — สำหรับอัพโหลดไฟล์เท่านั้น (เสียง / รูปสินค้า)</label>
+    <input type="text" id="upload-url" placeholder="https://script.google.com/macros/s/.../exec">
+    <div class="settings-hint">ใช้กับเมนู "สร้างเสียง" และ "เพิ่มสินค้า" เท่านั้น — เพราะ Worker อัพโหลดไฟล์เข้า Drive ไม่ได้</div>
+  </div>
+  <div>
+    <label>Gemini API Key — สำหรับสร้างเสียง + อ่าน Screenshot ค่าคอม</label>
+    <input type="password" id="gemini-key" placeholder="AIza...">
+    <div class="settings-hint">เก็บไว้ในเบราว์เซอร์นี้เท่านั้น (localStorage) ไม่ถูกส่งไปไหนนอกจาก Google โดยตรง</div>
   </div>
   <button class="btn btn-primary" id="btn-save-settings">💾 บันทึก</button>
 </div>
@@ -169,115 +245,302 @@ input:focus{border-color:var(--pn);}
 <!-- MAIN -->
 <div class="main" id="main">
 
-  <!-- LIST VIEW -->
-  <div id="list-view">
-    <div id="list-status"></div>
-    <div class="list-wrap" id="list-wrap"></div>
-  </div>
+  <!-- ═══════════ TAB 1: พร้อมโพสต์ ═══════════ -->
+  <div class="tab-page show" id="tab-post">
 
-  <!-- DETAIL VIEW -->
-  <div class="detail" id="detail-view">
-    <div class="hdr" style="position:static;">
-      <button class="icon-btn" id="btn-back">←</button>
-      <div class="hdr-title" style="font-size:14px;">รายละเอียดสินค้า</div>
+    <!-- LIST VIEW -->
+    <div id="list-view">
+      <div id="list-status"></div>
+      <div class="list-wrap" id="list-wrap"></div>
     </div>
 
-    <div class="detail-hero" id="detail-hero">🛍️</div>
-    <div class="detail-gallery" id="detail-gallery"></div>
-
-    <div class="detail-body">
-      <div>
-        <div class="detail-name" id="d-name">—</div>
-        <div class="detail-shop" id="d-shop"></div>
+    <!-- DETAIL VIEW -->
+    <div class="detail" id="detail-view">
+      <div class="hdr" style="position:static;">
+        <button class="icon-btn" id="btn-back">←</button>
+        <div class="hdr-title" style="font-size:14px;">รายละเอียดสินค้า</div>
       </div>
 
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div class="stat-label">⭐ Rating</div>
-          <div class="stat-value" id="d-rating">—</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">📦 ยอดขาย</div>
-          <div class="stat-value" id="d-sales">—</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">💰 ราคา</div>
-          <div class="stat-value" id="d-price">—</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">🎯 Commission</div>
-          <div class="stat-value green" id="d-comm">—</div>
-        </div>
-      </div>
+      <div class="detail-hero" id="detail-hero">🛍️</div>
+      <div class="detail-gallery" id="detail-gallery"></div>
 
-      <div class="video-wrap" id="video-wrap" style="display:none;">
-        <video id="d-video" controls playsinline></video>
-      </div>
-      <button class="btn btn-ghost btn-sm" id="btn-download-mp4" style="display:none;">
-        📥 ดาวน์โหลด MP4
-      </button>
-
-      <div class="section" id="caption-section" style="display:none;">
-        <div class="section-title">
-          <span>📝 Caption</span>
-          <button class="copy-btn" id="copy-caption">คัดลอก</button>
+      <div class="detail-body">
+        <div>
+          <div class="detail-name" id="d-name">—</div>
+          <div class="detail-shop" id="d-shop"></div>
         </div>
-        <div class="section-text" id="d-caption"></div>
-      </div>
 
-      <div class="section" id="hook-section" style="display:none;">
-        <div class="section-title">
-          <span>🎯 Hook</span>
-          <button class="copy-btn" id="copy-hook">คัดลอก</button>
-        </div>
-        <div class="section-text" id="d-hook"></div>
-      </div>
-
-      <div class="section" id="script-section" style="display:none;">
-        <div class="section-title">
-          <span>🎬 Script</span>
-          <button class="copy-btn" id="copy-script">คัดลอก</button>
-        </div>
-        <div class="section-text" id="d-script"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">
-          <span>🔗 Affiliate Link</span>
-          <div style="display:flex;gap:6px;">
-            <button class="copy-btn" id="btn-open-link">🔗 เปิด</button>
-            <button class="copy-btn" id="copy-link">คัดลอก</button>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label">⭐ Rating</div>
+            <div class="stat-value" id="d-rating">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">📦 ยอดขาย</div>
+            <div class="stat-value" id="d-sales">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">💰 ราคา</div>
+            <div class="stat-value" id="d-price">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">🎯 Commission</div>
+            <div class="stat-value green" id="d-comm">—</div>
+          </div>
+          <div class="stat-box" style="grid-column:1 / -1;">
+            <div class="stat-label">👥 คู่แข่งที่โปรโมต</div>
+            <div class="stat-value" id="d-partners">—</div>
           </div>
         </div>
-        <div class="link-row">
-          <div class="link-text" id="d-link">—</div>
+
+        <div class="video-wrap" id="video-wrap" style="display:none;">
+          <video id="d-video" controls playsinline></video>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="btn-download-mp4" style="display:none;">
+          📥 ดาวน์โหลด MP4
+        </button>
+
+        <div class="section" id="caption-section" style="display:none;">
+          <div class="section-title">
+            <span>📝 Caption</span>
+            <button class="copy-btn" id="copy-caption">คัดลอก</button>
+          </div>
+          <div class="section-text" id="d-caption"></div>
+        </div>
+
+        <div class="section" id="hook-section" style="display:none;">
+          <div class="section-title">
+            <span>🎯 Hook</span>
+            <button class="copy-btn" id="copy-hook">คัดลอก</button>
+          </div>
+          <div class="section-text" id="d-hook"></div>
+        </div>
+
+        <div class="section" id="script-section" style="display:none;">
+          <div class="section-title">
+            <span>🎬 Script</span>
+            <button class="copy-btn" id="copy-script">คัดลอก</button>
+          </div>
+          <div class="section-text" id="d-script"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span>🔗 Affiliate Link</span>
+            <div style="display:flex;gap:6px;">
+              <button class="copy-btn" id="btn-open-link">🔗 เปิด</button>
+              <button class="copy-btn" id="copy-link">คัดลอก</button>
+            </div>
+          </div>
+          <div class="link-row">
+            <div class="link-text" id="d-link">—</div>
+          </div>
+        </div>
+
+        <div style="height:8px;"></div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-ghost btn-sm" id="btn-open-drive" style="flex:1;">📂 เปิด Drive</button>
+        <button class="btn btn-green" id="btn-mark-posted" style="flex:2;">✅ โพสต์แล้ว</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TAB 2: สร้างเสียง ═══════════ -->
+  <div class="tab-page" id="tab-voice">
+    <div class="tab-body">
+      <div class="tab-intro">ดึงรายการที่มีบทพากย์รอสร้างเสียงจาก Sheet เลือกรายการ แล้วกดเริ่ม ระบบจะสลับโมเดลอัตโนมัติถ้าเจอ Limit</div>
+
+      <div class="field-row">
+        <div>
+          <label>เสียง (Voice)</label>
+          <select id="tts-voice">
+            <option value="Kore">Kore — หนักแน่น มั่นใจ</option>
+            <option value="Puck" selected>Puck — สดใส กระตือรือร้น</option>
+            <option value="Zephyr">Zephyr — สดใส</option>
+            <option value="Charon">Charon — ให้ข้อมูล ชัดเจน</option>
+            <option value="Fenrir">Fenrir — ตื่นเต้น มีพลัง</option>
+            <option value="Leda">Leda — เยาว์วัย สดใส</option>
+            <option value="Orus">Orus — หนักแน่น เด็ดขาด</option>
+            <option value="Aoede">Aoede — เบาสบาย</option>
+            <option value="Callirrhoe">Callirrhoe — สบายๆ</option>
+            <option value="Autonoe">Autonoe — สดใส</option>
+            <option value="Enceladus">Enceladus — เบา นุ่ม</option>
+            <option value="Iapetus">Iapetus — ชัดเจน</option>
+            <option value="Umbriel">Umbriel — สบายๆ</option>
+            <option value="Algieba">Algieba — นุ่มนวล</option>
+            <option value="Despina">Despina — นุ่มนวล สงบ</option>
+            <option value="Erinome">Erinome — ชัดเจน แม่นยำ</option>
+            <option value="Algenib">Algenib — เสียงแหบ</option>
+            <option value="Rasalgethi">Rasalgethi — มืออาชีพ</option>
+            <option value="Laomedeia">Laomedeia — สดใส มีชีวิตชีวา</option>
+            <option value="Achernar">Achernar — นุ่ม อ่อนโยน</option>
+            <option value="Alnilam">Alnilam — หนักแน่น</option>
+            <option value="Schedar">Schedar — สม่ำเสมอ</option>
+            <option value="Gacrux">Gacrux — ผู้ใหญ่ มีประสบการณ์</option>
+            <option value="Pulcherrima">Pulcherrima — เชิญชวน</option>
+            <option value="Achird">Achird — เป็นมิตร</option>
+            <option value="Zubenelgenubi">Zubenelgenubi — เป็นกันเอง</option>
+            <option value="Vindemiatrix">Vindemiatrix — อ่อนโยน</option>
+            <option value="Sadachbia">Sadachbia — มีชีวิตชีวา</option>
+            <option value="Sadaltager">Sadaltager — น่าเชื่อถือ</option>
+            <option value="Sulafat">Sulafat — อบอุ่น</option>
+          </select>
+        </div>
+        <div>
+          <label>โมเดล TTS หลัก</label>
+          <select id="tts-model">
+            <option value="gemini-3.1-flash-tts-preview">Gemini 3.1 Flash TTS</option>
+            <option value="gemini-2.5-flash-preview-tts">Gemini 2.5 Flash TTS (สำรอง)</option>
+          </select>
         </div>
       </div>
 
-      <div style="height:8px;"></div>
-    </div>
+      <div>
+        <label>หน่วงเวลาระหว่างรายการ (กัน Rate Limit)</label>
+        <select id="batch-delay">
+          <option value="25000">25 วิ (~2.4 req/min)</option>
+          <option value="30000" selected>30 วิ (~2 req/min — แนะนำ)</option>
+          <option value="45000">45 วิ (~1.3 req/min — ปลอดภัยสุด)</option>
+        </select>
+      </div>
 
-    <div class="action-bar">
-      <button class="btn btn-ghost btn-sm" id="btn-open-drive" style="flex:1;">📂 เปิด Drive</button>
-      <button class="btn btn-green" id="btn-mark-posted" style="flex:2;">✅ โพสต์แล้ว</button>
+      <button class="btn btn-ghost" id="btn-load-voice-list">🔄 โหลดรายการที่รอสร้างเสียง</button>
+      <div id="voice-list-status"></div>
+
+      <div id="voice-pick-list" style="display:none;flex-direction:column;gap:8px;"></div>
+
+      <div id="batch-controls" style="display:none;flex-direction:column;gap:10px;">
+        <div class="inline-row" style="justify-content:space-between;">
+          <div style="font-size:12.5px;color:var(--text2);">เลือกแล้ว <b id="batch-selected-count" style="color:var(--pn);">0</b> รายการ</div>
+          <div class="inline-row">
+            <button class="copy-btn" id="btn-select-all">เลือกทั้งหมด</button>
+            <button class="copy-btn" id="btn-select-none">ยกเลิกเลือก</button>
+          </div>
+        </div>
+        <div id="batch-rpd-warning" class="row-warn" style="display:none;margin:0;"></div>
+        <button class="btn btn-primary" id="btn-start-batch" disabled>▶️ เริ่มสร้างเสียง</button>
+      </div>
+
+      <div id="batch-progress" style="display:none;flex-direction:column;gap:10px;">
+        <div class="progress-track"><div class="progress-fill" id="batch-progress-bar"></div></div>
+        <div style="font-size:12.5px;color:var(--text2);" id="batch-progress-text">—</div>
+        <div class="batch-log" id="batch-item-log"></div>
+        <button class="btn btn-red btn-sm" id="btn-stop-batch">⏹️ หยุด Batch</button>
+      </div>
+
+      <div id="batch-summary" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TAB 3: เพิ่มสินค้า ═══════════ -->
+  <div class="tab-page" id="tab-add">
+    <div class="tab-body">
+      <div class="tab-intro">Shopee บล็อกการดึงข้อมูลอัตโนมัติจากลิงก์ (anti-bot) — ให้ Screenshot หน้าสินค้าจากแอป Shopee มาให้ AI อ่านชื่อ/ราคา/rating/ค่าคอม/คู่แข่งแทน แล้วแนบรูปสินค้าเองอีกที</div>
+
+      <input type="file" accept="image/*" id="product-shot-input" style="display:none;">
+      <button class="btn btn-primary" id="btn-product-shot">📷 อัพโหลด Screenshot หน้าสินค้า ให้ AI อ่านข้อมูลให้</button>
+      <div class="settings-hint">อ่านชื่อ/ราคา/rating/ยอดขาย/ร้านค้า/ค่าคอม %/ยอดคอมบาท/จำนวนคู่แข่ง จากภาพเดียว — ตรวจสอบอีกครั้งก่อนบันทึกเสมอ</div>
+
+      <div>
+        <label>ชื่อสินค้า</label>
+        <input type="text" id="sp-name">
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>ราคาปกติ (฿)</label>
+          <input type="number" id="sp-price">
+        </div>
+        <div>
+          <label>ราคาขาย (฿)</label>
+          <input type="number" id="sp-price-sale">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>⭐ Rating</label>
+          <input type="number" step="0.1" id="sp-rating">
+        </div>
+        <div>
+          <label>📦 ยอดขาย (ชิ้น)</label>
+          <input type="number" id="sp-sales">
+        </div>
+      </div>
+
+      <div>
+        <label>🏪 ชื่อร้าน</label>
+        <input type="text" id="sp-shop">
+      </div>
+
+      <div>
+        <label>รูปสินค้า — แนบรูปจริงของสินค้า (เลือกได้หลายรูป) แตะ ⭐ ปักเป็นรูป Intro, แตะ ✕ ไม่เอารูปนี้</label>
+        <input type="file" accept="image/*" multiple id="product-photos-input" style="display:none;">
+        <button class="btn btn-ghost btn-sm" id="btn-add-photos">📸 แนบรูปสินค้า</button>
+        <div class="img-grid" id="sp-img-grid" style="margin-top:10px;"></div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>ค่าคอมมิชชั่น (%)</label>
+          <input type="number" step="0.01" id="sp-comm-rate" placeholder="0">
+        </div>
+        <div>
+          <label>ค่าคอมมิชชั่น (฿ โดยประมาณ)</label>
+          <input type="number" step="0.01" id="sp-comm-baht" placeholder="0">
+        </div>
+      </div>
+
+      <div>
+        <label>👥 จำนวนพาร์ทเนอร์ที่โปรโมต (คู่แข่ง)</label>
+        <input type="number" step="1" id="sp-partner-count" placeholder="0">
+      </div>
+
+      <div>
+        <label>ลิงก์ Affiliate (วางเก็บไว้ใช้ตอนโพสต์)</label>
+        <input type="text" id="sp-link-input" placeholder="https://s.shopee.co.th/xxxxx">
+      </div>
+
+      <button class="btn btn-green" id="btn-sp-save">💾 บันทึกลง Sheet</button>
+      <button class="btn btn-ghost btn-sm" id="btn-sp-reset">🗑️ ล้างฟอร์ม / ทำรายการใหม่</button>
     </div>
   </div>
 
 </div>
 
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active" data-tab="post">
+    <div class="nav-ic">📱</div><div class="nav-lb">พร้อมโพสต์</div>
+  </div>
+  <div class="nav-item" data-tab="voice">
+    <div class="nav-ic">🎙️</div><div class="nav-lb">สร้างเสียง</div>
+  </div>
+  <div class="nav-item" data-tab="add">
+    <div class="nav-ic">🛒</div><div class="nav-lb">เพิ่มสินค้า</div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
+const $ = id => document.getElementById(id);
+
 // ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
-let appsUrl     = '';
+let appsUrl     = '';   // Cloudflare Worker — อ่านข้อมูล
+let uploadUrl   = '';   // Apps Script — อัพโหลดไฟล์เท่านั้น
+let geminiKey   = '';
 let readyItems  = [];
 let currentItem = null;
 let currentImgs = [];
+let activeTab   = 'post';
 
 // ═══════════════════════════════════════
-// XHR HELPER
+// XHR HELPER (text/plain กัน CORS preflight กับ Apps Script)
 // ═══════════════════════════════════════
 function xhrGet(url) {
   return new Promise((resolve, reject) => {
@@ -294,7 +557,6 @@ function xhrPost(url, body) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
-    // ใช้ text/plain หลีกเลี่ยง CORS preflight (Apps Script ไม่รองรับ OPTIONS)
     xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
     xhr.responseType = 'json';
     xhr.onload  = () => resolve(xhr.response || {});
@@ -303,12 +565,35 @@ function xhrPost(url, body) {
   });
 }
 
+// fetch แบบมี timeout — ใช้กับ Gemini API โดยตรงเท่านั้น (รองรับ CORS เอง)
+async function fetchWithTimeout(url, options, timeoutMs = 45000, serviceName = 'Gemini') {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timer);
+    return res;
+  } catch (err) {
+    clearTimeout(timer);
+    if (err.name === 'AbortError') {
+      throw new Error(`หมดเวลารอ (${Math.round(timeoutMs/1000)} วิ) — ${serviceName} ตอบกลับช้าเกินไป ลองใหม่อีกครั้งครับ`);
+    }
+    throw err;
+  }
+}
+
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  appsUrl = localStorage.getItem('bengen_apps_url') || '';
-  document.getElementById('apps-url').value = appsUrl;
+  appsUrl   = localStorage.getItem('bengen_apps_url') || '';
+  uploadUrl = localStorage.getItem('bengen_upload_url') || '';
+  geminiKey = localStorage.getItem('bengen_gemini_key') || '';
+  $('apps-url').value   = appsUrl;
+  $('upload-url').value = uploadUrl;
+  $('gemini-key').value = geminiKey;
+
+  initTheme();
   bindEvents();
 
   if (appsUrl) {
@@ -320,37 +605,105 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function bindEvents() {
-  document.getElementById('btn-refresh').addEventListener('click', loadReadyList);
-  document.getElementById('btn-settings').addEventListener('click', () => toggleSettings());
-  document.getElementById('btn-save-settings').addEventListener('click', saveSettings);
-  document.getElementById('btn-back').addEventListener('click', showListView);
-  document.getElementById('btn-mark-posted').addEventListener('click', markAsPosted);
-  document.getElementById('btn-open-drive').addEventListener('click', openInDrive);
-  document.getElementById('copy-caption').addEventListener('click', () => copyText('d-caption','Caption'));
-  document.getElementById('copy-hook').addEventListener('click', () => copyText('d-hook','Hook'));
-  document.getElementById('copy-script').addEventListener('click', () => copyText('d-script','Script'));
-  document.getElementById('copy-link').addEventListener('click', () => copyText('d-link','Affiliate Link'));
-  document.getElementById('btn-open-link').addEventListener('click', openAffiliateLink);
-  document.getElementById('btn-download-mp4').addEventListener('click', downloadVideo);
+  $('btn-theme').addEventListener('click', toggleTheme);
+  $('btn-refresh').addEventListener('click', onRefreshClick);
+  $('btn-settings').addEventListener('click', () => toggleSettings());
+  $('btn-save-settings').addEventListener('click', saveSettings);
+  $('btn-back').addEventListener('click', showListView);
+  $('btn-mark-posted').addEventListener('click', markAsPosted);
+  $('btn-open-drive').addEventListener('click', openInDrive);
+  $('copy-caption').addEventListener('click', () => copyText('d-caption','Caption'));
+  $('copy-hook').addEventListener('click', () => copyText('d-hook','Hook'));
+  $('copy-script').addEventListener('click', () => copyText('d-script','Script'));
+  $('copy-link').addEventListener('click', () => copyText('d-link','Affiliate Link'));
+  $('btn-open-link').addEventListener('click', openAffiliateLink);
+  $('btn-download-mp4').addEventListener('click', downloadVideo);
+
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.addEventListener('click', () => switchTab(el.dataset.tab));
+  });
+
+  // Voice tab
+  $('btn-load-voice-list').addEventListener('click', loadVoicePendingList);
+  $('btn-select-all').addEventListener('click', () => batchSelectAll(true));
+  $('btn-select-none').addEventListener('click', () => batchSelectAll(false));
+  $('btn-start-batch').addEventListener('click', runVoiceBatch);
+  $('btn-stop-batch').addEventListener('click', stopBatch);
+
+  // เพิ่มสินค้า tab
+  $('btn-sp-save').addEventListener('click', saveShopeeProduct);
+  $('btn-sp-reset').addEventListener('click', resetShopeeForm);
+  $('btn-product-shot').addEventListener('click', () => $('product-shot-input').click());
+  $('product-shot-input').addEventListener('change', e => {
+    if (e.target.files && e.target.files[0]) readProductScreenshot(e.target.files[0]);
+    e.target.value = '';
+  });
+  $('btn-add-photos').addEventListener('click', () => $('product-photos-input').click());
+  $('product-photos-input').addEventListener('change', e => {
+    if (e.target.files && e.target.files.length) handlePhotoUpload(e.target.files);
+    e.target.value = '';
+  });
 }
 
+// ═══════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════
+function initTheme() {
+  const saved = localStorage.getItem('bengen_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  $('btn-theme').textContent = saved === 'light' ? '☀️' : '🌙';
+}
+function toggleTheme() {
+  const cur  = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = cur === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('bengen_theme', next);
+  $('btn-theme').textContent = next === 'light' ? '☀️' : '🌙';
+}
+
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-page').forEach(el => el.classList.remove('show'));
+  $('tab-' + tab).classList.add('show');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
+  const titles = { post: '📱 พร้อมโพสต์', voice: '🎙️ สร้างเสียง', add: '🛒 เพิ่มสินค้า' };
+  $('hdr-title').textContent = titles[tab];
+  window.scrollTo(0, 0);
+}
+
+function onRefreshClick() {
+  if (activeTab === 'post') loadReadyList();
+  else if (activeTab === 'voice') loadVoicePendingList();
+  else toast('ℹ️ แท็บนี้ไม่มีการรีเฟรช — เริ่มกรอกข้อมูลสินค้าใหม่ได้เลยครับ');
+}
+
+// ═══════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════
 function toggleSettings(forceShow) {
-  const panel = document.getElementById('settings-panel');
+  const panel = $('settings-panel');
   const show  = forceShow !== undefined ? forceShow : !panel.classList.contains('show');
   panel.classList.toggle('show', show);
 }
 
 function saveSettings() {
-  appsUrl = document.getElementById('apps-url').value.trim();
+  appsUrl   = $('apps-url').value.trim();
+  uploadUrl = $('upload-url').value.trim();
+  geminiKey = $('gemini-key').value.trim();
   if (!appsUrl) { toast('⚠️ กรอก Backend URL ก่อนครับ'); return; }
   localStorage.setItem('bengen_apps_url', appsUrl);
+  localStorage.setItem('bengen_upload_url', uploadUrl);
+  localStorage.setItem('bengen_gemini_key', geminiKey);
   toggleSettings(false);
   toast('✅ บันทึกแล้ว');
   loadReadyList();
 }
 
 // ═══════════════════════════════════════
-// LOAD READY-TO-POST LIST
+// TAB 1 — LOAD READY-TO-POST LIST
 // ═══════════════════════════════════════
 async function loadReadyList() {
   if (!appsUrl) { toast('⚠️ ตั้งค่า Backend URL ก่อนครับ'); toggleSettings(true); return; }
@@ -366,12 +719,10 @@ async function loadReadyList() {
     const products = productsRes.rows || [];
     const contents = contentRes.rows || [];
 
-    // Filter: videoStatus = done AND ยังไม่ได้ postedAt
     const ready = contents.filter(c =>
       c.videoStatus === 'done' && !c.postedAt
     );
 
-    // Join กับ Products
     readyItems = ready.map(c => {
       const p = products.find(pr => pr.id === c.productId) || {};
       return { content: c, product: p };
@@ -383,13 +734,13 @@ async function loadReadyList() {
 
   } catch (err) {
     showListStatus('err', '❌ โหลดข้อมูลไม่สำเร็จ: ' + err.message);
-    document.getElementById('list-wrap').innerHTML = '';
+    $('list-wrap').innerHTML = '';
   }
 }
 
 function showLoading() {
-  document.getElementById('list-status').innerHTML = '';
-  document.getElementById('list-wrap').innerHTML = `
+  $('list-status').innerHTML = '';
+  $('list-wrap').innerHTML = `
     <div class="loading-wrap">
       <div class="spin"></div>
       <div class="loading-text">กำลังโหลดรายการ...</div>
@@ -397,13 +748,13 @@ function showLoading() {
 }
 
 function showListStatus(type, msg) {
-  const el = document.getElementById('list-status');
-  const cls = { info: 'row-info', ok: 'row-ok', err: 'row-err' };
+  const el = $('list-status');
+  const cls = { info: 'row-info', ok: 'row-ok', err: 'row-err', warn: 'row-warn' };
   el.innerHTML = `<div class="${cls[type]||'row-info'}" style="margin:14px 14px 0;">${msg}</div>`;
 }
 
 function renderList() {
-  const wrap = document.getElementById('list-wrap');
+  const wrap = $('list-wrap');
 
   if (!readyItems.length) {
     wrap.innerHTML = `
@@ -412,11 +763,11 @@ function renderList() {
         <div class="empty-title">ยังไม่มีสินค้าพร้อมโพสต์</div>
         <div class="empty-desc">สินค้าที่วิดีโอเสร็จแล้ว<br>จะมาแสดงที่นี่โดยอัตโนมัติ</div>
       </div>`;
-    document.getElementById('list-status').innerHTML = '';
+    $('list-status').innerHTML = '';
     return;
   }
 
-  document.getElementById('list-status').innerHTML =
+  $('list-status').innerHTML =
     `<div style="padding:14px 14px 0;font-size:13px;color:var(--text2);">พบ ${readyItems.length} รายการพร้อมโพสต์</div>`;
 
   wrap.innerHTML = readyItems.map((item, i) => {
@@ -426,6 +777,7 @@ function renderList() {
     const price = p.priceSale || p.price || 0;
     const comm  = p.commissionRate || 0;
     const commBaht = p.commissionBaht || 0;
+    const partners = parseInt(p.promoterCount) || 0;
 
     return `
       <div class="card" data-idx="${i}">
@@ -439,6 +791,7 @@ function renderList() {
             ${p.rating ? `<span class="badge b-star">⭐ ${p.rating}</span>` : ''}
             ${price ? `<span class="badge b-price">฿${Number(price).toLocaleString()}</span>` : ''}
             ${comm ? `<span class="badge b-comm">💰 ${comm}% (฿${commBaht})</span>` : ''}
+            ${partners ? `<span class="badge b-partner">👥 ${partners}${partners>=10?'+':''}</span>` : ''}
           </div>
         </div>
         <div class="card-arrow">›</div>
@@ -452,23 +805,23 @@ function renderList() {
 
 function escapeHtml(s) {
   const d = document.createElement('div');
-  d.textContent = s;
+  d.textContent = s || '';
   return d.innerHTML;
 }
 
 // ═══════════════════════════════════════
-// DETAIL VIEW
+// TAB 1 — DETAIL VIEW
 // ═══════════════════════════════════════
 async function openDetail(idx) {
   currentItem = readyItems[idx];
   const { product: p, content: c } = currentItem;
 
-  document.getElementById('list-view').style.display = 'none';
-  document.getElementById('detail-view').classList.add('show');
+  $('list-view').style.display = 'none';
+  $('detail-view').classList.add('show');
+  document.body.classList.add('hide-nav');
   window.scrollTo(0, 0);
 
-  // Hero image
-  const heroEl = document.getElementById('detail-hero');
+  const heroEl = $('detail-hero');
   currentImgs = [p.driveImageUrl].filter(Boolean);
   if (currentImgs.length) {
     heroEl.innerHTML = `<img src="${currentImgs[0]}" onerror="this.style.display='none'">`;
@@ -476,33 +829,34 @@ async function openDetail(idx) {
     heroEl.innerHTML = '🛍️';
   }
 
-  // Gallery (โหลดเพิ่มจาก Drive folder ถ้ามี)
-  document.getElementById('detail-gallery').innerHTML = '';
+  $('detail-gallery').innerHTML = '';
   if (p.driveFolderUrl) {
     loadGalleryImages(p.driveFolderUrl);
   }
 
-  // Info
-  document.getElementById('d-name').textContent = p.name || c.productName || '—';
-  document.getElementById('d-shop').textContent = p.shopName
+  $('d-name').textContent = p.name || c.productName || '—';
+  $('d-shop').textContent = p.shopName
     ? `🏪 ${p.shopName}${p.shopType==='mall'?' · Shopee Mall':p.shopType==='preferred'?' · Preferred':''}`
     : '';
 
-  document.getElementById('d-rating').textContent = p.rating ? `⭐ ${p.rating}` : '—';
-  document.getElementById('d-sales').textContent   = p.sales ? formatNum(p.sales) + ' ชิ้น' : '—';
+  $('d-rating').textContent = p.rating ? `⭐ ${p.rating}` : '—';
+  $('d-sales').textContent   = p.sales ? formatNum(p.sales) + ' ชิ้น' : '—';
 
   const price = p.priceSale || p.price || 0;
-  const orig  = p.price || 0;
-  document.getElementById('d-price').textContent = price ? `฿${Number(price).toLocaleString()}` : '—';
+  $('d-price').textContent = price ? `฿${Number(price).toLocaleString()}` : '—';
 
   const comm     = p.commissionRate || 0;
   const commBaht = p.commissionBaht || 0;
-  document.getElementById('d-comm').textContent = comm ? `${comm}% · ฿${commBaht}` : '—';
+  $('d-comm').textContent = comm ? `${comm}% · ฿${commBaht}` : '—';
 
-  // Video
-  const videoWrap = document.getElementById('video-wrap');
-  const videoEl   = document.getElementById('d-video');
-  const dlBtn     = document.getElementById('btn-download-mp4');
+  const partners = parseInt(p.promoterCount) || 0;
+  $('d-partners').textContent = partners
+    ? (partners >= 10 ? `${partners}+ ราย` : `${partners} ราย`)
+    : 'ไม่มีข้อมูล';
+
+  const videoWrap = $('video-wrap');
+  const videoEl   = $('d-video');
+  const dlBtn     = $('btn-download-mp4');
   if (c.mp4DriveUrl) {
     videoEl.src = c.mp4DriveUrl;
     videoWrap.style.display = 'block';
@@ -517,18 +871,16 @@ async function openDetail(idx) {
     dlBtn.style.display = 'none';
   }
 
-  // Caption / Hook / Script
   setSection('caption-section', 'd-caption', c.caption);
   setSection('hook-section', 'd-hook', c.hook);
   setSection('script-section', 'd-script', c.script);
 
-  // Affiliate Link
-  document.getElementById('d-link').textContent = p.affiliateLink || 'ไม่มีลิงก์';
+  $('d-link').textContent = p.affiliateLink || 'ไม่มีลิงก์';
 }
 
 function setSection(sectionId, textId, value) {
-  const section = document.getElementById(sectionId);
-  const textEl  = document.getElementById(textId);
+  const section = $(sectionId);
+  const textEl  = $(textId);
   if (value && value.trim()) {
     section.style.display = 'block';
     textEl.textContent = value;
@@ -547,14 +899,14 @@ async function loadGalleryImages(driveFolderUrl) {
     if (!images.length) return;
 
     currentImgs = images.map(img => img.base64);
-    const galleryEl = document.getElementById('detail-gallery');
+    const galleryEl = $('detail-gallery');
     galleryEl.innerHTML = currentImgs.map((src, i) =>
       `<img src="${src}" class="${i===0?'active':''}" data-i="${i}">`
     ).join('');
 
     galleryEl.querySelectorAll('img').forEach((el, i) => {
       el.addEventListener('click', () => {
-        document.getElementById('detail-hero').innerHTML = `<img src="${currentImgs[i]}">`;
+        $('detail-hero').innerHTML = `<img src="${currentImgs[i]}">`;
         galleryEl.querySelectorAll('img').forEach(x => x.classList.remove('active'));
         el.classList.add('active');
       });
@@ -565,17 +917,15 @@ async function loadGalleryImages(driveFolderUrl) {
 }
 
 function showListView() {
-  document.getElementById('detail-view').classList.remove('show');
-  document.getElementById('list-view').style.display = 'block';
+  $('detail-view').classList.remove('show');
+  $('list-view').style.display = 'block';
+  document.body.classList.remove('hide-nav');
   window.scrollTo(0, 0);
 }
 
-// ═══════════════════════════════════════
-// ACTIONS
-// ═══════════════════════════════════════
 async function markAsPosted() {
   if (!currentItem) return;
-  const btn = document.getElementById('btn-mark-posted');
+  const btn = $('btn-mark-posted');
   btn.disabled = true;
   btn.innerHTML = '<span class="spin"></span> กำลังบันทึก...';
 
@@ -609,7 +959,6 @@ function openAffiliateLink() {
   window.open(link, '_blank');
 }
 
-// แปลง Drive view URL → direct download URL (fallback สำหรับไฟล์ที่ใหญ่เกิน proxy limit)
 function toDriveDownloadUrl(url) {
   const fileId = url.match(/[?&]id=([^&]+)/)?.[1] || url.match(/\/d\/([^/]+)\//)?.[1];
   if (!fileId) return url;
@@ -617,7 +966,7 @@ function toDriveDownloadUrl(url) {
 }
 
 async function downloadVideo() {
-  const btn    = document.getElementById('btn-download-mp4');
+  const btn    = $('btn-download-mp4');
   const fileId = btn.dataset.fileId;
   if (!fileId) { toast('⚠️ ไม่พบไฟล์วิดีโอ'); return; }
 
@@ -625,13 +974,10 @@ async function downloadVideo() {
   btn.innerHTML = '<span class="spin"></span> กำลังโหลดไฟล์...';
 
   try {
-    // ดึงไฟล์ผ่าน Apps Script เป็น Base64 → แปลงเป็น Blob จริง
-    // ทำให้ Browser รู้ขนาดไฟล์แน่นอน ไม่มีปัญหา "ไม่เต็มไฟล์" แบบ Drive link ตรงๆ
     const resp = await xhrGet(`${appsUrl}?action=proxyVideo&fileId=${fileId}`);
 
     if (resp.error) {
       if (resp.tooLarge) {
-        // ไฟล์ใหญ่เกิน — fallback ไปใช้ Drive link ตรงแทน
         toast('⚠️ ไฟล์ใหญ่ (' + resp.sizeMB + ' MB) — เปิดผ่าน Drive แทนครับ');
         const driveUrl = toDriveDownloadUrl(currentItem.content.mp4DriveUrl);
         window.open(driveUrl, '_blank');
@@ -642,7 +988,6 @@ async function downloadVideo() {
 
     if (!resp.base64) throw new Error('ไม่ได้รับข้อมูลไฟล์');
 
-    // แปลง Base64 → Blob → Download จริง (มีขนาดไฟล์ชัดเจนแน่นอน)
     const blob = base64ToBlob(resp.base64);
     const url  = URL.createObjectURL(blob);
     const name = (btn.dataset.productName || 'video').substring(0, 30).replace(/[^\wก-๙\-]/g, '-');
@@ -675,7 +1020,7 @@ function base64ToBlob(b64src) {
 }
 
 function copyText(elId, label) {
-  const text = document.getElementById(elId).textContent.trim();
+  const text = $(elId).textContent.trim();
   if (!text || text === '—') { toast('⚠️ ไม่มีข้อความ'); return; }
   navigator.clipboard.writeText(text)
     .then(() => toast(`📋 คัดลอก ${label} แล้ว`))
@@ -687,8 +1032,614 @@ function formatNum(n) {
   return n >= 1000 ? (n/1000).toFixed(1)+'K' : String(n);
 }
 
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload  = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+}
+
+// ═══════════════════════════════════════
+// TAB 2 — VOICE GENERATION (Batch)
+// ═══════════════════════════════════════
+const TTS_MODELS = ['gemini-3.1-flash-tts-preview', 'gemini-2.5-flash-preview-tts'];
+let exhaustedModels = new Set();
+let voicePendingRows = [];
+let batchRunning = false;
+let batchStopRequested = false;
+
+async function loadVoicePendingList() {
+  if (!appsUrl) { toast('⚠️ ตั้งค่า Backend URL ก่อนครับ'); toggleSettings(true); return; }
+
+  const btn = $('btn-load-voice-list');
+  const origHtml = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span> กำลังโหลด...';
+  btn.disabled  = true;
+  setVoiceListStatus('info', 'กำลังโหลดรายการจาก Sheets...');
+  $('batch-controls').style.display = 'none';
+  $('batch-summary').style.display  = 'none';
+  $('batch-progress').style.display = 'none';
+
+  try {
+    const data = await xhrGet(`${appsUrl}?action=read&sheet=Content`);
+    if (data.error) throw new Error(data.error);
+    const rows = (data.rows || []).filter(r =>
+      r.voiceScript && r.voiceScript.trim() && r.voiceStatus !== 'done'
+    );
+
+    if (!rows.length) {
+      setVoiceListStatus('warn', '⚠️ ไม่พบรายการที่รอสร้างเสียง (voiceStatus ≠ done)');
+      $('voice-pick-list').style.display = 'none';
+      return;
+    }
+
+    rows.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    voicePendingRows = rows;
+
+    const listEl = $('voice-pick-list');
+    listEl.style.display = 'flex';
+    listEl.innerHTML = rows.map((r, i) => `
+      <div class="voice-pick-item">
+        <input type="checkbox" class="batch-check" data-i="${i}">
+        <div style="flex:1;">
+          <div class="voice-pick-name">${escapeHtml(r.productName || r.productId)}</div>
+          <div class="voice-pick-meta">${(r.voiceScript||'').length} ตัวอักษร · ${r.createdAt ? new Date(r.createdAt).toLocaleDateString('th-TH') : ''}</div>
+        </div>
+      </div>`
+    ).join('');
+
+    listEl.querySelectorAll('.batch-check').forEach(cb => {
+      cb.addEventListener('change', updateBatchSelectedCount);
+    });
+
+    setVoiceListStatus('ok', `✅ พบ ${rows.length} รายการที่รอสร้างเสียง`);
+    $('batch-controls').style.display = 'flex';
+    updateBatchSelectedCount();
+
+  } catch (err) {
+    setVoiceListStatus('err', '❌ ' + err.message);
+  } finally {
+    btn.disabled = false; btn.innerHTML = origHtml;
+  }
+}
+
+function setVoiceListStatus(type, msg) {
+  const el = $('voice-list-status');
+  const cls = { info:'row-info', ok:'row-ok', err:'row-err', warn:'row-warn' };
+  el.innerHTML = `<div class="${cls[type]||'row-info'}" style="margin:0;">${msg}</div>`;
+}
+
+function updateBatchSelectedCount() {
+  const checked = document.querySelectorAll('.batch-check:checked').length;
+  $('batch-selected-count').textContent = checked;
+  $('btn-start-batch').disabled = checked === 0;
+
+  const warnEl = $('batch-rpd-warning');
+  if (checked > 50) {
+    warnEl.style.display = 'flex';
+    warnEl.textContent = `⚠️ เลือก ${checked} รายการ — Free Tier บางบัญชีมีโควต้าแค่ 100-500 ครั้ง/วัน ลองแบ่งทำหลายรอบครับ`;
+  } else {
+    warnEl.style.display = 'none';
+  }
+}
+
+function getBatchSelectedRows() {
+  const boxes = document.querySelectorAll('.batch-check:checked');
+  return Array.from(boxes).map(cb => voicePendingRows[parseInt(cb.dataset.i)]);
+}
+
+function batchSelectAll(select) {
+  document.querySelectorAll('.batch-check').forEach(cb => cb.checked = select);
+  updateBatchSelectedCount();
+}
+
+// สร้างเสียง + Upload ให้ 1 รายการ
+async function generateVoiceForRow(row, modelOverride) {
+  if (!row) return { success: false, error: 'ไม่พบข้อมูลรายการนี้ — อาจต้องโหลดรายการใหม่' };
+
+  const text = (row.voiceScript || '').trim();
+  if (!text) return { success: false, error: 'ไม่มีบทพากย์' };
+
+  const voiceName = $('tts-voice').value;
+  const model     = modelOverride || $('tts-model').value;
+
+  try {
+    const pcmBase64  = await callGeminiTTS(text, voiceName, geminiKey, model);
+    const wavBlob    = pcmToWavBlob(pcmBase64);
+    const wavDataUrl = await blobToDataUrl(wavBlob);
+
+    // uploadAudio ต้องใช้ Apps Script (Worker อัพโหลดไฟล์เข้า Drive ไม่ได้ — Hybrid Model)
+    const json = await xhrPost(uploadUrl, {
+      action: 'uploadAudio',
+      productId: row.productId,
+      contentId: row.id,
+      audioBase64: wavDataUrl,
+      fileName: 'voiceover-' + Date.now() + '.wav',
+    });
+
+    if (json.error) return { success: false, error: json.error, model };
+    return { success: true, directUrl: json.directUrl, model };
+
+  } catch (err) {
+    const isRateLimit = err.httpStatus === 429 || /429|RESOURCE_EXHAUSTED|exceeded your current quota/i.test(err.message);
+    let retryAfterSec = null;
+    const retryMatch = err.message.match(/retry in\s*([\d.]+)\s*s/i);
+    if (retryMatch) retryAfterSec = Math.ceil(parseFloat(retryMatch[1]));
+    return { success: false, error: err.message, isRateLimit, retryAfterSec, model };
+  }
+}
+
+async function runVoiceBatch() {
+  const rows = getBatchSelectedRows();
+  if (!rows.length)     { toast('⚠️ เลือกอย่างน้อย 1 รายการก่อนครับ'); return; }
+  if (!geminiKey)       { toast('⚠️ ตั้งค่า Gemini API Key ก่อนครับ'); toggleSettings(true); return; }
+  if (!uploadUrl)       { toast('⚠️ ตั้งค่า Apps Script URL (สำหรับอัพโหลด) ก่อนครับ'); toggleSettings(true); return; }
+
+  batchRunning = true;
+  batchStopRequested = false;
+  exhaustedModels.clear();
+
+  $('batch-controls').style.display  = 'none';
+  $('batch-progress').style.display  = 'flex';
+  $('batch-summary').style.display   = 'none';
+  $('batch-item-log').innerHTML      = '';
+
+  $('btn-load-voice-list').disabled  = true;
+
+  const delayMs = parseInt($('batch-delay').value) || 30000;
+  const results = { success: [], failed: [] };
+
+  for (let i = 0; i < rows.length; i++) {
+    if (batchStopRequested) break;
+    const row  = rows[i];
+    const name = row.productName || row.productId || `รายการที่ ${i+1}`;
+
+    updateBatchProgress(i, rows.length, `กำลังทำ ${i+1}/${rows.length}: ${name}`);
+    addBatchLog(name, 'loading', 'กำลัง Generate...');
+
+    let result;
+    const maxRetries = 2;
+    let usedModel = $('tts-model').value;
+    const modelQueue = [usedModel, ...TTS_MODELS.filter(m => m !== usedModel)];
+
+    outer:
+    for (const model of modelQueue) {
+      if (exhaustedModels.has(model)) continue;
+
+      let attempt = 0;
+      while (attempt <= maxRetries) {
+        result = await generateVoiceForRow(row, model);
+        usedModel = model;
+        if (result.success) break outer;
+
+        if (result.isRateLimit && attempt < maxRetries) {
+          const waitSec = result.retryAfterSec ? result.retryAfterSec + 2 : 30 + attempt * 20;
+          addBatchLog(name, 'warn', `[${model}] โดน Limit — รอ ${waitSec} วิ ก่อนลองใหม่ (ครั้งที่ ${attempt+1}/${maxRetries})`);
+          await countdownWait(waitSec, (left) => {
+            updateBatchProgress(i, rows.length, `รอ Limit: ${name} (เหลือ ${left} วิ)`);
+          });
+          attempt++;
+          continue;
+        }
+
+        if (result.isRateLimit) {
+          exhaustedModels.add(model);
+          addBatchLog(name, 'warn', `⛽ "${model}" ยังติด Limit หลัง Retry ครบแล้ว — ลองสลับ Model`);
+          break;
+        }
+        break;
+      }
+      if (result && !result.success && !result.isRateLimit) break;
+    }
+
+    if (result && result.success) {
+      results.success.push(name);
+      updateBatchLog(name, 'ok', `✅ สำเร็จ (${usedModel})`);
+    } else {
+      const errMsg = result ? result.error : 'Model TTS ทุกตัวติด Limit อยู่แล้วตั้งแต่ก่อนเริ่มรายการนี้';
+      results.failed.push({ name, error: errMsg });
+      updateBatchLog(name, 'err', '❌ ' + errMsg);
+
+      if (TTS_MODELS.every(m => exhaustedModels.has(m))) {
+        addBatchLog('⛔ ระบบ', 'err', 'ติด Limit ครบทุก Model TTS แล้ว — หยุด Batch ทันที ลองใหม่ภายหลังครับ');
+        batchStopRequested = true;
+        break;
+      }
+    }
+
+    if (i < rows.length - 1 && !batchStopRequested) {
+      const waitSec = Math.round(delayMs / 1000);
+      await countdownWait(waitSec, (left) => {
+        updateBatchProgress(i, rows.length, `พักก่อนตัวถัดไป... (${left} วิ)`);
+      });
+    }
+  }
+
+  batchRunning = false;
+  $('btn-load-voice-list').disabled = false;
+  showBatchSummary(results, batchStopRequested);
+}
+
+function stopBatch() {
+  batchStopRequested = true;
+  toast('⏹️ กำลังหยุด Batch หลังจบรายการปัจจุบัน...');
+}
+
+function updateBatchProgress(i, total, text) {
+  $('batch-progress-text').textContent = text;
+  $('batch-progress-bar').style.width  = Math.round((i / total) * 100) + '%';
+}
+
+function addBatchLog(name, type, msg) {
+  const colors = { loading:'var(--text2)', ok:'var(--green)', err:'var(--red)', warn:'var(--amber)' };
+  const row = document.createElement('div');
+  row.className = 'batch-log-item';
+  row.dataset.name = name;
+  row.style.color = colors[type];
+  row.textContent = `${name} — ${msg}`;
+  $('batch-item-log').appendChild(row);
+  $('batch-item-log').scrollTop = $('batch-item-log').scrollHeight;
+}
+
+function updateBatchLog(name, type, msg) {
+  const colors = { loading:'var(--text2)', ok:'var(--green)', err:'var(--red)', warn:'var(--amber)' };
+  const rows = $('batch-item-log').querySelectorAll(`[data-name="${CSS.escape(name)}"]`);
+  const row  = rows[rows.length - 1];
+  if (row) {
+    row.style.color = colors[type];
+    row.textContent = `${name} — ${msg}`;
+  } else {
+    addBatchLog(name, type, msg);
+  }
+}
+
+function showBatchSummary(results, wasStopped) {
+  $('batch-progress').style.display = 'none';
+  const el = $('batch-summary');
+  el.style.display = 'block';
+
+  const total = results.success.length + results.failed.length;
+  const type  = results.failed.length === 0 ? 'ok' : (results.success.length === 0 ? 'err' : 'warn');
+  const cls   = { ok:'row-ok', err:'row-err', warn:'row-warn' }[type];
+
+  let html = `<div class="${cls}" style="flex-direction:column;align-items:flex-start;gap:6px;margin:0;">`;
+  html += `<div>${wasStopped ? '⏹️ หยุด Batch แล้ว' : '🏁 Batch เสร็จสิ้น'} — สำเร็จ ${results.success.length}/${total} รายการ</div>`;
+  if (results.failed.length) {
+    html += `<div style="font-size:11px;">รายการที่พลาด:<br>` +
+      results.failed.map(f => `• ${escapeHtml(f.name)}: ${escapeHtml(f.error)}`).join('<br>') +
+      `</div>`;
+  }
+  html += `</div>`;
+  el.innerHTML = html;
+
+  toast(wasStopped ? '⏹️ หยุด Batch แล้ว' : `🏁 Batch เสร็จ — สำเร็จ ${results.success.length}/${total}`);
+  loadVoicePendingList();
+}
+
+function countdownWait(totalSec, onTick) {
+  return new Promise(resolve => {
+    let left = totalSec;
+    onTick(left);
+    const timer = setInterval(() => {
+      left--;
+      if (batchStopRequested) { clearInterval(timer); resolve(); return; }
+      if (left <= 0) { clearInterval(timer); resolve(); return; }
+      onTick(left);
+    }, 1000);
+  });
+}
+
+async function callGeminiTTS(text, voiceName, apiKey, model) {
+  model = model || 'gemini-3.1-flash-tts-preview';
+  const res = await fetchWithTimeout(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text }] }],
+        generationConfig: {
+          responseModalities: ['AUDIO'],
+          speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName } } }
+        }
+      })
+    },
+    75000,
+    'Gemini TTS API'
+  );
+
+  const data = await res.json();
+  if (!res.ok) {
+    const err = new Error(data.error?.message || `HTTP ${res.status}`);
+    err.httpStatus = res.status;
+    throw err;
+  }
+
+  const part = data.candidates?.[0]?.content?.parts?.[0];
+  const inlineData = part?.inlineData || part?.inline_data;
+  if (!inlineData?.data) throw new Error('Gemini ไม่ส่งข้อมูลเสียงกลับมา (ลองเปลี่ยนเสียงหรือบทพากย์)');
+
+  return inlineData.data;
+}
+
+function pcmToWavBlob(base64Pcm, sampleRate = 24000, numChannels = 1, bitsPerSample = 16) {
+  const binary = atob(base64Pcm);
+  const len = binary.length;
+  const pcmBytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) pcmBytes[i] = binary.charCodeAt(i);
+
+  const byteRate   = sampleRate * numChannels * bitsPerSample / 8;
+  const blockAlign = numChannels * bitsPerSample / 8;
+  const dataSize   = pcmBytes.length;
+
+  const buffer = new ArrayBuffer(44 + dataSize);
+  const view   = new DataView(buffer);
+
+  const writeStr = (offset, str) => {
+    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+  };
+
+  writeStr(0, 'RIFF');
+  view.setUint32(4, 36 + dataSize, true);
+  writeStr(8, 'WAVE');
+  writeStr(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bitsPerSample, true);
+  writeStr(36, 'data');
+  view.setUint32(40, dataSize, true);
+
+  new Uint8Array(buffer, 44).set(pcmBytes);
+
+  return new Blob([buffer], { type: 'audio/wav' });
+}
+
+// ═══════════════════════════════════════
+// TAB 3 — เพิ่มสินค้า (Screenshot + OCR แทนการดึงอัตโนมัติ —
+// Shopee บล็อก server-side fetch ด้วย anti-bot แบบ JS-challenge เต็มรูปแบบ
+// ต่อให้ปรับ header/endpoint ยังไงก็ไม่ผ่าน จึงเปลี่ยนมาให้ผู้ใช้แนบรูปเอง
+// + อ่านข้อมูลข้อความจาก Screenshot ด้วย Gemini Vision แทน)
+// ═══════════════════════════════════════
+let spImages       = [];   // Base64 ของรูปสินค้าที่ผู้ใช้แนบเอง
+let shopeeImgRemoved = [];
+let shopeeIntroIndex = null;
+
+function renderShopeeImgGrid() {
+  const grid = $('sp-img-grid');
+  if (!spImages.length) { grid.innerHTML = ''; return; }
+
+  grid.innerHTML = spImages.map((src, i) => `
+    <div class="img-cell ${shopeeImgRemoved[i]?'removed':''} ${shopeeIntroIndex===i?'intro':''}" data-i="${i}">
+      <img src="${src}">
+      <div class="img-btns">
+        <button class="img-btn pin ${shopeeIntroIndex===i?'active':''}" data-act="pin" data-i="${i}" title="ปักเป็น Intro">⭐</button>
+        <button class="img-btn del ${shopeeImgRemoved[i]?'active':''}" data-act="del" data-i="${i}" title="ไม่เอารูปนี้">✕</button>
+      </div>
+      ${shopeeIntroIndex===i ? '<div class="intro-tag">INTRO</div>' : ''}
+    </div>`
+  ).join('');
+
+  grid.querySelectorAll('.img-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const i = parseInt(btn.dataset.i);
+      if (btn.dataset.act === 'pin') {
+        shopeeIntroIndex = (shopeeIntroIndex === i) ? null : i;
+        if (shopeeIntroIndex === i) shopeeImgRemoved[i] = false; // ปักรูปที่ไม่เอาไว้ไม่ได้ — เอากลับมาให้อัตโนมัติ
+      } else {
+        shopeeImgRemoved[i] = !shopeeImgRemoved[i];
+        if (shopeeImgRemoved[i] && shopeeIntroIndex === i) shopeeIntroIndex = null;
+      }
+      renderShopeeImgGrid();
+    });
+  });
+}
+
+async function handlePhotoUpload(files) {
+  if (!files || !files.length) return;
+  const btn = $('btn-add-photos');
+  const origHtml = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span> กำลังแนบรูป...';
+  btn.disabled = true;
+
+  try {
+    for (const file of files) {
+      const dataUrl = await blobToDataUrl(file);
+      spImages.push(dataUrl);
+      shopeeImgRemoved.push(false);
+    }
+    renderShopeeImgGrid();
+    toast(`✅ แนบรูปแล้ว ${files.length} รูป (รวม ${spImages.length} รูป)`);
+  } catch (err) {
+    toast('❌ แนบรูปไม่สำเร็จ: ' + err.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = origHtml;
+}
+
+// เรียก Gemini Vision พร้อม Retry อัตโนมัติเมื่อเจอ "high demand" / model overloaded
+// (ปัญหาฝั่ง Google ชั่วคราว มักหายเองใน 5-15 วิ) — ไม่ใช่ error ที่แก้ด้วยโค้ดได้ตรงๆ
+// แค่รอแล้วลองใหม่ก็มักผ่าน
+async function callGeminiVisionRetry(mime, base64, promptText, btnForStatus) {
+  const model = 'gemini-3.6-flash';
+  const maxRetries = 3;
+  const waitSecs = [4, 8, 15];
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const res = await fetchWithTimeout(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [
+            { inlineData: { mimeType: mime, data: base64 } },
+            { text: promptText }
+          ]}]
+        })
+      },
+      45000, 'Gemini Vision'
+    );
+
+    const data = await res.json();
+    if (res.ok) return data;
+
+    const msg = data.error?.message || `HTTP ${res.status}`;
+    const isOverload = res.status === 503 || /high demand|overloaded|UNAVAILABLE/i.test(msg);
+
+    if (isOverload && attempt < maxRetries) {
+      const wait = waitSecs[attempt] || 15;
+      if (btnForStatus) btnForStatus.innerHTML = `<span class="spin"></span> โมเดลไม่ว่าง กำลังลองใหม่ใน ${wait} วิ... (${attempt+1}/${maxRetries})`;
+      await sleep(wait * 1000);
+      continue;
+    }
+
+    throw new Error(msg);
+  }
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function readProductScreenshot(file) {
+  if (!geminiKey) { toast('⚠️ ตั้งค่า Gemini API Key ก่อนครับ'); toggleSettings(true); return; }
+
+  const btn = $('btn-product-shot');
+  const origHtml = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span> กำลังอ่านภาพ...';
+  btn.disabled = true;
+
+  try {
+    const dataUrl = await blobToDataUrl(file);
+    const base64  = dataUrl.split(',')[1];
+    const mime    = file.type || 'image/jpeg';
+
+    const prompt = 'อ่านภาพหน้าจอนี้ซึ่งเป็นหน้าสินค้าจากแอป Shopee (หรือ Shopee Affiliate ฝั่ง Partner) หาข้อมูลทั้งหมดที่มีในภาพ: (1) name — ชื่อสินค้าเต็ม (2) price — ราคาปกติ/ก่อนลด ถ้ามี ถ้าไม่มีให้ใช้ราคาที่เห็น (3) priceSale — ราคาขายจริงที่แสดง (4) rating — คะแนนดาว เช่น 4.9 (5) sales — จำนวนที่ขายแล้ว (ถ้าเขียนว่า "ขายแล้ว 5 ชิ้น" ให้ตอบ 5, ถ้าเป็น "1พัน" หรือ "1k" ให้แปลงเป็นตัวเลขเต็ม) (6) shopName — ชื่อร้านค้า ถ้ามี (7) commissionRate — ตัวเลข % จาก badge "EXTRA COMM X%" หรือ "ค่าคอมมิชชั่น X%" (8) commissionBaht — ยอดเงินบาทของค่าคอมมิชชั่น ถ้าระบุไว้ชัดเจนในภาพเท่านั้น (9) promoterCount — จำนวนพาร์ทเนอร์ที่โปรโมต จากข้อความ "N พาร์ทเนอร์ที่โปรโมต" หรือ "N+พาร์ทเนอร์ที่โปรโมต" (ถ้าเป็น "10+" ให้ตอบ 10) กรณีหาค่าไหนไม่เจอในภาพให้ตอบ null สำหรับค่านั้น ห้ามเดาหรือคำนวณเอง ตอบกลับเป็น JSON เท่านั้น ห้ามมีข้อความอื่นใดๆ รูปแบบ: {"name": ข้อความหรือ null, "price": ตัวเลขหรือ null, "priceSale": ตัวเลขหรือ null, "rating": ตัวเลขหรือ null, "sales": ตัวเลขหรือ null, "shopName": ข้อความหรือ null, "commissionRate": ตัวเลขหรือ null, "commissionBaht": ตัวเลขหรือ null, "promoterCount": ตัวเลขหรือ null}';
+
+    const data = await callGeminiVisionRetry(mime, base64, prompt, btn);
+
+    let txt = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    txt = txt.replace(/```json/gi, '').replace(/```/g, '').trim();
+    const parsed = JSON.parse(txt);
+
+    const found = [];
+    if (parsed.name        != null) { $('sp-name').value = parsed.name; found.push('ชื่อ'); }
+    if (parsed.price       != null) { $('sp-price').value = parsed.price; found.push('ราคา'); }
+    if (parsed.priceSale   != null) { $('sp-price-sale').value = parsed.priceSale; found.push('ราคาขาย'); }
+    if (parsed.rating      != null) { $('sp-rating').value = parsed.rating; found.push('rating'); }
+    if (parsed.sales       != null) { $('sp-sales').value = parsed.sales; found.push('ยอดขาย'); }
+    if (parsed.shopName    != null) { $('sp-shop').value = parsed.shopName; found.push('ร้านค้า'); }
+    if (parsed.commissionRate != null) { $('sp-comm-rate').value = parsed.commissionRate; found.push(`คอม ${parsed.commissionRate}%`); }
+
+    if (parsed.commissionBaht != null) {
+      $('sp-comm-baht').value = parsed.commissionBaht;
+      found.push(`฿${parsed.commissionBaht}`);
+    } else if (parsed.commissionRate != null) {
+      // หน้า Shopee Affiliate ส่วนใหญ่โชว์แค่ % ไม่มียอดบาท — คำนวณประมาณให้จากราคา
+      const priceForCalc = parseFloat(parsed.priceSale) || parseFloat(parsed.price) || 0;
+      if (priceForCalc > 0) {
+        const estBaht = Math.round(priceForCalc * parsed.commissionRate) / 100;
+        $('sp-comm-baht').value = estBaht;
+        found.push(`≈฿${estBaht}`);
+      }
+    }
+
+    if (parsed.promoterCount != null) { $('sp-partner-count').value = parsed.promoterCount; found.push(`คู่แข่ง ${parsed.promoterCount}`); }
+
+    if (found.length) {
+      toast('✅ อ่านได้: ' + found.join(' · ') + ' — ตรวจสอบอีกครั้งก่อนบันทึก', 4500);
+    } else {
+      toast('⚠️ ไม่พบข้อมูลในภาพนี้ ลองภาพอื่นหรือกรอกเองครับ');
+    }
+
+  } catch (err) {
+    toast('❌ อ่านภาพไม่สำเร็จ (ลองใหม่ให้แล้วหลายครั้ง): ' + err.message, 4500);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = origHtml;
+}
+
+async function saveShopeeProduct() {
+  if (!uploadUrl) { toast('⚠️ ตั้งค่า Apps Script URL (สำหรับอัพโหลด) ก่อนครับ'); toggleSettings(true); return; }
+
+  const name = $('sp-name').value.trim();
+  if (!name) { toast('⚠️ กรุณาระบุชื่อสินค้า'); return; }
+
+  const keptIdx = spImages.map((_, i) => i).filter(i => !shopeeImgRemoved[i]);
+  if (!keptIdx.length) { toast('⚠️ แนบรูปสินค้าอย่างน้อย 1 รูปก่อนครับ'); return; }
+
+  const btn = $('btn-sp-save');
+  const origHtml = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span> กำลังบันทึก...';
+  btn.disabled = true;
+
+  try {
+    const images = keptIdx.map(i => spImages[i]);
+
+    let introImageFile = '';
+    if (shopeeIntroIndex !== null && !shopeeImgRemoved[shopeeIntroIndex]) {
+      const pos = keptIdx.indexOf(shopeeIntroIndex);
+      if (pos >= 0) introImageFile = 'product-' + (pos + 1) + '.jpg';
+    }
+
+    const price     = parseFloat($('sp-price').value) || 0;
+    const priceSale = parseFloat($('sp-price-sale').value) || 0;
+    const discount  = (price > priceSale && price > 0) ? Math.round((1 - priceSale / price) * 100) : 0;
+    const link      = $('sp-link-input').value.trim();
+
+    const payload = {
+      action: 'saveProduct',
+      name,
+      price,
+      priceSale,
+      discount,
+      commissionRate: parseFloat($('sp-comm-rate').value) || 0,
+      commissionBaht: parseFloat($('sp-comm-baht').value) || 0,
+      affiliateLink: link,
+      productUrl: link,
+      shopName: $('sp-shop').value.trim(),
+      shopType: 'normal',
+      rating: parseFloat($('sp-rating').value) || 0,
+      ratingCount: 0,
+      sales: parseInt($('sp-sales').value) || 0,
+      description: '',
+      images,
+      introImageFile,
+      promoterCount: parseInt($('sp-partner-count').value) || 0,
+    };
+
+    const json = await xhrPost(uploadUrl, payload);
+    if (json.error) throw new Error(json.error);
+
+    toast('✅ บันทึกสินค้าแล้ว — เข้าคิวสร้างเนื้อหาอัตโนมัติ');
+    resetShopeeForm();
+
+  } catch (err) {
+    toast('❌ บันทึกไม่สำเร็จ: ' + err.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = origHtml;
+}
+
+function resetShopeeForm() {
+  spImages = [];
+  shopeeImgRemoved = [];
+  shopeeIntroIndex = null;
+  ['sp-name','sp-price','sp-price-sale','sp-rating','sp-sales','sp-shop',
+   'sp-comm-rate','sp-comm-baht','sp-partner-count','sp-link-input'].forEach(id => $(id).value = '');
+  renderShopeeImgGrid();
+}
+
 function toast(msg, d = 2500) {
-  const el = document.getElementById('toast');
+  const el = $('toast');
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(window._t);
