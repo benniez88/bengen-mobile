@@ -219,7 +219,6 @@ body.hide-nav .bottom-nav{display:none;}
   background:var(--bg4);color:var(--text2);}
 .ap-seg-btn.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 6px rgba(0,0,0,.18);}
 .ap-seg-btn.active .ap-seg-n{background:linear-gradient(135deg,var(--p),var(--pn));color:#fff;}
-.ap-seg-btn.fail.has .ap-seg-n{background:rgba(239,68,68,.18);color:var(--red);}
 
 .ap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:30px;}
 .ap-toolbar-text{font-size:12.5px;color:var(--text2);}
@@ -332,6 +331,118 @@ body.ap-lock{overflow:hidden;}
 :root[data-theme="light"] #tab-autopost .row-err,:root[data-theme="light"] .ap-sheet .row-err{color:#b91c1c;}
 :root[data-theme="light"] #tab-autopost .row-warn,:root[data-theme="light"] .ap-sheet .row-warn{color:#92400e;}
 :root[data-theme="light"] .ap-backdrop{background:rgba(30,22,48,.42);}
+
+/* ── AUTOPOST v2: host status bar ── */
+.ap-hostbar{position:sticky;top:0;z-index:15;display:flex;align-items:center;gap:8px;
+  padding:6px 10px 6px 14px;background:var(--bg2);border-bottom:1px solid var(--border);}
+.ap-hostbar-main{flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:none;border:none;
+  color:var(--text);font-family:var(--font);text-align:left;cursor:pointer;padding:6px 0;min-height:44px;}
+.ap-host-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;}
+.ap-host-l1{font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ap-host-l2{font-size:11.5px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ap-host-chev{color:var(--text3);font-size:18px;flex-shrink:0;}
+.ap-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:var(--text3);
+  box-shadow:0 0 0 3px rgba(128,110,160,.18);}
+.ap-dot.green{background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.22);}
+.ap-dot.pn{background:var(--pn);box-shadow:0 0 0 3px rgba(200,125,255,.25);animation:apPulse 1.4s ease-in-out infinite;}
+.ap-dot.amber{background:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.22);}
+.ap-dot.red{background:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.22);}
+@keyframes apPulse{50%{box-shadow:0 0 0 6px rgba(200,125,255,.08);}}
+.ap-host-l1 .spin{width:11px;height:11px;border-width:2px;vertical-align:-1px;margin-right:4px;}
+
+/* switch */
+.ap-sw{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;
+  font-family:var(--font);cursor:pointer;padding:4px 2px;min-width:58px;min-height:44px;justify-content:center;}
+.ap-sw-track{width:44px;height:26px;border-radius:999px;background:var(--bg4);border:1px solid var(--border2);
+  position:relative;transition:background .2s,border-color .2s;}
+.ap-sw-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.35);transition:left .2s;display:flex;align-items:center;justify-content:center;}
+.ap-sw-knob .spin{width:12px;height:12px;border-width:2px;border-color:#ddd;border-top-color:var(--p);}
+.ap-sw.on .ap-sw-track{background:var(--green);border-color:var(--green);}
+.ap-sw.on .ap-sw-knob{left:20px;}
+.ap-sw-lb{font-size:10px;font-weight:800;color:var(--text2);white-space:nowrap;}
+.ap-sw.on .ap-sw-lb{color:var(--green);}
+.ap-sw.pending .ap-sw-lb{color:var(--pn);}
+.ap-sw:disabled{opacity:.45;cursor:not-allowed;}
+
+/* stats v2 */
+.ap-stat-btn{font-family:var(--font);text-align:left;color:inherit;cursor:pointer;}
+.ap-stat-btn:active{background:var(--bg3);}
+.ap-stat-btn.alert{border-color:rgba(239,68,68,.55);background:rgba(239,68,68,.08);}
+.ap-stat-of{font-size:13px;font-weight:700;color:var(--text3);}
+.ap-seg-btn.att.has .ap-seg-n{background:var(--red);color:#fff;}
+
+/* scheduled / attention badges */
+.b-posting{background:rgba(200,125,255,.16);color:var(--pn);}
+.b-retry{background:rgba(245,158,11,.16);color:var(--amber);}
+.b-check{background:rgba(245,158,11,.16);color:var(--amber);}
+.b-over{background:rgba(255,110,199,.15);color:var(--pk);}
+.b-posting .spin{width:9px;height:9px;border-width:1.5px;vertical-align:-1px;margin-right:3px;}
+.ap-card-note{font-size:11.5px;line-height:1.45;color:var(--text2);}
+.ap-card-note.warn{color:var(--amber);font-weight:700;}
+.ap-card-note.err{color:var(--red);}
+
+.ap-card.ap-att{flex-wrap:wrap;cursor:default;align-items:flex-start;}
+.ap-card.ap-att:active{border-color:var(--border);background:var(--bg2);}
+.ap-card.ap-att.k-needs_check{border-color:rgba(245,158,11,.5);}
+.ap-card.ap-att.k-failed{border-color:rgba(239,68,68,.5);}
+.ap-card.ap-att.k-overdue{border-color:rgba(255,110,199,.45);}
+.ap-att-msg{flex-basis:100%;font-size:12.5px;line-height:1.6;padding:10px 12px;border-radius:10px;
+  background:var(--bg3);color:var(--text2);}
+.ap-att-msg b{color:var(--text);}
+.ap-att-err{display:block;margin-top:4px;color:var(--red);font-size:12px;word-break:break-word;}
+.ap-actions{flex-basis:100%;display:flex;gap:8px;}
+.ap-actions .btn{flex:1;width:auto;min-height:42px;padding:9px 8px;font-size:13px;}
+.ap-actions .btn.ap-min{flex:0 0 auto;padding:9px 14px;}
+
+/* host sheet */
+.ap-hero{display:flex;gap:12px;align-items:center;padding:14px;border-radius:14px;background:var(--bg2);
+  border:1px solid var(--border);}
+.ap-hero .ap-dot{width:14px;height:14px;}
+.ap-hero-t{font-size:16px;font-weight:800;line-height:1.35;}
+.ap-hero-s{font-size:12.5px;color:var(--text2);line-height:1.5;word-break:break-word;}
+.ap-hero.red{border-color:rgba(239,68,68,.5);}
+.ap-hero.amber{border-color:rgba(245,158,11,.5);}
+.ap-hero.pn{border-color:rgba(200,125,255,.5);}
+.ap-hero.green{border-color:rgba(16,185,129,.45);}
+.ap-cl{display:flex;flex-direction:column;}
+.ap-cl-row{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:10px 0;border-bottom:1px solid var(--border);}
+.ap-cl-row:last-child{border-bottom:none;padding-bottom:2px;}
+.ap-cl-ic{font-size:14px;line-height:1.5;text-align:center;}
+.ap-cl-lb{font-size:13.5px;font-weight:700;display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
+.ap-cl-val{font-size:12px;color:var(--text2);font-weight:600;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ap-cl-msg{font-size:12px;line-height:1.55;margin-top:3px;color:var(--text2);white-space:pre-wrap;word-break:break-word;}
+.ap-cl-row.bad .ap-cl-msg{color:var(--red);}
+.ap-cl-row.warn .ap-cl-msg{color:var(--amber);}
+.ap-cl.stale .ap-cl-row:not(.online){opacity:.5;}
+.ap-cl-stale{font-size:11.5px;color:var(--text3);margin:-4px 0 6px;}
+.ap-q{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.ap-q .stat-box{padding:10px 12px;}
+.ap-q .stat-value{font-size:17px;}
+.ap-q .ap-q-wide{grid-column:1 / -1;}
+.ap-meta{font-size:11px;color:var(--text3);text-align:center;line-height:1.7;word-break:break-all;}
+.ap-checking{display:flex;align-items:center;gap:10px;}
+.ap-checking .spin{width:18px;height:18px;}
+
+/* gate (ตรวจก่อนตั้งเวลา / confirm) — ซ้อนบน sheet อื่น */
+.ap-backdrop.top{z-index:52;}
+.ap-sheet.top{z-index:53;max-height:84vh;max-height:84dvh;}
+.ap-gate-big{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 8px 4px;text-align:center;}
+.ap-gate-ic{font-size:40px;line-height:1.2;}
+.ap-gate-ic .spin{width:38px;height:38px;border-width:4px;}
+.ap-gate-t{font-size:17px;font-weight:800;}
+.ap-gate-s{font-size:13px;color:var(--text2);line-height:1.6;}
+.ap-issues{display:flex;flex-direction:column;}
+.ap-issue{display:flex;gap:8px;font-size:13px;line-height:1.55;padding:9px 0;border-bottom:1px dashed var(--border);
+  color:var(--text);word-break:break-word;}
+.ap-issue:last-child{border-bottom:none;}
+.ap-issue.bad{color:var(--red);}
+.ap-issue.warn{color:var(--amber);}
+.ap-issue-ic{flex-shrink:0;width:18px;text-align:center;}
+.ap-gate-opt{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;font-weight:700;color:var(--text);
+  margin:0;cursor:pointer;line-height:1.5;}
+.ap-gate-opt input{width:20px;height:20px;accent-color:var(--pn);flex-shrink:0;margin-top:1px;}
+.ap-gate-opt span small{display:block;font-weight:600;font-size:11.5px;color:var(--text2);}
 
 /* ── TOAST ── */
 #toast{position:fixed;bottom:76px;left:16px;right:16px;background:var(--bg2);
@@ -650,6 +761,9 @@ body.ap-lock{overflow:hidden;}
 
   <!-- ═══════════ TAB 4: AutoPost ═══════════ -->
   <div class="tab-page" id="tab-autopost">
+    <!-- แถบสถานะเครื่องโพสต์ (ติดบนสุด) — render โดย apRenderHostBar() -->
+    <div class="ap-hostbar" id="ap-hostbar"></div>
+
     <div class="tab-body">
       <div class="ap-stats">
         <div class="stat-box">
@@ -660,17 +774,17 @@ body.ap-lock{overflow:hidden;}
           <div class="stat-label">✅ โพสต์วันนี้</div>
           <div class="stat-value green" id="ap-stat-today">–</div>
         </div>
-        <div class="stat-box">
-          <div class="stat-label">⚠️ ล้มเหลว</div>
-          <div class="stat-value red" id="ap-stat-fail">–</div>
-        </div>
+        <button class="stat-box ap-stat-btn" id="ap-stat-att-btn">
+          <div class="stat-label">🛠️ ต้องดูแล</div>
+          <div class="stat-value" id="ap-stat-att">–</div>
+        </button>
       </div>
 
       <div class="ap-seg" id="ap-seg" role="tablist">
         <button class="ap-seg-btn" data-group="ready" role="tab">พร้อมตั้งเวลา<span class="ap-seg-n" id="ap-n-ready">0</span></button>
         <button class="ap-seg-btn" data-group="scheduled" role="tab">ตั้งเวลาแล้ว<span class="ap-seg-n" id="ap-n-scheduled">0</span></button>
+        <button class="ap-seg-btn att" data-group="attention" role="tab">ต้องดูแล<span class="ap-seg-n" id="ap-n-attention">0</span></button>
         <button class="ap-seg-btn" data-group="posted" role="tab">โพสต์แล้ว<span class="ap-seg-n" id="ap-n-posted">0</span></button>
-        <button class="ap-seg-btn fail" data-group="failed" role="tab">ล้มเหลว<span class="ap-seg-n" id="ap-n-failed">0</span></button>
       </div>
 
       <div id="ap-status"></div>
@@ -775,6 +889,31 @@ body.ap-lock{overflow:hidden;}
     <button class="btn btn-red btn-sm" id="ap-sp-stop" style="display:none;">⏹️ หยุด</button>
     <button class="btn btn-primary" id="ap-sp-go">🗓️ ยืนยันตั้งเวลา</button>
   </div>
+</div>
+
+<!-- 4.1 สถานะเครื่องโพสต์ -->
+<div class="ap-sheet" id="ap-sheet-host" role="dialog" aria-modal="true" aria-labelledby="ap-host-title">
+  <div class="ap-grab"></div>
+  <div class="ap-sheet-hdr">
+    <div class="ap-sheet-title" id="ap-host-title">🖥️ สถานะเครื่องโพสต์</div>
+    <button class="icon-btn" data-ap-close aria-label="ปิด">✕</button>
+  </div>
+  <div class="ap-sheet-body" id="ap-host-body"></div>
+  <div class="ap-sheet-foot">
+    <button class="btn btn-primary" id="ap-host-check">🔍 ตรวจตอนนี้</button>
+  </div>
+</div>
+
+<!-- 4.2/4.4 ตรวจก่อนตั้งเวลา + กล่องยืนยัน (ซ้อนบน sheet อื่น) -->
+<div class="ap-backdrop top" id="ap-backdrop-top"></div>
+<div class="ap-sheet top" id="ap-sheet-gate" role="dialog" aria-modal="true" aria-labelledby="ap-gate-title">
+  <div class="ap-grab"></div>
+  <div class="ap-sheet-hdr">
+    <div class="ap-sheet-title" id="ap-gate-title">🔍 ตรวจเครื่อง</div>
+    <button class="icon-btn" id="ap-gate-x" aria-label="ปิด">✕</button>
+  </div>
+  <div class="ap-sheet-body" id="ap-gate-body"></div>
+  <div class="ap-sheet-foot" id="ap-gate-foot"></div>
 </div>
 
 <div id="toast"></div>
@@ -936,7 +1075,7 @@ function switchTab(tab) {
   $('hdr-title').textContent = titles[tab];
   window.scrollTo(0, 0);
   if (tab === 'autopost') apOnShow();
-  else if (apSelectMode) apExitSelect(true);
+  else apOnHide();
 }
 
 function onRefreshClick() {
@@ -1985,9 +2124,10 @@ function resetShopeeForm() {
 }
 
 // ═══════════════════════════════════════
-// TAB 4 — AUTOPOST (ตั้งเวลาโพสต์ Shopee Video)
-// หน้าเว็บไม่ได้โพสต์เอง — แค่เขียน scheduledAt/postMode ลง Sheet ผ่าน Worker
-// สคริปต์ Python บนคอมจะหยิบคลิปที่ถึงเวลาไปโพสต์ทุก 15–30 นาที
+// TAB 4 — AUTOPOST v2 (ตั้งเวลาโพสต์ Shopee Video + สถานะเครื่องโพสต์)
+// หน้าเว็บไม่ได้โพสต์เอง — เขียนค่าลง Sheet ผ่าน Worker แล้ว Agent (bengen_agent.py) บนคอมมาอ่าน
+//   Content          : scheduledAt / postMode / postStartedAt / postAttempts / postError
+//   AutoPostStatus   : แถวเดียว id="host" → status(JSON) / checkRequestedAt / postingPaused
 // ═══════════════════════════════════════
 const AP_CAP_MAX   = 150;
 const AP_TH_OFFSET = 7 * 3600 * 1000;   // Asia/Bangkok = UTC+7 (ไม่มี DST)
@@ -1996,20 +2136,46 @@ const AP_PAST_GRACE_MS = 5 * 60 * 1000; // ห้ามตั้งย้อน�
 const AP_POSTED_LIMIT  = 30;
 const AP_WD  = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
 const AP_MON = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-const AP_GROUPS = ['ready','scheduled','posted','failed'];
+const AP_GROUPS = ['ready','scheduled','attention','posted'];
+const AP_CFG = {
+  hostPollMs: 20000,      // อ่าน AutoPostStatus ขณะเปิดแท็บ
+  contentPollMs: 60000,   // อ่าน Content ใหม่ขณะ state=posting
+  checkPollMs: 3000,      // poll ระหว่างรอ "ตรวจตอนนี้" / สวิตช์
+  checkTimeoutMs: 60000,
+  pauseTimeoutMs: 45000,
+  offlineMs: 120000,      // lastSeen เก่ากว่านี้ = ออฟไลน์
+  soonMs: 30 * 60000      // เตือนบนการ์ดที่จะถึงเวลาภายใน 30 นาที
+};
+const AP_DEFAULT_LIMITS = { dailyLimit: 70, overdueMaxMinutes: 120, retryMax: 2, retryDelayMinutes: 10 };
+const AP_EXTRA_FIELDS = ['postStartedAt', 'postAttempts', 'postError'];
 
-let apItems    = [];          // [{ content, product, group, check }]
+let apAll      = [];          // ทุกแถว Content: { content, product, check }
+let apItems    = [];          // แถวที่อยู่ในกลุ่ม: + { group, kind, due, attempts }
 let apLoaded   = false;
 let apLoading  = false;
+let apContentLoadedAt = 0;
 let apGroup    = 'ready';
 let apSelectMode = false;
 let apSelected = new Set();   // content ids (string)
 let apOne      = null;        // { item, pick:{mode, date} }
 let apSpread   = { pick: null, stepMin: 120, running: false, stop: false };
-let apTicker   = null;
+let apHostRow  = null;        // แถว AutoPostStatus ดิบ
+let apHost     = null;        // status JSON ที่ parse แล้ว (null = ยังไม่เคยมี Agent)
+let apHostLoadedAt = 0;
+let apHostTimer = null;
+let apCheckRun = null;        // { reqId, cancelled, promise }
+let apLastCheck = null;       // { result, at }
+let apPauseBusy = false;
+let apPauseSentAt = 0;
+let apListSig  = '';
+let apListRenderedAt = 0;
+let apGateResolve = null;
+let apGateToken = 0;
 
 function apLsGet(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
 function apLsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function apBool(v) { return v === true || String(v == null ? '' : v).trim().toLowerCase() === 'true'; }
+function apHas(v) { return v !== undefined && v !== null && String(v).trim() !== ''; }
 
 // ── เวลา (คิดเป็นเวลาไทยเสมอ ไม่ขึ้นกับ timezone ของเครื่อง) ──
 function apDate(v) {
@@ -2045,15 +2211,17 @@ function apFmtDay(date) {
   const base = `${AP_WD[t.wd]} ${t.d} ${AP_MON[t.m]}`;
   return diff === 0 ? 'วันนี้ · ' + base : diff === 1 ? 'พรุ่งนี้ · ' + base : base;
 }
+function apDur(ms) {
+  ms = Math.abs(ms);
+  if (ms < 60000) return Math.max(1, Math.round(ms / 1000)) + ' วิ';
+  if (ms < 3600000) return Math.round(ms / 60000) + ' นาที';
+  if (ms < AP_DAY_MS) return Math.round(ms / 3600000) + ' ชม.';
+  return Math.round(ms / AP_DAY_MS) + ' วัน';
+}
 function apRel(date) {
   const ms = date.getTime() - Date.now();
-  const abs = Math.abs(ms), past = ms < 0;
-  let s;
-  if (abs < 60000) return past ? 'เมื่อสักครู่' : 'ตอนนี้';
-  if (abs < 3600000) s = Math.round(abs / 60000) + ' นาที';
-  else if (abs < AP_DAY_MS) s = Math.round(abs / 3600000) + ' ชม.';
-  else s = Math.round(abs / AP_DAY_MS) + ' วัน';
-  return past ? s + 'ที่แล้ว' : 'อีก ' + s;
+  if (Math.abs(ms) < 5000) return ms < 0 ? 'เมื่อสักครู่' : 'ตอนนี้';
+  return ms < 0 ? apDur(ms) + 'ที่แล้ว' : 'อีก ' + apDur(ms);
 }
 // <input type="datetime-local"> ↔ Date (ตีความเป็นเวลาไทยเสมอ)
 function apToInput(date) {
@@ -2078,7 +2246,7 @@ function apQuickPresets() {
   ];
 }
 
-// ── ตรวจความพร้อม (ข้อ 7) ──
+// ── ตรวจความพร้อมของแคปชั่น/ลิงก์ ──
 function apCaption(c) { return String(c.caption || c.hook || ''); }
 // อนุญาต: ASCII, ไทย, emoji, เครื่องหมายทั่วไป — อย่างอื่น (ฮีบรู/เกาหลี/เขมร/รัสเซีย/ลาว ฯลฯ) = ผิด
 const AP_OK_CHAR = /[\u0000-\u007F -¿×÷฀-๿ -⁯₠-⃏℀-⅏←-⇿⌀-⏿①-⓿─-➿⤀-⥿⬀-⯿〰〽㊗㊙︎️⃣\u{1F000}-\u{1FAFF}\u{E0020}-\u{E007F}]/u;
@@ -2113,20 +2281,371 @@ function apCaptionHtml(cap) {
   return out || '<span style="color:var(--text3);">— ไม่มีแคปชั่น —</span>';
 }
 
-// ── จัดกลุ่ม (ข้อ 6) ──
-function apClassify(c) {
-  if (c.postedAt) return 'posted';
-  if (c.postError) return 'failed';
-  if (c.postMode === 'scheduled' && c.scheduledAt) return 'scheduled';
-  if (c.videoStatus === 'done' && c.mp4DriveUrl && !c.scheduledAt) return 'ready';
-  return null;
+// ═══════════════════════════════════════
+// สถานะเครื่องโพสต์ (AutoPostStatus)
+// ═══════════════════════════════════════
+function apLimits() {
+  const L = Object.assign({}, AP_DEFAULT_LIMITS);
+  const src = apHost && apHost.limits;
+  if (src && typeof src === 'object') {
+    Object.keys(src).forEach(k => { const n = Number(src[k]); if (apHas(src[k]) && !isNaN(n)) L[k] = n; });
+  }
+  return L;
 }
+function apSetHostRows(rows) {
+  const row = (rows || []).find(r => String(r.id) === 'host') || (rows || [])[0] || null;
+  apHostRow = row;
+  let st = null;
+  if (row && row.status) {
+    try {
+      st = typeof row.status === 'string' ? JSON.parse(row.status) : row.status;
+      if (!st || typeof st !== 'object' || Array.isArray(st)) st = null;
+    } catch (e) { st = null; }
+  }
+  apHost = st;
+  apHostLoadedAt = Date.now();
+}
+async function apLoadHost() {
+  if (!appsUrl) return false;
+  try {
+    const r = await xhrGet(`${appsUrl}?action=read&sheet=AutoPostStatus&_=${Date.now()}`);
+    if (r && r.error) throw new Error(r.error);
+    apSetHostRows((r && r.rows) || []);
+    return true;
+  } catch (e) {
+    console.warn('AutoPostStatus read error:', e);
+    return false;
+  }
+}
+async function apWriteHost(field, value) {
+  const res = await xhrPost(appsUrl, { action: 'updateStatus', sheet: 'AutoPostStatus', id: 'host', field, value });
+  if (!res || res.error || res.ok === false) throw new Error((res && res.error) || `บันทึก ${field} ไม่สำเร็จ`);
+  return res;
+}
+function apProblems(filter) {
+  const list = (apHost && Array.isArray(apHost.problems)) ? apHost.problems.filter(p => p && typeof p === 'object') : [];
+  if (filter === 'blocking') return list.filter(p => p.level === 'error' || p.level === 'wait');
+  return list;
+}
+function apIsOffline() {
+  if (!apHost) return true;
+  const seen = apDate(apHost.lastSeen);
+  return !seen || Date.now() - seen.getTime() > AP_CFG.offlineMs;
+}
+function apFindAny(id) { return apAll.find(r => String(r.content.id) === String(id)); }
+function apItemName(it) { return (it && (it.product.name || it.content.productName)) || 'ไม่ทราบชื่อ'; }
+
+// ค่าหยุด/เปิดโพสต์: ค่าจริงมาจาก status (Agent) — ค่าในคอลัมน์ = คำสั่งล่าสุดจากเว็บ
+function apPauseState() {
+  const statusPaused = apHost && apHas(apHost.postingPaused) ? apBool(apHost.postingPaused) : null;
+  const rowPaused = apHostRow && apHas(apHostRow.postingPaused) ? apBool(apHostRow.postingPaused) : null;
+  const paused = statusPaused !== null ? statusPaused : (rowPaused !== null ? rowPaused : false);
+  const pending = rowPaused !== null && statusPaused !== null && rowPaused !== statusPaused;
+  const lockedOnHost = !!apHost && apHost.postingEnabled === false;
+  const stale = pending && apPauseSentAt && Date.now() - apPauseSentAt > AP_CFG.pauseTimeoutMs;
+  return { paused, pending, want: rowPaused, lockedOnHost, stale, busy: apPauseBusy };
+}
+
+// สรุปสถานะเครื่อง 1 บรรทัด — offline สำคัญกว่า state เสมอ
+function apHostView() {
+  const h = apHost;
+  if (!h) return { kind: 'none', color: 'gray', title: 'ยังไม่พบเครื่องโพสต์', sub: 'เปิด bengen_agent.py บนคอม' };
+  const seen = apDate(h.lastSeen);
+  if (apIsOffline()) return { kind: 'offline', color: 'red', title: 'คอมออฟไลน์',
+    sub: seen ? 'เห็นล่าสุด ' + apRel(seen) : 'ยังไม่เคยส่งสัญญาณ' };
+  const ph = h.phone || {};
+  const batt = apHas(ph.battery) ? ` · แบต ${ph.battery}%${ph.charging ? ' ⚡' : ''}` : '';
+  const chk = apDate(h.lastCheckAt) || seen;
+  const ps = apPauseState();
+  if (h.state === 'posting') {
+    const it = apFindAny(h.currentContentId);
+    return { kind: 'posting', color: 'pn', spin: true, title: 'กำลังโพสต์',
+      sub: it ? apItemName(it) : (apHas(h.currentContentId) ? 'คลิป #' + h.currentContentId : 'กำลังโพสต์คลิป') };
+  }
+  if (h.state === 'waiting') {
+    const p = apProblems('blocking')[0];
+    return { kind: 'waiting', color: 'amber', title: 'รอเครื่อง', sub: p ? String(p.msg || p.code) : 'เครื่องยังไม่พร้อมโพสต์' };
+  }
+  if (h.state === 'stopped' || h.postingEnabled === false || (ps.paused && h.state !== 'starting')) {
+    return { kind: 'stopped', color: 'gray', title: 'หยุดโพสต์อัตโนมัติอยู่',
+      sub: h.postingEnabled === false ? 'ปิดไว้ที่ config.yaml บนคอม' : 'คลิปที่ถึงเวลาจะรอจนกว่าจะเปิดสวิตช์' };
+  }
+  if (h.state === 'starting') return { kind: 'starting', color: 'gray', title: 'Agent กำลังเริ่มทำงาน…', sub: 'เห็นล่าสุด ' + apRel(seen) };
+  return { kind: 'idle', color: 'green', title: 'พร้อมโพสต์', sub: `เช็คล่าสุด ${chk ? apRel(chk) : '—'}${batt}` };
+}
+
+// ── แถบสถานะเครื่อง (4.1) ──
+function apRenderHostBar() {
+  const el = $('ap-hostbar');
+  if (!el) return;
+  const hv = apHostView();
+  const ps = apPauseState();
+  let l2 = hv.sub;
+  if (ps.busy) l2 = 'กำลังส่งคำสั่ง…';
+  else if (ps.pending && (hv.kind === 'offline' || hv.kind === 'none')) l2 = (ps.want ? 'สั่งหยุดไว้' : 'สั่งเปิดไว้') + ' · จะมีผลเมื่อคอมกลับมา';
+  else if (ps.pending) l2 = ps.stale ? '⚠️ คอมยังไม่รับคำสั่ง' : 'รอคอมรับคำสั่ง…';
+
+  const on = !ps.paused && !ps.lockedOnHost;
+  const swLabel = ps.lockedOnHost ? 'ปิดที่คอม' : (ps.busy || ps.pending) ? 'กำลังส่ง…' : on ? 'อัตโนมัติ' : 'หยุดอยู่';
+  el.innerHTML = `
+    <button class="ap-hostbar-main" id="ap-host-open" aria-label="ดูสถานะเครื่องโพสต์">
+      <span class="ap-dot ${hv.color}"></span>
+      <span class="ap-host-txt">
+        <span class="ap-host-l1">${hv.spin ? '<span class="spin"></span>' : ''}${escapeHtml(hv.title)}${hv.kind === 'posting' ? ': ' + escapeHtml(hv.sub) : ''}</span>
+        <span class="ap-host-l2">${escapeHtml(hv.kind === 'posting' && !ps.busy && !ps.pending ? 'หยุดสวิตช์ได้ จะหยุดหลังคลิปนี้เสร็จ' : l2)}</span>
+      </span>
+      <span class="ap-host-chev">›</span>
+    </button>
+    <button class="ap-sw${on ? ' on' : ''}${ps.busy || ps.pending ? ' pending' : ''}" id="ap-sw" role="switch"
+      aria-checked="${on}" aria-label="โพสต์อัตโนมัติ" ${ps.lockedOnHost || ps.busy ? 'disabled' : ''}>
+      <span class="ap-sw-track"><span class="ap-sw-knob">${ps.busy ? '<span class="spin"></span>' : ''}</span></span>
+      <span class="ap-sw-lb">${swLabel}</span>
+    </button>`;
+}
+
+// checklist ของเครื่อง (ใช้ใน sheet สถานะ + ผลตรวจ)
+const AP_CL_ROWS = [
+  { key: 'phone',   label: 'ต่อมือถือ',   codes: ['no_device', 'unauthorized', 'u2', 'adb'] },
+  { key: 'lock',    label: 'จอไม่ล็อก',   codes: ['locked', 'screen_off'] },
+  { key: 'awake',   label: 'Stay awake',  codes: ['stay_awake'] },
+  { key: 'battery', label: 'แบตเตอรี่',    codes: ['battery'] },
+  { key: 'shopee',  label: 'Shopee',      codes: ['shopee_missing', 'shopee_version'] },
+];
+function apChecklistHtml() {
+  const h = apHost;
+  const off = apIsOffline();
+  const probs = apProblems();
+  const lvOf = p => p.level === 'error' ? 'bad' : 'warn';
+  const ic = { ok: '✅', warn: '⚠️', bad: '❌', na: '➖' };
+  const row = (cls, icon, label, val, msg) => `
+    <div class="ap-cl-row ${cls}"><span class="ap-cl-ic">${icon}</span>
+      <div><div class="ap-cl-lb"><span>${label}</span><span class="ap-cl-val">${escapeHtml(val || '')}</span></div>
+      ${msg ? `<div class="ap-cl-msg">${escapeHtml(msg)}</div>` : ''}</div></div>`;
+
+  if (!h) return `<div class="ap-cl">${row('bad online', ic.bad, 'คอมออนไลน์', 'ไม่พบ', 'ยังไม่เคยได้รับสถานะจาก Agent — เปิด bengen_agent.py บนคอมที่ต่อมือถือไว้')}</div>`;
+
+  const seen = apDate(h.lastSeen);
+  const ph = h.phone || {};
+  let html = row(off ? 'bad online' : 'ok online', off ? ic.bad : ic.ok, 'คอมออนไลน์',
+    seen ? 'เห็นล่าสุด ' + apRel(seen) : '—',
+    off ? 'คอมปิดอยู่ หรือ Agent ไม่ได้รัน — คลิปที่ถึงเวลาจะยังไม่ถูกโพสต์' : '');
+
+  const used = new Set();
+  AP_CL_ROWS.forEach(r => {
+    const ps = probs.filter(p => r.codes.includes(p.code));
+    ps.forEach(p => used.add(p));
+    let lv = ps.length ? (ps.some(p => p.level === 'error') ? 'bad' : 'warn') : 'ok';
+    let val = '', msg = ps.map(p => p.msg || p.code).join('\n');
+    if (r.key === 'phone') {
+      val = ph.connected ? [ph.model, ph.serial].filter(apHas).join(' · ') : 'ไม่ได้ต่อ';
+      if (!ph.connected && lv === 'ok') { lv = 'bad'; msg = msg || 'ยังไม่เจอมือถือ เสียบสาย USB และเปิด USB debugging'; }
+    } else if (!ph.connected) {
+      lv = ps.length ? lv : 'na'; val = val || '—';
+    } else if (r.key === 'lock') {
+      val = ph.locked ? 'ล็อกอยู่' : ph.screenOn === false ? 'จอดับ' : 'ปลดล็อกอยู่';
+      if ((ph.locked || ph.screenOn === false) && lv === 'ok') lv = 'warn';
+    } else if (r.key === 'awake') {
+      val = ph.stayAwake ? 'เปิดอยู่' : 'ปิดอยู่';
+      if (!ph.stayAwake && lv === 'ok') lv = 'warn';
+    } else if (r.key === 'battery') {
+      val = apHas(ph.battery) ? `${ph.battery}%${ph.charging ? ' · กำลังชาร์จ' : ' · ไม่ได้ชาร์จ'}` : '—';
+    } else if (r.key === 'shopee') {
+      const v = ph.shopeeVersion, cal = h.calibratedVersion;
+      val = apHas(v) ? 'v' + v : 'ไม่พบแอป';
+      if (apHas(v) && apHas(cal) && String(v) !== String(cal)) {
+        val += ` (จูนไว้ v${cal})`;
+        if (lv === 'ok') { lv = 'warn'; msg = msg || 'เวอร์ชันไม่ตรงกับที่ปรับจูนไว้ ปุ่มในแอปอาจเลื่อนตำแหน่ง'; }
+      } else if (apHas(v) && apHas(cal)) val += ' · ตรงกับที่จูนไว้';
+    }
+    html += row(lv, ic[lv], r.label, val, msg);
+  });
+  probs.filter(p => !used.has(p)).forEach(p => html += row(lvOf(p), ic[lvOf(p)], 'อื่นๆ', p.code || '', p.msg || ''));
+  return `${off ? '<div class="ap-cl-stale">ข้อมูลด้านล่างเป็นค่าล่าสุดก่อนคอมออฟไลน์</div>' : ''}<div class="ap-cl${off ? ' stale' : ''}">${html}</div>`;
+}
+
+// ── sheet สถานะเครื่อง ──
+function apHostSheetOpen() { return $('ap-sheet-host').classList.contains('show'); }
+function apOpenHostSheet() {
+  apRenderHostSheet();
+  apOpenSheet('ap-sheet-host');
+  $('ap-host-body').scrollTop = 0;
+  apLoadHost().then(apRenderHostAll);
+}
+function apCheckBannerHtml() {
+  if (apCheckRun) {
+    return `<div class="row-info ap-checking" style="margin:0;"><span class="spin"></span>
+      <span style="flex:1;">กำลังให้คอมตรวจเครื่อง… (ปกติ 15–30 วิ)</span>
+      <button class="copy-btn" id="ap-check-cancel">ยกเลิกการรอ</button></div>`;
+  }
+  if (!apLastCheck || Date.now() - apLastCheck.at > 10 * 60000) return '';
+  const ago = apRel(new Date(apLastCheck.at));
+  if (apLastCheck.result === 'ok' && apBlockingNow().length) return '';   // ผลเก่า ไม่ตรงกับสถานะล่าสุดแล้ว
+  if (apLastCheck.result === 'ok') return `<div class="row-ok" style="margin:0;">✅ ตรวจแล้ว เครื่องพร้อมโพสต์ · ${ago}</div>`;
+  if (apLastCheck.result === 'fail') return `<div class="row-warn" style="margin:0;">⚠️ ตรวจแล้ว พบปัญหาที่ทำให้ยังโพสต์ไม่ได้ · ${ago}</div>`;
+  if (apLastCheck.result === 'timeout') return `<div class="row-err" style="margin:0;">📡 คอมไม่ตอบใน 60 วิ — อาจปิดอยู่หรือ Agent ไม่ได้รัน · ${ago}</div>`;
+  if (apLastCheck.result === 'error') return `<div class="row-err" style="margin:0;">❌ ส่งคำสั่งตรวจไม่สำเร็จ ลองใหม่อีกครั้ง</div>`;
+  return '';
+}
+function apRenderHostSheet() {
+  const body = $('ap-host-body');
+  if (!body) return;
+  const hv = apHostView();
+  const h = apHost;
+  const L = apLimits();
+  let html = `
+    <div class="ap-hero ${hv.color}"><span class="ap-dot ${hv.color}"></span>
+      <div style="flex:1;min-width:0;"><div class="ap-hero-t">${hv.spin ? '<span class="spin" style="width:13px;height:13px;border-width:2px;margin-right:6px;vertical-align:-1px;"></span>' : ''}${escapeHtml(hv.title)}</div>
+      <div class="ap-hero-s">${escapeHtml(hv.sub)}</div></div></div>
+    ${apCheckBannerHtml()}`;
+  if (hv.kind === 'posting') html += `<div class="row-info" style="margin:0;">ถ้าปิดสวิตช์ตอนนี้ จะหยุดหลังโพสต์คลิปปัจจุบันเสร็จ</div>`;
+  if (apPauseState().lockedOnHost) html += `<div class="row-warn" style="margin:0;">⚙️ ปิดโพสต์อัตโนมัติไว้ที่ config.yaml บนคอม (postingEnabled: false) — เปิดจากเว็บไม่ได้</div>`;
+
+  html += `<div class="section"><div class="section-title"><span>ความพร้อมของเครื่อง</span></div>${apChecklistHtml()}</div>`;
+
+  if (h) {
+    const q = h.queue || {};
+    const num = v => apHas(v) ? escapeHtml(String(v)) : '–';
+    const att = ['overdue', 'needs_check', 'failed'].reduce((s, k) => s + (Number(q[k]) || 0), 0);
+    const nxt = apDate(q.nextPostAfter);
+    const nxtTxt = nxt && nxt > new Date() ? `${apFmt(nxt)} (${apRel(nxt)})` : 'ได้เลย';
+    html += `<div class="section"><div class="section-title"><span>คิววันนี้ (จากคอม)</span>
+      <span style="text-transform:none;letter-spacing:0;color:var(--text3);font-weight:600;">${apDate(q.checkedAt) ? apRel(apDate(q.checkedAt)) : ''}</span></div>
+      <div class="ap-q">
+        <div class="stat-box"><div class="stat-label">โพสต์แล้ววันนี้</div><div class="stat-value green">${num(q.postedToday)}<span class="ap-stat-of">/${L.dailyLimit}</span></div></div>
+        <div class="stat-box"><div class="stat-label">รอโพสต์</div><div class="stat-value">${num(q.scheduled)}</div></div>
+        <div class="stat-box"><div class="stat-label">ถึงเวลา / รอลองใหม่</div><div class="stat-value">${num(q.due)} / ${num(q.retry_wait)}</div></div>
+        <div class="stat-box"><div class="stat-label">ต้องดูแล</div><div class="stat-value${att ? ' red' : ''}">${att}</div></div>
+        <div class="stat-box ap-q-wide"><div class="stat-label">คลิปถัดไปโพสต์ได้หลัง</div><div class="stat-value" style="font-size:15px;">${escapeHtml(nxtTxt)}</div></div>
+      </div></div>`;
+    if (apHas(h.lastError)) html += `<div class="row-err" style="margin:0;flex-direction:column;gap:2px;"><b>ข้อผิดพลาดล่าสุด</b><span style="word-break:break-word;">${escapeHtml(String(h.lastError))}</span></div>`;
+    const started = apDate(h.startedAt);
+    html += `<div class="ap-meta">${escapeHtml(h.host || '—')} · Agent v${escapeHtml(h.agentVersion || '?')}<br>
+      เริ่มทำงาน ${started ? escapeHtml(apFmt(started)) : '—'} · ลองใหม่ได้ ${L.retryMax} ครั้ง · เลยเวลาเกิน ${L.overdueMaxMinutes} นาทีจะไม่โพสต์เอง</div>`;
+  }
+  body.innerHTML = html;
+  const cancel = $('ap-check-cancel');
+  if (cancel) cancel.onclick = apCancelCheck;
+  const btn = $('ap-host-check');
+  btn.disabled = !!apCheckRun;
+  btn.innerHTML = apCheckRun ? '<span class="spin"></span> กำลังตรวจ…' : '🔍 ตรวจตอนนี้';
+}
+
+// ── ตรวจตอนนี้ (4.2) ──
+function apSleepRun(ms, run) {
+  return new Promise(res => {
+    const end = Date.now() + ms;
+    const t = setInterval(() => { if ((run && run.cancelled) || Date.now() >= end) { clearInterval(t); res(); } }, 200);
+  });
+}
+function apRunCheck() {
+  if (apCheckRun) return apCheckRun.promise;   // กำลังตรวจอยู่แล้ว ใช้รอบเดิม
+  const run = { reqId: new Date().toISOString(), cancelled: false };
+  apCheckRun = run;
+  run.promise = (async () => {
+    apRenderHostAll();
+    let result = 'timeout';
+    try {
+      await apWriteHost('checkRequestedAt', run.reqId);
+      const end = Date.now() + AP_CFG.checkTimeoutMs;
+      while (Date.now() < end) {
+        await apSleepRun(AP_CFG.checkPollMs, run);
+        if (run.cancelled) { result = 'cancelled'; break; }
+        await apLoadHost();
+        if (apHost && apHost.checkAnsweredFor === run.reqId) {
+          result = apBlockingNow().length ? 'fail' : 'ok';
+          break;
+        }
+      }
+    } catch (e) {
+      result = 'error';
+      run.error = e.message;
+    }
+    if (apCheckRun === run) apCheckRun = null;
+    if (result !== 'cancelled') apLastCheck = { result, at: Date.now() };
+    apRenderHostAll();
+    return { result, error: run.error };
+  })();
+  return run.promise;
+}
+function apCancelCheck() { if (apCheckRun) apCheckRun.cancelled = true; }
+function apBlockingNow() {
+  const out = [];
+  if (!apHost) out.push({ lv: 'bad', msg: 'ยังไม่พบเครื่องโพสต์ — เปิด bengen_agent.py บนคอม' });
+  else if (apIsOffline()) out.push({ lv: 'bad', msg: 'คอมออฟไลน์ · เห็นล่าสุด ' + (apDate(apHost.lastSeen) ? apRel(apDate(apHost.lastSeen)) : '—') });
+  else apProblems('blocking').forEach(p => out.push({ lv: p.level === 'error' ? 'bad' : 'warn', msg: String(p.msg || p.code) }));
+  return out;
+}
+
+// ── สวิตช์เปิด/หยุดโพสต์อัตโนมัติ (4.3) ──
+async function apTogglePause() {
+  const ps = apPauseState();
+  if (ps.lockedOnHost) { toast('⚙️ ปิดไว้ที่ config.yaml บนคอม — เปิดจากเว็บไม่ได้'); return; }
+  if (ps.busy) return;
+  // ถ้ามีคำสั่งค้างอยู่ ให้กดแล้วสลับจาก "ค่าที่สั่งไว้" แทนค่าจริง
+  const cur = ps.pending ? ps.want : ps.paused;
+  await apSetPaused(!cur);
+}
+async function apSetPaused(want) {
+  apPauseBusy = true;
+  apPauseSentAt = Date.now();
+  apRenderHostAll();
+  try {
+    const kind0 = apHostView().kind;
+    await apWriteHost('postingPaused', want ? 'true' : 'false');
+    if (want && kind0 === 'posting') toast('⏸️ ส่งคำสั่งแล้ว — จะหยุดหลังโพสต์คลิปปัจจุบันเสร็จ', 3500);
+    else if (kind0 === 'offline' || kind0 === 'none') toast('📨 ส่งคำสั่งแล้ว — จะมีผลตอนคอมกลับมาออนไลน์', 3500);
+    const end = Date.now() + AP_CFG.pauseTimeoutMs;
+    let applied = false;
+    while (Date.now() < end) {
+      await sleep(AP_CFG.checkPollMs);
+      await apLoadHost();
+      apPauseBusy = false;
+      apRenderHostAll();
+      apPauseBusy = true;
+      if (apHost && apHas(apHost.postingPaused) && apBool(apHost.postingPaused) === want) { applied = true; break; }
+      if (apIsOffline()) break;           // คอมไม่อยู่ ไม่ต้องรอ
+    }
+    if (!apHostRow || apBool(apHostRow.postingPaused) !== want) toast('⚠️ เขียนค่าลง Sheet ไม่สำเร็จ ลองกดใหม่');
+    else if (applied) toast(want ? '⏸️ หยุดโพสต์อัตโนมัติแล้ว' : '▶️ เปิดโพสต์อัตโนมัติแล้ว');
+    else if (!apIsOffline()) toast('⚠️ คอมยังไม่รับคำสั่งใน 45 วิ — ตรวจว่า Agent ยังรันอยู่', 3500);
+  } catch (e) {
+    toast('❌ ' + e.message);
+  }
+  apPauseBusy = false;
+  apRenderHostAll();
+}
+
+// ═══════════════════════════════════════
+// จัดกลุ่มคลิป (ต้องตรงกับ Agent)
+// ═══════════════════════════════════════
+function apClassify(c, L, now) {
+  if (c.postedAt) return { group: 'posted' };
+  if (c.postMode === 'scheduled' && c.scheduledAt) {
+    const at = apDate(c.scheduledAt);
+    const attempts = Number(c.postAttempts || 0) || 0;
+    if (apHas(c.postStartedAt)) return { group: 'attention', kind: 'needs_check', attempts };
+    if (attempts > L.retryMax) return { group: 'attention', kind: 'failed', attempts };
+    if (!at) return { group: 'attention', kind: 'overdue', attempts };
+    if (at.getTime() > now) return { group: 'scheduled', due: false, attempts };
+    if (now - at.getTime() > L.overdueMaxMinutes * 60000) return { group: 'attention', kind: 'overdue', attempts };
+    return { group: 'scheduled', due: true, attempts };
+  }
+  if (c.videoStatus === 'done' && c.mp4DriveUrl && !c.scheduledAt) return { group: 'ready' };
+  return { group: null };
+}
+function apRegroup() {
+  const L = apLimits(), now = Date.now();
+  apItems = apAll.map(r => Object.assign({}, r, apClassify(r.content, L, now))).filter(it => it.group);
+  apSelected.forEach(id => { const it = apFind(id); if (!it || it.group !== 'ready') apSelected.delete(id); });
+}
+const AP_KIND_ORDER = { needs_check: 0, failed: 1, overdue: 2 };
 function apByGroup(g) {
   const list = apItems.filter(it => it.group === g);
-  if (g === 'ready')     return list.sort((a, b) => (apDate(b.content.createdAt)||0) - (apDate(a.content.createdAt)||0));
-  if (g === 'scheduled') return list.sort((a, b) => (apDate(a.content.scheduledAt)||0) - (apDate(b.content.scheduledAt)||0));
-  if (g === 'posted')    return list.sort((a, b) => (apDate(b.content.postedAt)||0) - (apDate(a.content.postedAt)||0)).slice(0, AP_POSTED_LIMIT);
-  return list.sort((a, b) => (apDate(b.content.updatedAt)||0) - (apDate(a.content.updatedAt)||0));
+  const t = (it, k) => (apDate(it.content[k]) || new Date(0)).getTime();
+  if (g === 'ready')     return list.sort((a, b) => t(b, 'createdAt') - t(a, 'createdAt'));
+  if (g === 'scheduled') return list.sort((a, b) => t(a, 'scheduledAt') - t(b, 'scheduledAt'));
+  if (g === 'posted')    return list.sort((a, b) => t(b, 'postedAt') - t(a, 'postedAt')).slice(0, AP_POSTED_LIMIT);
+  return list.sort((a, b) => (AP_KIND_ORDER[a.kind] - AP_KIND_ORDER[b.kind]) || (t(a, 'scheduledAt') - t(b, 'scheduledAt')));
 }
 function apFind(id) { return apItems.find(it => String(it.content.id) === String(id)); }
 
@@ -2151,26 +2670,27 @@ async function apLoad(opts = {}) {
   try {
     const [productsRes, contentRes] = await Promise.all([
       xhrGet(`${appsUrl}?action=read&sheet=Products&_=${Date.now()}`),
-      xhrGet(`${appsUrl}?action=read&sheet=Content&_=${Date.now()}`)
+      xhrGet(`${appsUrl}?action=read&sheet=Content&_=${Date.now()}`),
+      apLoadHost()
     ]);
     if (contentRes.error) throw new Error(contentRes.error);
     const products = productsRes.rows || [];
     const contents = contentRes.rows || [];
-    apItems = contents.map(c => {
+    apAll = contents.map(c => {
       const product = products.find(p => String(p.id) === String(c.productId)) || {};
-      const item = { content: c, product, group: apClassify(c) };
-      item.check = apCheck(item);
-      return item;
-    }).filter(it => it.group);
+      const row = { content: c, product };
+      row.check = apCheck(row);
+      return row;
+    });
     apLoaded = true;
-    // ล้างรายการที่เลือกไว้แต่ไม่อยู่ในกลุ่มพร้อมแล้ว
-    apSelected.forEach(id => { const it = apFind(id); if (!it || it.group !== 'ready') apSelected.delete(id); });
+    apContentLoadedAt = Date.now();
     apRender();
     return true;
   } catch (err) {
     $('ap-list').innerHTML = '';
     apSetStatus('err', '❌ โหลดข้อมูลไม่สำเร็จ: ' + escapeHtml(err.message) +
       ' <button class="copy-btn" onclick="apLoad()" style="margin-left:auto;">ลองใหม่</button>');
+    apRenderHostBar();
     return false;
   } finally {
     apLoading = false;
@@ -2182,28 +2702,47 @@ function apSetStatus(type, html) {
   $('ap-status').innerHTML = html ? `<div class="${cls}" style="margin:0;align-items:center;">${html}</div>` : '';
 }
 
-// ── แสดงผล (8.1) ──
-function apRender() {
-  if (!apLoaded) return;
-  const todayN = apThDay(new Date());
+// ── แสดงผล ──
+function apRenderStats() {
+  const L = apLimits();
   const counts = {};
   AP_GROUPS.forEach(g => counts[g] = apItems.filter(it => it.group === g).length);
-  const postedToday = apItems.filter(it => it.group === 'posted' && apDate(it.content.postedAt) &&
-    apThDay(apDate(it.content.postedAt)) === todayN).length;
+  const today = apThDay(new Date());
+  let postedToday = apItems.filter(it => it.group === 'posted' && apDate(it.content.postedAt) &&
+    apThDay(apDate(it.content.postedAt)) === today).length;
+  const q = apHost && apHost.queue;
+  if (q && !apIsOffline() && apHas(q.postedToday)) postedToday = Math.max(postedToday, Number(q.postedToday) || 0);
 
-  $('ap-stat-wait').textContent  = counts.scheduled;
-  $('ap-stat-today').textContent = postedToday;
-  $('ap-stat-fail').textContent  = counts.failed;
+  $('ap-stat-wait').textContent = counts.scheduled;
+  $('ap-stat-today').innerHTML  = `${postedToday}<span class="ap-stat-of">/${L.dailyLimit}</span>`;
+  $('ap-stat-att').textContent  = counts.attention;
+  $('ap-stat-att').classList.toggle('red', counts.attention > 0);
+  $('ap-stat-att-btn').classList.toggle('alert', counts.attention > 0);
   AP_GROUPS.forEach(g => $('ap-n-' + g).textContent = g === 'posted' ? Math.min(counts[g], AP_POSTED_LIMIT) : counts[g]);
   document.querySelectorAll('#ap-seg .ap-seg-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.group === apGroup);
     b.setAttribute('aria-selected', b.dataset.group === apGroup);
   });
-  document.querySelector('#ap-seg .fail').classList.toggle('has', counts.failed > 0);
+  document.querySelector('#ap-seg .att').classList.toggle('has', counts.attention > 0);
+}
 
+// ลายเซ็นของสิ่งที่ทำให้ list เปลี่ยน — ใช้ตัดสินว่าต้อง render list ใหม่ไหมตอน poll สถานะเครื่อง
+function apListSignature() {
+  const hv = apHostView();
+  return [apGroup, apSelectMode, hv.kind, apHost && apHost.currentContentId,
+    apItems.map(it => `${it.content.id}:${it.group}:${it.kind || ''}:${it.due ? 1 : 0}`).join(',')].join('|');
+}
+
+function apRender() {
+  if (!apLoaded) { apRenderHostBar(); return; }
+  apRegroup();
+  apRenderHostBar();
+  apRenderStats();
   if (apGroup !== 'ready' && apSelectMode) apExitSelect(true);
   $('ap-status').innerHTML = '';
   apRenderToolbar();
+  apListSig = apListSignature();
+  apListRenderedAt = Date.now();
 
   const list = apByGroup(apGroup);
   const wrap = $('ap-list');
@@ -2211,65 +2750,185 @@ function apRender() {
     const E = {
       ready:     ['🎬', 'ยังไม่มีคลิปพร้อมตั้งเวลา', 'คลิปที่วิดีโอเสร็จแล้วและยังไม่ได้ตั้งเวลา<br>จะมาแสดงที่นี่'],
       scheduled: ['🗓️', 'ยังไม่มีคลิปในคิว', 'ไปที่ "พร้อมตั้งเวลา" แล้วแตะคลิป<br>เพื่อตั้งเวลาโพสต์'],
+      attention: ['🎉', 'ไม่มีอะไรต้องดูแล', 'คลิปที่เลยเวลา โพสต์พัง หรือค้างกลางทาง<br>จะมาแสดงที่นี่'],
       posted:    ['📭', 'ยังไม่มีคลิปที่โพสต์แล้ว', 'เมื่อคอมโพสต์สำเร็จ<br>คลิปจะย้ายมาอยู่ที่นี่'],
-      failed:    ['🎉', 'ไม่มีคลิปที่ล้มเหลว', 'ถ้าคอมโพสต์ไม่สำเร็จ<br>จะแสดงสาเหตุไว้ที่นี่ให้ตั้งเวลาใหม่'],
     }[apGroup];
     wrap.innerHTML = `<div class="empty"><div class="empty-icon">${E[0]}</div>
       <div class="empty-title">${E[1]}</div><div class="empty-desc">${E[2]}</div></div>`;
     return;
   }
-  wrap.innerHTML = list.map(apCardHtml).join('');
-  wrap.querySelectorAll('.ap-card').forEach(el => {
-    el.addEventListener('click', e => {
-      const id = el.dataset.id;
-      if (apSelectMode) {
-        if (e.target.classList.contains('ap-check')) apToggleSel(id, e.target.checked);
-        else apToggleSel(id);
-      } else {
-        apOpenOne(id);
-      }
-    });
-  });
+  wrap.innerHTML = list.map(it => it.group === 'attention' ? apAttCardHtml(it) : apCardHtml(it)).join('');
+}
+
+function apOnListClick(e) {
+  const actBtn = e.target.closest('[data-act]');
+  const card = e.target.closest('.ap-card');
+  if (!card) return;
+  const id = card.dataset.id;
+  if (actBtn) { e.stopPropagation(); apAct(id, actBtn.dataset.act, actBtn); return; }
+  if (card.classList.contains('ap-att')) return;
+  if (apSelectMode) {
+    if (e.target.classList.contains('ap-check')) apToggleSel(id, e.target.checked);
+    else apToggleSel(id);
+  } else {
+    apOpenOne(id);
+  }
+}
+
+function apHostRiskNote(it) {
+  // เตือนบนการ์ดที่ถึงเวลาแล้ว หรือจะถึงภายใน 30 นาที ถ้าเครื่องไม่พร้อม
+  const at = apDate(it.content.scheduledAt);
+  if (!at || (!it.due && at.getTime() - Date.now() > AP_CFG.soonMs)) return '';
+  const hv = apHostView();
+  const msg = {
+    offline:  '⚠️ คอมออฟไลน์ อาจไม่โพสต์ตามเวลา',
+    none:     '⚠️ ยังไม่พบเครื่องโพสต์ อาจไม่โพสต์ตามเวลา',
+    stopped:  '⚠️ หยุดโพสต์อัตโนมัติอยู่ คลิปจะรอจนกว่าจะเปิดสวิตช์',
+    waiting:  '⚠️ เครื่องไม่พร้อม: ' + hv.sub,
+  }[hv.kind];
+  return msg ? `<div class="ap-card-note warn">${escapeHtml(msg)}</div>` : '';
 }
 
 function apStatusBadge(it) {
   const c = it.content;
   if (it.group === 'posted') return `<span class="badge b-posted">✅ ${escapeHtml(apFmt(apDate(c.postedAt)))}</span>`;
-  if (it.group === 'failed') return `<span class="badge b-fail">❌ โพสต์ไม่สำเร็จ</span>`;
   if (it.group === 'scheduled') {
     const d = apDate(c.scheduledAt);
-    if (d && d.getTime() <= Date.now()) return `<span class="badge b-due">⏳ รอคิวโพสต์</span>`;
+    if (it.due) {
+      const h = apHost;
+      if (h && !apIsOffline() && h.state === 'posting' && String(h.currentContentId) === String(c.id))
+        return `<span class="badge b-posting"><span class="spin"></span>กำลังโพสต์…</span>`;
+      if (it.attempts > 0) return `<span class="badge b-retry">🔁 พังครั้งที่ ${it.attempts}</span>`;
+      return `<span class="badge b-due">⏳ ถึงเวลาแล้ว รอ Agent หยิบ</span>`;
+    }
     return `<span class="badge b-time">🕒 ${escapeHtml(apFmt(d))}</span>`;
   }
+  if (it.group === 'attention') {
+    return { needs_check: '<span class="badge b-check">🔍 ต้องตรวจสอบ</span>',
+             overdue: '<span class="badge b-over">⏰ เลยเวลา</span>',
+             failed: '<span class="badge b-fail">❌ ล้มเหลว</span>' }[it.kind] || '';
+  }
   return '';
+}
+
+function apImgHtml(p) {
+  const img = p.driveImageUrl || '';
+  return img
+    ? `<img class="card-img" src="${escapeHtml(img)}" alt="" onerror="this.outerHTML='<div class=&quot;card-img&quot;>🛍️</div>'">`
+    : `<div class="card-img">🛍️</div>`;
 }
 
 function apCardHtml(it) {
   const p = it.product, c = it.content;
   const id = escapeHtml(String(c.id));
-  const img = p.driveImageUrl || '';
   const sel = apSelected.has(String(c.id));
   const warns = (it.group === 'posted') ? [] : it.check.issues;
-  const extra = it.group === 'scheduled' && apDate(c.scheduledAt) && apDate(c.scheduledAt) > new Date()
-    ? `<span class="badge" style="background:var(--bg3);color:var(--text2);">${apRel(apDate(c.scheduledAt))}</span>` : '';
+  const at = apDate(c.scheduledAt);
+  const extra = it.group === 'scheduled' && !it.due && at
+    ? `<span class="badge" style="background:var(--bg3);color:var(--text2);">${apRel(at)}</span>` : '';
+  let notes = '';
+  if (it.group === 'scheduled') {
+    if (it.due && it.attempts > 0) {
+      notes += `<div class="ap-card-note err">${apHas(c.postError) ? escapeHtml(String(c.postError).slice(0, 140)) + ' · ' : ''}จะลองใหม่ภายใน ~${apLimits().retryDelayMinutes} นาที (ครั้งที่ ${it.attempts + 1}/${apLimits().retryMax + 1})</div>`;
+    }
+    notes += apHostRiskNote(it);
+  }
   return `
     <div class="card ap-card${sel ? ' selected' : ''}${it.group === 'posted' ? ' dim' : ''}" data-id="${id}">
       ${apSelectMode ? `<input type="checkbox" class="ap-check" ${sel ? 'checked' : ''} aria-label="เลือกคลิปนี้">` : ''}
-      ${img
-        ? `<img class="card-img" src="${escapeHtml(img)}" alt="" onerror="this.outerHTML='<div class=&quot;card-img&quot;>🛍️</div>'">`
-        : `<div class="card-img">🛍️</div>`}
+      ${apImgHtml(p)}
       <div class="card-body">
-        <div class="card-name">${escapeHtml(p.name || c.productName || 'ไม่ทราบชื่อ')}</div>
+        <div class="card-name">${escapeHtml(apItemName(it))}</div>
         <div class="ap-cap">${escapeHtml(it.check.cap) || '<i>ไม่มีแคปชั่น</i>'}</div>
         <div class="card-badges">
           ${apStatusBadge(it)}${extra}
           ${warns.map(w => `<span class="badge b-warn">${w.short}</span>`).join('')}
         </div>
-        ${it.group === 'failed' && c.postError
-          ? `<div style="font-size:11.5px;color:var(--red);line-height:1.4;">${escapeHtml(String(c.postError).slice(0, 140))}</div>` : ''}
+        ${notes}
       </div>
       ${apSelectMode ? '' : '<div class="card-arrow">›</div>'}
     </div>`;
+}
+
+// การ์ดกลุ่ม "ต้องดูแล" (4.5)
+function apAttCardHtml(it) {
+  const p = it.product, c = it.content;
+  const id = escapeHtml(String(c.id));
+  const L = apLimits();
+  const at = apDate(c.scheduledAt);
+  const err = apHas(c.postError) ? `<span class="ap-att-err">สาเหตุ: ${escapeHtml(String(c.postError))}</span>` : '';
+  let msg = '', acts = '';
+  if (it.kind === 'needs_check') {
+    const st = apDate(c.postStartedAt);
+    msg = `Agent หยุดกลางทาง ไม่รู้ว่าคลิปขึ้นแล้วหรือยัง <b>เปิดแอป Shopee เช็คก่อน</b>${st ? ` · เริ่มโพสต์ ${escapeHtml(apFmt(st))}` : ''}${err}`;
+    acts = `<button class="btn btn-green btn-sm" data-act="posted">✅ ขึ้นแล้ว</button>
+            <button class="btn btn-ghost btn-sm" data-act="retry">🔁 ยังไม่ขึ้น ลองใหม่</button>`;
+  } else if (it.kind === 'overdue') {
+    msg = at
+      ? `เลยเวลามา <b>${apDur(Date.now() - at.getTime())}</b> (ตั้งไว้ ${escapeHtml(apFmt(at))}) — คอมปิดหรือเครื่องไม่พร้อม Agent จะไม่โพสต์เองเมื่อเลยเกิน ${L.overdueMaxMinutes} นาที${err}`
+      : `เวลาที่ตั้งไว้อ่านไม่ได้ (${escapeHtml(String(c.scheduledAt))}) — ตั้งเวลาใหม่${err}`;
+    acts = `<button class="btn btn-primary btn-sm" data-act="resched">🗓️ ตั้งเวลาใหม่</button>
+            <button class="btn btn-ghost btn-sm ap-min" data-act="cancel">ยกเลิก</button>`;
+  } else {
+    msg = `ลองแล้ว <b>${it.attempts} ครั้ง</b> ไม่สำเร็จ (ก่อนกดโพสต์ คลิปยังไม่ขึ้น)${err}`;
+    acts = `<button class="btn btn-primary btn-sm" data-act="retry">🔁 ลองใหม่</button>
+            <button class="btn btn-ghost btn-sm" data-act="resched">🗓️ ตั้งเวลาใหม่</button>
+            <button class="btn btn-ghost btn-sm ap-min" data-act="cancel">ยกเลิก</button>`;
+  }
+  return `
+    <div class="card ap-card ap-att k-${it.kind}" data-id="${id}">
+      ${apImgHtml(p)}
+      <div class="card-body">
+        <div class="card-name">${escapeHtml(apItemName(it))}</div>
+        <div class="ap-cap">${escapeHtml(it.check.cap) || '<i>ไม่มีแคปชั่น</i>'}</div>
+        <div class="card-badges">${apStatusBadge(it)}</div>
+      </div>
+      <div class="ap-att-msg">${msg}</div>
+      <div class="ap-actions">${acts}</div>
+    </div>`;
+}
+
+// ── action บนการ์ด ──
+async function apAct(id, act, btn) {
+  const it = apFind(id);
+  if (!it) return;
+  if (act === 'resched') { apOpenOne(id); return; }
+  if (act === 'retry' && it.kind === 'needs_check') {
+    const ok = await apConfirm({
+      title: '🔁 ยืนยันลองใหม่',
+      icon: '⚠️',
+      head: 'เช็คในแอป Shopee แล้วใช่ไหม?',
+      text: `แน่ใจนะว่าเช็คในแอปแล้ว คลิป “${escapeHtml(apItemName(it))}” ยังไม่ขึ้น<br><b>ถ้าขึ้นไปแล้ว จะโพสต์ซ้ำ</b>`,
+      okText: 'ยังไม่ขึ้นแน่นอน ลองใหม่', okClass: 'btn-amber'
+    });
+    if (!ok) return;
+  }
+  const card = btn.closest('.ap-card');
+  const btns = card ? card.querySelectorAll('button') : [btn];
+  const oldHtml = btn.innerHTML;
+  btns.forEach(b => b.disabled = true);
+  btn.innerHTML = '<span class="spin"></span>';
+  try {
+    if (act === 'posted') {
+      await apMarkPosted(it);
+      await apLoad({ silent: true });
+      const r = apFindAny(id);
+      toast(r && r.content.postedAt ? '✅ ย้ายไป "โพสต์แล้ว"' : '⚠️ ส่งคำสั่งแล้ว แต่ Sheet ยังไม่มี postedAt กด 🔄 ตรวจอีกครั้ง');
+    } else if (act === 'retry') {
+      const now = new Date();
+      await apRetry(it, now);
+      await apLoad({ silent: true });
+      toast(apVerify(id, now, 120000) ? '🔁 ส่งกลับเข้าคิวแล้ว — Agent จะหยิบใน ~1 นาที' : '⚠️ ส่งคำสั่งแล้ว แต่ค่าใน Sheet ยังไม่ตรง กด 🔄 ตรวจอีกครั้ง');
+    } else if (act === 'cancel') {
+      await apUnschedule(it);
+      await apLoad({ silent: true });
+      toast(apVerify(id, null) ? '🗑️ ยกเลิกแล้ว — ย้ายกลับไป "พร้อมตั้งเวลา"' : '⚠️ ส่งคำสั่งแล้ว แต่ค่าใน Sheet ยังไม่ว่าง กด 🔄 ตรวจอีกครั้ง');
+    }
+  } catch (e) {
+    toast('❌ ' + e.message);
+    btns.forEach(b => b.disabled = false);
+    btn.innerHTML = oldHtml;
+  }
 }
 
 // ── โหมดเลือกหลายคลิป ──
@@ -2277,9 +2936,11 @@ function apRenderToolbar() {
   const tb = $('ap-toolbar');
   const n = apByGroup('ready').length;
   if (apGroup !== 'ready' || !n) {
-    tb.innerHTML = apGroup === 'scheduled' && apByGroup('scheduled').length
-      ? `<div class="ap-toolbar-text">เรียงจากเวลาใกล้สุด · คอมหยิบทุก 15–30 นาที</div>` : '';
-    tb.style.display = tb.innerHTML ? 'flex' : 'none';
+    let txt = '';
+    if (apGroup === 'scheduled' && apByGroup('scheduled').length) txt = 'เรียงจากเวลาใกล้สุด · คอมหยิบทีละคลิป เว้น 2–5 นาที';
+    if (apGroup === 'attention' && apByGroup('attention').length) txt = 'คลิปเหล่านี้ Agent จะไม่โพสต์เอง — เลือกว่าจะทำอะไรต่อ';
+    tb.innerHTML = txt ? `<div class="ap-toolbar-text">${txt}</div>` : '';
+    tb.style.display = txt ? 'flex' : 'none';
     return;
   }
   tb.style.display = 'flex';
@@ -2331,12 +2992,135 @@ function apOpenSheet(id) {
 }
 function apCloseSheets() {
   if (apSpread.running) { toast('⏳ รอให้บันทึกเสร็จก่อน หรือกด ⏹️ หยุด'); return; }
+  if (apGateResolve) apGateDone(false);
   $('ap-backdrop').classList.remove('show');
   document.querySelectorAll('.ap-sheet').forEach(s => s.classList.remove('show'));
   document.body.classList.remove('ap-lock');
   const v = document.querySelector('#ap-one-body video');
   if (v) v.pause();
   apOne = null;
+}
+
+// gate: sheet ซ้อนบนสุด ใช้กับ "ตรวจก่อนตั้งเวลา" และกล่องยืนยัน
+function apGateOpen(title) {
+  apGateToken++;
+  $('ap-gate-title').textContent = title;
+  $('ap-backdrop-top').classList.add('show');
+  $('ap-sheet-gate').classList.add('show');
+  document.body.classList.add('ap-lock');
+  return apGateToken;
+}
+function apGateSet(bodyHtml, buttons) {
+  $('ap-gate-body').innerHTML = bodyHtml;
+  $('ap-gate-body').scrollTop = 0;
+  const foot = $('ap-gate-foot');
+  foot.innerHTML = buttons.map((b, i) =>
+    `<button class="btn ${b.cls || 'btn-ghost'}" data-i="${i}" style="flex:${b.flex || 1};">${b.text}</button>`).join('');
+  foot.querySelectorAll('button').forEach(el => el.onclick = () => {
+    const b = buttons[+el.dataset.i];
+    if (b.onClick) b.onClick(); else apGateDone(typeof b.value === 'function' ? b.value() : b.value);
+  });
+}
+function apGateWait() { return new Promise(res => { apGateResolve = res; }); }
+function apGateIsOpen() { return $('ap-sheet-gate').classList.contains('show'); }
+function apGateDone(v) {
+  $('ap-backdrop-top').classList.remove('show');
+  $('ap-sheet-gate').classList.remove('show');
+  if (!document.querySelector('.ap-sheet.show')) document.body.classList.remove('ap-lock');
+  apGateToken++;
+  const r = apGateResolve;
+  apGateResolve = null;
+  if (r) r(v);
+}
+function apGateBig(icon, head, text) {
+  return `<div class="ap-gate-big"><div class="ap-gate-ic">${icon}</div>
+    <div class="ap-gate-t">${head}</div>${text ? `<div class="ap-gate-s">${text}</div>` : ''}</div>`;
+}
+async function apConfirm(o) {
+  apGateOpen(o.title);
+  apGateSet(apGateBig(o.icon || '❓', o.head || '', o.text || ''), [
+    { text: o.cancelText || 'ยกเลิก', cls: 'btn-ghost', value: false },
+    { text: o.okText || 'ตกลง', cls: o.okClass || 'btn-primary', value: true, flex: 2 },
+  ]);
+  return !!(await apGateWait());
+}
+
+// คลิปต่อวันเกิน dailyLimit ไหม (นับคลิปที่ตั้งไว้แล้ว + ที่โพสต์แล้ว + ที่กำลังจะตั้ง)
+function apDailyWarns(dates, excludeIds) {
+  const L = apLimits();
+  if (!L.dailyLimit) return [];
+  const ex = new Set((excludeIds || []).map(String));
+  const cnt = {};
+  const add = (d, obj) => { if (!d) return; const k = apThDay(d); obj[k] = (obj[k] || 0) + 1; };
+  apItems.forEach(it => {
+    if (ex.has(String(it.content.id))) return;
+    if (it.group === 'posted') add(apDate(it.content.postedAt), cnt);
+    else if (it.group === 'scheduled') add(apDate(it.content.scheduledAt), cnt);
+  });
+  const today = apThDay(new Date());
+  const q = apHost && apHost.queue;
+  if (q && apHas(q.postedToday)) cnt[today] = Math.max(cnt[today] || 0, Number(q.postedToday) || 0);
+  const add2 = {};
+  dates.forEach(d => add(d, add2));
+  return Object.keys(add2).filter(k => (cnt[k] || 0) + add2[k] > L.dailyLimit).map(k => {
+    const d = new Date(+k * AP_DAY_MS - AP_TH_OFFSET + 12 * 3600000);
+    return { lv: 'warn', msg: `${apFmtDay(d)} จะมี ${(cnt[k] || 0) + add2[k]} คลิป เกินลิมิต ${L.dailyLimit} คลิป/วัน — คลิปที่เกินจะรอไปโพสต์วันถัดไป` };
+  });
+}
+
+// ── ตรวจก่อนตั้งเวลา (4.4) — คืน { proceed, unpause } ──
+function apIssuesHtml(list) {
+  const ic = { bad: '❌', warn: '⚠️', info: 'ℹ️' };
+  return `<div class="ap-issues">${list.map(x =>
+    `<div class="ap-issue ${x.lv}"><span class="ap-issue-ic">${ic[x.lv] || '•'}</span><span>${escapeHtml(x.msg)}</span></div>`).join('')}</div>`;
+}
+async function apPrecheck(dates, excludeIds) {
+  const token = apGateOpen('🔍 ตรวจเครื่องก่อนตั้งเวลา');
+  apGateSet(apGateBig('<span class="spin"></span>', 'กำลังให้คอมตรวจเครื่อง…', 'ปกติใช้เวลา 15–30 วินาที<br>ต้องเปิดคอมและ Agent ไว้'),
+    [{ text: 'ยกเลิกการรอ', cls: 'btn-ghost', onClick: apCancelCheck }]);
+  const r = await apRunCheck();
+  if (!apGateIsOpen() || apGateToken !== token) return { proceed: false };   // ผู้ใช้ปิดไปแล้ว
+
+  const blocking = [];
+  if (r.result === 'timeout') blocking.push({ lv: 'bad', msg: 'คอมไม่ตอบใน 60 วิ — อาจปิดอยู่หรือ Agent ไม่ได้รัน' });
+  else if (r.result === 'cancelled') blocking.push({ lv: 'warn', msg: 'ยกเลิกการรอ — ยังไม่รู้ว่าเครื่องพร้อมไหม' });
+  else if (r.result === 'error') blocking.push({ lv: 'bad', msg: 'ส่งคำสั่งตรวจไม่สำเร็จ: ' + (r.error || '') });
+  else apBlockingNow().forEach(x => blocking.push(x));
+
+  const warns = apDailyWarns(dates, excludeIds);
+  const ps = apPauseState();
+  const paused = (ps.pending ? ps.want : ps.paused) && !ps.lockedOnHost;
+  if (!blocking.length && !warns.length && !paused && !ps.lockedOnHost) {
+    apGateDone(true);
+    return { proceed: true, unpause: false };
+  }
+
+  const L = apLimits();
+  const first = new Date(Math.min.apply(null, dates.map(d => d.getTime())));
+  let head, icon, sub;
+  if (r.result === 'timeout') { icon = '📡'; head = 'คอมไม่ตอบ'; sub = 'ตั้งเวลาไว้ก่อนได้ แล้วค่อยเปิดคอม/เสียบมือถือทีหลัง'; }
+  else if (blocking.length) { icon = '⚠️'; head = 'เครื่องยังไม่พร้อมโพสต์'; sub = 'ตั้งเวลาไว้ก่อนได้ ถ้าจะแก้เครื่องก่อนถึงเวลา'; }
+  else { icon = '📋'; head = 'ก่อนตั้งเวลา'; sub = 'เครื่องพร้อม แต่มีเรื่องที่ควรรู้'; }
+
+  let html = apGateBig(icon, head, sub);
+  if (blocking.length) html += `<div class="section"><div class="section-title"><span>ปัญหาที่พบ</span></div>${apIssuesHtml(blocking)}</div>`;
+  if (blocking.length) {
+    const late = new Date(first.getTime() + L.overdueMaxMinutes * 60000);
+    html += `<div class="row-warn" style="margin:0;"><span>⏰</span><span>ถ้าเครื่องพร้อมช้ากว่า <b>${escapeHtml(apFmt(late))}</b> คลิปจะไปอยู่ "เลยเวลา" และ Agent จะไม่โพสต์เอง</span></div>`;
+  }
+  if (warns.length) html += `<div class="section"><div class="section-title"><span>ลิมิตต่อวัน</span></div>${apIssuesHtml(warns)}</div>`;
+  if (ps.lockedOnHost) html += `<div class="row-warn" style="margin:0;">⚙️ โพสต์อัตโนมัติถูกปิดไว้ที่ config.yaml บนคอม คลิปจะยังไม่ถูกโพสต์จนกว่าจะเปิดที่คอม</div>`;
+  if (paused) {
+    html += `<div class="section"><label class="ap-gate-opt"><input type="checkbox" id="ap-gate-unpause" checked>
+      <span>เปิดโพสต์อัตโนมัติด้วย<small>ตอนนี้หยุดโพสต์อัตโนมัติอยู่ ถ้าไม่เปิด คลิปจะรอจนกว่าจะเปิดสวิตช์</small></span></label></div>`;
+  }
+  apGateSet(html, [
+    { text: 'ยกเลิก', cls: 'btn-ghost', value: false },
+    { text: '💾 ตั้งเวลาต่อ', cls: 'btn-primary', flex: 2, value: () => ({ unpause: !!($('ap-gate-unpause') && $('ap-gate-unpause').checked) }) },
+  ]);
+  const v = await apGateWait();
+  if (!v) return { proceed: false };
+  return { proceed: true, unpause: paused && !!v.unpause };
 }
 
 function apChecksHtml(ch) {
@@ -2357,8 +3141,14 @@ function apQuickHtml(activeMode) {
       <b>${q.title}</b><span>${escapeHtml(q.sub)}</span>
     </button>`).join('');
 }
+function apHostHintHtml() {
+  const hv = apHostView();
+  const t = { idle: '🟢 เครื่องพร้อม', posting: '🟣 เครื่องกำลังโพสต์คลิปอื่น', waiting: '🟡 เครื่องยังไม่พร้อม',
+              stopped: '⚪ หยุดโพสต์อัตโนมัติอยู่', starting: '⚪ Agent กำลังเริ่ม', offline: '🔴 คอมออฟไลน์', none: '⚪ ยังไม่พบเครื่องโพสต์' }[hv.kind];
+  return `<div class="ap-note">${t} · ระบบจะให้คอมตรวจเครื่องอีกครั้งก่อนบันทึก<br>คอมหยิบคลิปที่ถึงเวลาทุก ~1 นาที โพสต์ทีละคลิป เว้น 2–5 นาที</div>`;
+}
 
-// ── 8.2 ตั้งเวลาคลิปเดียว ──
+// ── ตั้งเวลาคลิปเดียว ──
 function apOpenOne(id) {
   const it = apFind(id);
   if (!it) return;
@@ -2366,22 +3156,25 @@ function apOpenOne(id) {
   const cur = it.group === 'scheduled' ? apDate(c.scheduledAt) : null;
   apOne = { item: it, pick: cur ? { mode: 'custom', date: cur } : null };
 
-  const title = { ready: '🕒 ตั้งเวลาโพสต์', scheduled: '🕒 แก้เวลาโพสต์', posted: '✅ โพสต์แล้ว', failed: '🔁 ตั้งเวลาใหม่' }[it.group];
+  const title = { ready: '🕒 ตั้งเวลาโพสต์', scheduled: '🕒 แก้เวลาโพสต์', posted: '✅ โพสต์แล้ว', attention: '🗓️ ตั้งเวลาใหม่' }[it.group];
   $('ap-one-title').textContent = title;
 
-  const img = p.driveImageUrl || '';
   let html = `
     <div class="ap-prod">
-      ${img ? `<img class="card-img" src="${escapeHtml(img)}" alt="" onerror="this.outerHTML='<div class=&quot;card-img&quot;>🛍️</div>'">` : '<div class="card-img">🛍️</div>'}
+      ${apImgHtml(p)}
       <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
-        <div class="ap-prod-name">${escapeHtml(p.name || c.productName || 'ไม่ทราบชื่อ')}</div>
+        <div class="ap-prod-name">${escapeHtml(apItemName(it))}</div>
         <div class="card-badges">${apStatusBadge(it)}
           ${ch.hasLink ? '<span class="badge b-posted">✅ มีลิงก์สินค้า</span>' : '<span class="badge b-fail">❌ ไม่มีลิงก์สินค้า</span>'}</div>
       </div>
     </div>`;
 
-  if (it.group === 'failed' && c.postError) {
-    html += `<div class="row-err" style="margin:0;flex-direction:column;gap:2px;"><b>❌ โพสต์ครั้งก่อนไม่สำเร็จ</b><span>${escapeHtml(String(c.postError))}</span></div>`;
+  if (it.group === 'attention') {
+    const kindTxt = { overdue: '⏰ เลยเวลาที่ตั้งไว้', failed: `❌ ลองแล้ว ${it.attempts} ครั้งไม่สำเร็จ`, needs_check: '🔍 Agent หยุดกลางทาง' }[it.kind];
+    html += `<div class="row-err" style="margin:0;flex-direction:column;gap:2px;"><b>${kindTxt}</b>${apHas(c.postError) ? `<span>${escapeHtml(String(c.postError))}</span>` : ''}
+      <span style="font-size:12px;opacity:.85;">บันทึกเวลาใหม่จะล้างสถานะพัง/จำนวนครั้งที่ลองให้ใหม่</span></div>`;
+  } else if (it.group === 'scheduled' && it.due && it.attempts > 0) {
+    html += `<div class="row-warn" style="margin:0;flex-direction:column;gap:2px;"><b>🔁 พังครั้งที่ ${it.attempts}</b>${apHas(c.postError) ? `<span>${escapeHtml(String(c.postError))}</span>` : ''}<span>Agent จะลองใหม่ภายใน ~${apLimits().retryDelayMinutes} นาที</span></div>`;
   }
   if (it.group !== 'posted' && ch.issues.length) {
     html += `<div class="row-warn" style="margin:0;">⚠️ พบปัญหา ${ch.issues.length} ข้อ — ยังตั้งเวลาได้ แต่โพสต์อาจออกมาไม่สมบูรณ์</div>`;
@@ -2411,7 +3204,7 @@ function apOpenOne(id) {
       <input type="datetime-local" id="ap-one-custom" value="${cur ? apToInput(cur) : ''}">
       <div id="ap-one-when"></div>
     </div>
-    <div class="ap-note">คอมจะโพสต์ภายใน ~15–30 นาทีหลังถึงเวลา และต้องเปิดคอมพร้อมต่อมือถือไว้</div>`;
+    ${apHostHintHtml()}`;
   }
   $('ap-one-body').innerHTML = html;
   $('ap-one-body').scrollTop = 0;
@@ -2421,9 +3214,11 @@ function apOpenOne(id) {
 
   const foot = $('ap-one-foot');
   foot.style.display = it.group === 'posted' ? 'none' : 'flex';
-  $('ap-one-unschedule').style.display = it.group === 'scheduled' ? 'flex' : 'none';
-  $('ap-one-save').disabled = false;
-  $('ap-one-save').innerHTML = it.group === 'scheduled' ? '💾 บันทึกเวลาใหม่' : '💾 ตั้งเวลาโพสต์';
+  const un = $('ap-one-unschedule');
+  un.style.display = (it.group === 'scheduled' || it.group === 'attention') ? 'flex' : 'none';
+  un.disabled = false;
+  un.innerHTML = it.group === 'attention' ? 'ยกเลิก' : 'ยกเลิกเวลา';
+  apOneSaveLabel();
 
   if (it.group !== 'posted') {
     $('ap-one-quick').querySelectorAll('.ap-qbtn').forEach(b => b.onclick = () => {
@@ -2440,6 +3235,10 @@ function apOpenOne(id) {
     apOneRefreshPick();
   }
   apOpenSheet('ap-sheet-one');
+}
+function apOneSaveLabel() {
+  const g = apOne && apOne.item.group;
+  $('ap-one-save').innerHTML = g === 'scheduled' ? '💾 บันทึกเวลาใหม่' : '💾 ตั้งเวลาโพสต์';
 }
 
 function apPickError(pick) {
@@ -2463,41 +3262,65 @@ function apOneRefreshPick() {
   $('ap-one-save').disabled = !pick || !!err;
 }
 
-// ── เขียน Sheet (ข้อ 5) ──
+// ── เขียน Sheet ──
 async function apWriteField(id, field, value) {
   const res = await xhrPost(appsUrl, { action: 'updateStatus', sheet: 'Content', id, field, value });
   if (!res || res.error || res.ok === false) throw new Error((res && res.error) || `บันทึก ${field} ไม่สำเร็จ`);
   return res;
 }
+// ตั้งเวลา/ตั้งเวลาใหม่: เขียน scheduledAt ก่อน → ล้างสถานะพัง → postMode สุดท้าย
+// (ถ้าล้าง postAttempts ก่อนเปลี่ยนเวลา คลิปที่ค้างอาจกลายเป็น "ถึงเวลา" แล้วถูกหยิบไปด้วยเวลาเก่า)
 async function apSchedule(item, date) {
   const id = item.content.id;
-  if (item.content.postError) await apWriteField(id, 'postError', '');
   await apWriteField(id, 'scheduledAt', date.toISOString());
+  for (const f of AP_EXTRA_FIELDS) if (apHas(item.content[f])) await apWriteField(id, f, '');
   await apWriteField(id, 'postMode', 'scheduled');
 }
+// ลองใหม่: scheduledAt = ตอนนี้ แล้วล้าง 3 field (เขียนทุกตัวเสมอ) แล้วค่อย postMode
+async function apRetry(item, now) {
+  const id = item.content.id;
+  await apWriteField(id, 'scheduledAt', now.toISOString());
+  for (const f of AP_EXTRA_FIELDS) await apWriteField(id, f, '');
+  await apWriteField(id, 'postMode', 'scheduled');
+}
+// ยกเลิก: ล้าง postMode ก่อน — คอมจะได้ไม่หยิบคลิปที่ค้างครึ่งทาง แล้วล้างอีก 4 field
 async function apUnschedule(item) {
-  // ล้าง postMode ก่อน — คอมจะได้ไม่หยิบคลิปที่ค้างครึ่งทาง
-  await apWriteField(item.content.id, 'postMode', '');
-  await apWriteField(item.content.id, 'scheduledAt', '');
+  const id = item.content.id;
+  await apWriteField(id, 'postMode', '');
+  await apWriteField(id, 'scheduledAt', '');
+  for (const f of AP_EXTRA_FIELDS) await apWriteField(id, f, '');
+}
+async function apMarkPosted(item) {
+  const res = await xhrPost(appsUrl, { action: 'markPosted', id: item.content.id });
+  if (!res || res.error || res.ok === false) throw new Error((res && res.error) || 'บันทึกว่าโพสต์แล้วไม่สำเร็จ');
+  if (apHas(item.content.postError)) await apWriteField(item.content.id, 'postError', '');
 }
 // เช็คค่าจริงจาก Sheet หลังโหลดใหม่ (Worker ตอบ ok เสมอ)
-function apVerify(id, date) {
-  const it = apFind(id);
-  if (!it) return !date;   // ไม่อยู่ในกลุ่มไหน = ไม่ได้ถูกตั้งเวลาแล้ว
-  const c = it.content;
-  if (!date) return !c.postMode && !c.scheduledAt;
+function apVerify(id, date, tolMs) {
+  const r = apFindAny(id);
+  if (!r) return false;
+  const c = r.content;
+  if (!date) return !apHas(c.postMode) && !apHas(c.scheduledAt) && AP_EXTRA_FIELDS.every(f => !apHas(c[f]));
   const got = apDate(c.scheduledAt);
-  return c.postMode === 'scheduled' && !!got && Math.abs(got - date) < 60000;
+  return c.postMode === 'scheduled' && !!got && Math.abs(got - date) < (tolMs || 60000) &&
+    !apHas(c.postStartedAt) && !(Number(c.postAttempts || 0) > 0) && !apHas(c.postError);
 }
 
 async function apSaveOne() {
   if (!apOne || !apOne.pick) return;
   const err = apPickError(apOne.pick);
   if (err) { toast('⚠️ ' + err); return; }
-  const item = apOne.item;
-  const date = apOne.pick.mode === 'asap' ? new Date() : apOne.pick.date;
+  const one = apOne;
+  const item = one.item;
   const btn = $('ap-one-save');
   btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> กำลังตรวจเครื่อง...';
+  const g = await apPrecheck([one.pick.mode === 'asap' ? new Date() : one.pick.date], [item.content.id]);
+  if (!g.proceed || apOne !== one) {
+    if (apOne === one) { apOneSaveLabel(); apOneRefreshPick(); }
+    return;
+  }
+  const date = one.pick.mode === 'asap' ? new Date() : one.pick.date;
   btn.innerHTML = '<span class="spin"></span> กำลังบันทึก...';
   try {
     await apSchedule(item, date);
@@ -2510,10 +3333,11 @@ async function apSaveOne() {
     } else {
       apSetStatus('warn', '⚠️ ส่งคำสั่งแล้ว แต่ค่าใน Sheet ยังไม่ตรง — กด 🔄 เพื่อตรวจอีกครั้ง');
     }
+    if (g.unpause) apSetPaused(false);
   } catch (e) {
     toast('❌ ' + e.message);
     btn.disabled = false;
-    btn.innerHTML = '💾 ตั้งเวลาโพสต์';
+    apOneSaveLabel();
   }
 }
 
@@ -2531,12 +3355,12 @@ async function apUnscheduleOne() {
     toast(ok ? '🗑️ ยกเลิกเวลาแล้ว — ย้ายกลับไป "พร้อมตั้งเวลา"' : '⚠️ ส่งคำสั่งแล้ว แต่ค่าใน Sheet ยังไม่ว่าง กด 🔄 ตรวจอีกครั้ง');
   } catch (e) {
     toast('❌ ' + e.message);
+    btn.disabled = false;
+    btn.innerHTML = item.group === 'attention' ? 'ยกเลิก' : 'ยกเลิกเวลา';
   }
-  btn.disabled = false;
-  btn.innerHTML = 'ยกเลิกเวลา';
 }
 
-// ── 8.3 กระจายเวลา ──
+// ── กระจายเวลา ──
 function apHmToMin(v) { const m = /^(\d{1,2}):(\d{2})/.exec(v || ''); return m ? (+m[1]) * 60 + (+m[2]) : null; }
 function apFitWindow(date, win) {
   if (!win) return date;
@@ -2545,7 +3369,6 @@ function apFitWindow(date, win) {
   const { from, to } = win;
   const inWin = from <= to ? (cur >= from && cur <= to) : (cur >= from || cur <= to);
   if (inWin) return date;
-  // นอกช่วง → ไปเวลาเริ่มช่วงของวันนี้ (ถ้ายังไม่ถึง) หรือวันถัดไป
   const addDay = from <= to ? (cur > to ? 1 : 0) : 0;
   return apFromTh(t.y, t.m, t.d + addDay, Math.floor(from / 60), from % 60);
 }
@@ -2565,7 +3388,6 @@ function apSpreadWin() {
   return from === null || to === null || from === to ? null : { from, to };
 }
 function apSpreadItems() {
-  // เรียงตามลำดับที่แสดงในรายการ
   return apByGroup('ready').filter(it => apSelected.has(String(it.content.id)));
 }
 
@@ -2573,6 +3395,7 @@ function apOpenSpread() {
   const items = apSpreadItems();
   if (!items.length) { toast('⚠️ เลือกคลิปก่อนครับ'); return; }
   apSpread.pick = null;
+  apSpread.items = items;
   apSpread.stepMin = parseInt(apLsGet('bengen_ap_step', '120')) || 120;
   $('ap-sp-win-on').checked = apLsGet('bengen_ap_win_on', '1') === '1';
   $('ap-sp-win-from').value = apLsGet('bengen_ap_win_from', '08:00');
@@ -2585,6 +3408,7 @@ function apOpenSpread() {
   $('ap-sp-log').innerHTML = '';
   $('ap-sp-stop').style.display = 'none';
   $('ap-sp-go').style.display = 'flex';
+  $('ap-sp-go').dataset.after = '';
   $('ap-sp-quick').innerHTML = apQuickHtml(null);
   $('ap-sp-quick').querySelectorAll('.ap-qbtn').forEach(b => b.onclick = () => {
     const q = apQuickPresets().find(x => x.mode === b.dataset.mode);
@@ -2598,7 +3422,7 @@ function apOpenSpread() {
 }
 
 function apSpreadRefresh() {
-  const items = apSpreadItems();
+  const items = apSpread.items || apSpreadItems();
   const pick = apSpread.pick;
   $('ap-sp-quick').querySelectorAll('.ap-qbtn').forEach(b => b.classList.toggle('active', !!pick && b.dataset.mode === pick.mode));
   $('ap-sp-custom').classList.toggle('active', !!pick && pick.mode === 'custom');
@@ -2627,7 +3451,7 @@ function apSpreadRefresh() {
     if (day !== lastDay) { html += `<div class="ap-plan-day">${escapeHtml(apFmtDay(d))}</div>`; lastDay = day; }
     const t = (i === 0 && pick.mode === 'asap') ? 'เร็วที่สุด' : apHM(d);
     html += `<div class="ap-plan-row"><span class="ap-plan-i">${i + 1}</span>
-      <span class="ap-plan-name">${escapeHtml(it.product.name || it.content.productName || 'ไม่ทราบชื่อ')}
+      <span class="ap-plan-name">${escapeHtml(apItemName(it))}
         ${it.check.issues.length ? '<span style="color:var(--red);">⚠️</span>' : ''}</span>
       <span class="ap-plan-t">${t}</span></div>`;
   });
@@ -2645,12 +3469,18 @@ function apSpLog(name, type, msg, replace) {
 }
 
 async function apRunSpread() {
-  const items = apSpreadItems();
+  const items = apSpread.items || [];
   if (!items.length || !apSpread.plan || apSpread.plan.length !== items.length) return;
   if (apSpread.pick.mode !== 'asap' && apSpread.plan[0].getTime() < Date.now() - AP_PAST_GRACE_MS) {
     toast('⚠️ เวลาเริ่มผ่านไปแล้ว เลือกใหม่ครับ'); apSpreadRefresh(); return;
   }
   const plan = apSpread.plan.slice();
+  const go = $('ap-sp-go');
+  go.disabled = true;
+  go.innerHTML = '<span class="spin"></span> กำลังตรวจเครื่อง...';
+  const g = await apPrecheck(plan, []);
+  if (!g.proceed) { apSpreadRefresh(); return; }
+
   apLsSet('bengen_ap_step', String(apSpread.stepMin));
   apLsSet('bengen_ap_win_on', $('ap-sp-win-on').checked ? '1' : '0');
   apLsSet('bengen_ap_win_from', $('ap-sp-win-from').value);
@@ -2659,7 +3489,7 @@ async function apRunSpread() {
   apSpread.running = true; apSpread.stop = false;
   $('ap-sp-setup').style.display = 'none';
   $('ap-sp-progress').style.display = 'flex';
-  $('ap-sp-go').style.display = 'none';
+  go.style.display = 'none';
   $('ap-sp-stop').style.display = 'flex';
   $('ap-sp-stop').style.flex = '1';
   $('ap-sp-log').innerHTML = '';
@@ -2668,7 +3498,7 @@ async function apRunSpread() {
   for (let i = 0; i < items.length; i++) {
     if (apSpread.stop) break;
     const it = items[i];
-    const name = it.product.name || it.content.productName || ('#' + it.content.id);
+    const name = apItemName(it);
     $('ap-sp-ptext').textContent = `กำลังบันทึก ${i + 1}/${items.length} — ${name}`;
     $('ap-sp-bar').style.width = Math.round((i / items.length) * 100) + '%';
     apSpLog(name, 'loading', `⏳ ${apFmt(plan[i])}`);
@@ -2700,11 +3530,11 @@ async function apRunSpread() {
   html += `</div>`;
   $('ap-sp-summary').innerHTML = html;
   $('ap-sp-ptext').textContent = `สำเร็จ ${okN} · ล้มเหลว ${failed.length + unverified.length}`;
-  const go = $('ap-sp-go');
   go.style.display = 'flex'; go.disabled = false;
   go.innerHTML = okN ? '🗓️ ดูคิวที่ตั้งเวลาแล้ว' : 'ปิด';
   go.dataset.after = '1';
   toast(`🏁 ตั้งเวลาสำเร็จ ${okN}/${items.length} คลิป`);
+  if (g.unpause && okN) apSetPaused(false);
 }
 
 function apSpreadGo() {
@@ -2719,8 +3549,42 @@ function apSpreadGo() {
   apRunSpread();
 }
 
+// ── รีเฟรช (ข้อ 5) ──
+function apRenderHostAll() {
+  apRenderHostBar();
+  if (apHostSheetOpen()) apRenderHostSheet();
+  if (!apLoaded) return;
+  apRegroup();
+  apRenderStats();
+  // render list ใหม่เฉพาะเมื่อกลุ่ม/ป้ายเปลี่ยน และไม่มี sheet เปิดอยู่
+  if (!document.querySelector('.ap-sheet.show') && apListSignature() !== apListSig) apRender();
+}
+async function apHostTick() {
+  if (activeTab !== 'autopost' || document.hidden) return;
+  if (apCheckRun || apPauseBusy) return;          // กำลัง poll อยู่แล้ว
+  await apLoadHost();
+  const busy = apLoading || apSpread.running || !!document.querySelector('.ap-sheet.show');
+  if (!busy && apHost && !apIsOffline() && apHost.state === 'posting' &&
+      Date.now() - apContentLoadedAt >= AP_CFG.contentPollMs - 1000) {
+    await apLoad({ silent: true });                 // จะได้เห็นคลิปย้ายไป "โพสต์แล้ว" เอง
+    return;
+  }
+  apRenderHostAll();
+  // ป้ายเวลาแบบสัมพัทธ์บนการ์ด: อัปเดตทุก ~1 นาที
+  if (!busy && Date.now() - apListRenderedAt >= 60000) apRender();
+}
+function apStartTimers() {
+  apStopTimers();
+  apHostTimer = setInterval(apHostTick, AP_CFG.hostPollMs);
+}
+function apStopTimers() {
+  if (apHostTimer) clearInterval(apHostTimer);
+  apHostTimer = null;
+}
+
 // ── กลุ่ม / init ──
 function apSwitchGroup(g) {
+  if (g === 'failed') g = 'attention';            // ค่าเก่าจาก v1
   if (!AP_GROUPS.includes(g)) g = 'ready';
   apGroup = g;
   apLsSet('bengen_ap_group', g);
@@ -2730,11 +3594,22 @@ function apSwitchGroup(g) {
 
 function apInit() {
   apGroup = apLsGet('bengen_ap_group', 'ready');
+  if (apGroup === 'failed') apGroup = 'attention';
   if (!AP_GROUPS.includes(apGroup)) apGroup = 'ready';
+  apRenderHostBar();
   document.querySelectorAll('#ap-seg .ap-seg-btn').forEach(b => b.addEventListener('click', () => apSwitchGroup(b.dataset.group)));
+  $('ap-stat-att-btn').addEventListener('click', () => apSwitchGroup('attention'));
+  $('ap-list').addEventListener('click', apOnListClick);
+  $('ap-hostbar').addEventListener('click', e => {
+    if (e.target.closest('#ap-sw')) apTogglePause();
+    else if (e.target.closest('#ap-host-open')) apOpenHostSheet();
+  });
+  $('ap-host-check').addEventListener('click', () => apRunCheck());
   $('ap-sel-cancel').addEventListener('click', () => apExitSelect());
   $('ap-sel-spread').addEventListener('click', apOpenSpread);
   $('ap-backdrop').addEventListener('click', apCloseSheets);
+  $('ap-backdrop-top').addEventListener('click', () => { if (apCheckRun) apCancelCheck(); apGateDone(false); });
+  $('ap-gate-x').addEventListener('click', () => { if (apCheckRun) apCancelCheck(); apGateDone(false); });
   document.querySelectorAll('[data-ap-close]').forEach(b => b.addEventListener('click', apCloseSheets));
   $('ap-one-save').addEventListener('click', apSaveOne);
   $('ap-one-unschedule').addEventListener('click', apUnscheduleOne);
@@ -2749,15 +3624,22 @@ function apInit() {
   ['ap-sp-win-on', 'ap-sp-win-from', 'ap-sp-win-to'].forEach(id => $(id).addEventListener('input', apSpreadRefresh));
   $('ap-sp-win-on').addEventListener('change', apSpreadRefresh);
 
-  // อัปเดตป้าย "อีก xx นาที" / "รอคิวโพสต์" ทุกนาที (ไม่โหลดใหม่)
-  apTicker = setInterval(() => {
-    if (activeTab === 'autopost' && apLoaded && !document.querySelector('.ap-sheet.show')) apRender();
-  }, 60000);
+  // หยุด poll เมื่อซ่อนหน้าเว็บ / กลับมาแล้วอัปเดตทันที
+  document.addEventListener('visibilitychange', () => {
+    if (activeTab !== 'autopost') return;
+    if (document.hidden) apStopTimers();
+    else { apStartTimers(); if (apLoaded) apHostTick(); }
+  });
 }
 
 function apOnShow() {
   if (!apLoaded) apLoad();
-  else apRender();
+  else { apRender(); apLoadHost().then(apRenderHostAll); }
+  if (!document.hidden) apStartTimers();
+}
+function apOnHide() {
+  apStopTimers();
+  if (apSelectMode) apExitSelect(true);
 }
 
 function toast(msg, d = 2500) {
