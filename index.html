@@ -311,6 +311,9 @@ body.ap-lock{overflow:hidden;}
 .ap-switch{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:700;color:var(--text);
   margin:0;cursor:pointer;}
 .ap-switch input{width:20px;height:20px;accent-color:var(--pn);}
+.ap-step-custom{display:none;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:10px;}
+.ap-step-custom.show{display:grid;}
+.ap-step-custom span{color:var(--text2);font-weight:700;font-size:13px;}
 .ap-win{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:10px;}
 .ap-win-sep{color:var(--text3);font-weight:700;}
 
@@ -852,11 +855,18 @@ body.ap-lock{overflow:hidden;}
       <div class="section">
         <div class="section-title"><span>ห่างกันทุกๆ</span></div>
         <div class="ap-pills" id="ap-sp-step">
+          <button class="ap-pill" data-min="10">10 นาที</button>
+          <button class="ap-pill" data-min="15">15 นาที</button>
           <button class="ap-pill" data-min="30">30 นาที</button>
           <button class="ap-pill" data-min="60">1 ชม.</button>
           <button class="ap-pill" data-min="120">2 ชม.</button>
           <button class="ap-pill" data-min="180">3 ชม.</button>
           <button class="ap-pill" data-min="240">4 ชม.</button>
+          <button class="ap-pill" data-min="custom">✏️ กำหนดเอง</button>
+        </div>
+        <div class="ap-step-custom" id="ap-sp-step-custom">
+          <input type="number" id="ap-sp-step-min" min="5" max="1440" step="1" inputmode="numeric" aria-label="ห่างกันกี่นาที">
+          <span>นาที</span>
         </div>
       </div>
 
@@ -2158,7 +2168,8 @@ let apGroup    = 'ready';
 let apSelectMode = false;
 let apSelected = new Set();   // content ids (string)
 let apOne      = null;        // { item, pick:{mode, date} }
-let apSpread   = { pick: null, stepMin: 120, running: false, stop: false };
+let apSpread   = { pick: null, stepMin: 120, stepCustom: false, running: false, stop: false };
+const AP_STEP_MIN = 5, AP_STEP_MAX = 1440;
 let apHostRow  = null;        // แถว AutoPostStatus ดิบ
 let apHost     = null;        // status JSON ที่ parse แล้ว (null = ยังไม่เคยมี Agent)
 let apHostLoadedAt = 0;
@@ -3397,6 +3408,9 @@ function apOpenSpread() {
   apSpread.pick = null;
   apSpread.items = items;
   apSpread.stepMin = parseInt(apLsGet('bengen_ap_step', '120')) || 120;
+  apSpread.stepCustom = apLsGet('bengen_ap_step_custom', '0') === '1'
+    || ![...$('ap-sp-step').querySelectorAll('.ap-pill')].some(b => +b.dataset.min === apSpread.stepMin);
+  $('ap-sp-step-min').value = apSpread.stepMin;
   $('ap-sp-win-on').checked = apLsGet('bengen_ap_win_on', '1') === '1';
   $('ap-sp-win-from').value = apLsGet('bengen_ap_win_from', '08:00');
   $('ap-sp-win-to').value   = apLsGet('bengen_ap_win_to', '22:00');
@@ -3426,10 +3440,15 @@ function apSpreadRefresh() {
   const pick = apSpread.pick;
   $('ap-sp-quick').querySelectorAll('.ap-qbtn').forEach(b => b.classList.toggle('active', !!pick && b.dataset.mode === pick.mode));
   $('ap-sp-custom').classList.toggle('active', !!pick && pick.mode === 'custom');
-  $('ap-sp-step').querySelectorAll('.ap-pill').forEach(b => b.classList.toggle('active', +b.dataset.min === apSpread.stepMin));
+  $('ap-sp-step').querySelectorAll('.ap-pill').forEach(b => b.classList.toggle('active',
+    b.dataset.min === 'custom' ? apSpread.stepCustom : !apSpread.stepCustom && +b.dataset.min === apSpread.stepMin));
+  $('ap-sp-step-custom').classList.toggle('show', apSpread.stepCustom);
   $('ap-sp-win').style.opacity = $('ap-sp-win-on').checked ? '1' : '.4';
 
-  const err = pick ? apPickError(pick) : 'เลือกเวลาเริ่มก่อนครับ';
+  const stepOk = Number.isInteger(apSpread.stepMin) && apSpread.stepMin >= AP_STEP_MIN && apSpread.stepMin <= AP_STEP_MAX;
+  const err = !pick ? 'เลือกเวลาเริ่มก่อนครับ'
+    : !stepOk ? `ระยะห่างต้องเป็น ${AP_STEP_MIN}–${AP_STEP_MAX} นาที`
+    : apPickError(pick);
   const go = $('ap-sp-go');
   go.disabled = !!err;
   go.innerHTML = `🗓️ ยืนยันตั้งเวลา ${items.length} คลิป`;
@@ -3482,6 +3501,7 @@ async function apRunSpread() {
   if (!g.proceed) { apSpreadRefresh(); return; }
 
   apLsSet('bengen_ap_step', String(apSpread.stepMin));
+  apLsSet('bengen_ap_step_custom', apSpread.stepCustom ? '1' : '0');
   apLsSet('bengen_ap_win_on', $('ap-sp-win-on').checked ? '1' : '0');
   apLsSet('bengen_ap_win_from', $('ap-sp-win-from').value);
   apLsSet('bengen_ap_win_to', $('ap-sp-win-to').value);
@@ -3620,7 +3640,23 @@ function apInit() {
     apSpread.pick = d ? { mode: 'custom', date: d } : null;
     apSpreadRefresh();
   });
-  $('ap-sp-step').querySelectorAll('.ap-pill').forEach(b => b.addEventListener('click', () => { apSpread.stepMin = +b.dataset.min; apSpreadRefresh(); }));
+  $('ap-sp-step').querySelectorAll('.ap-pill').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.min === 'custom') {
+      apSpread.stepCustom = true;
+      apSpread.stepMin = parseInt($('ap-sp-step-min').value, 10);
+      apSpreadRefresh();
+      $('ap-sp-step-min').focus();
+      return;
+    }
+    apSpread.stepCustom = false;
+    apSpread.stepMin = +b.dataset.min;
+    $('ap-sp-step-min').value = apSpread.stepMin;
+    apSpreadRefresh();
+  }));
+  $('ap-sp-step-min').addEventListener('input', () => {
+    apSpread.stepMin = parseInt($('ap-sp-step-min').value, 10);
+    apSpreadRefresh();
+  });
   ['ap-sp-win-on', 'ap-sp-win-from', 'ap-sp-win-to'].forEach(id => $(id).addEventListener('input', apSpreadRefresh));
   $('ap-sp-win-on').addEventListener('change', apSpreadRefresh);
 
