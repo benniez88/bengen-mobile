@@ -1188,7 +1188,7 @@ function renderList() {
   wrap.innerHTML = readyItems.map((item, i) => {
     const p = item.product;
     const c = item.content;
-    const img = p.driveImageUrl || '';
+    const img = driveImg(p.driveImageUrl, 240);
     const price = p.priceSale || p.price || 0;
     const comm  = p.commissionRate || 0;
     const commBaht = p.commissionBaht || 0;
@@ -1237,7 +1237,7 @@ async function openDetail(idx) {
   window.scrollTo(0, 0);
 
   const heroEl = $('detail-hero');
-  currentImgs = [p.driveImageUrl].filter(Boolean);
+  currentImgs = [driveImg(p.driveImageUrl, 1000)].filter(Boolean);
   if (currentImgs.length) {
     heroEl.innerHTML = `<img src="${currentImgs[0]}" onerror="this.style.display='none'">`;
   } else {
@@ -2822,8 +2822,16 @@ function apStatusBadge(it) {
   return '';
 }
 
+// ลิงก์ drive.google.com/uc?id=... มักโหลดใน <img> ไม่ขึ้น (Chrome บล็อกตอน redirect ไปหน้าดาวน์โหลด)
+// เปลี่ยนเป็นรูปย่อจาก lh3.googleusercontent.com — โหลดได้ตรงๆ และไฟล์เล็กกว่ามาก
+function driveImg(url, w) {
+  if (!url) return '';
+  const m = String(url).match(/[?&]id=([\w-]+)/) || String(url).match(/\/d\/([\w-]+)/);
+  return m ? `https://lh3.googleusercontent.com/d/${m[1]}=w${w}` : url;
+}
+
 function apImgHtml(p) {
-  const img = p.driveImageUrl || '';
+  const img = driveImg(p.driveImageUrl, 200);
   return img
     ? `<img class="card-img" src="${escapeHtml(img)}" alt="" onerror="this.outerHTML='<div class=&quot;card-img&quot;>🛍️</div>'">`
     : `<div class="card-img">🛍️</div>`;
