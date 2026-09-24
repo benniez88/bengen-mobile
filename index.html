@@ -204,6 +204,135 @@ body.hide-nav .bottom-nav{display:none;}
 .intro-tag{position:absolute;bottom:4px;left:4px;background:var(--amber);color:#1a1204;
   font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;}
 
+/* ── AUTOPOST TAB ── */
+.stat-value.red{color:var(--red);}
+.ap-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.ap-stats .stat-box{padding:11px 10px;}
+.ap-stats .stat-value{font-size:22px;line-height:1.1;}
+
+.ap-seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:4px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:12px;}
+.ap-seg-btn{border:none;background:transparent;color:var(--text2);font-family:var(--font);
+  font-size:11.5px;font-weight:700;line-height:1.25;padding:7px 2px;border-radius:9px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;min-height:48px;justify-content:center;}
+.ap-seg-btn .ap-seg-n{font-size:11px;font-weight:800;min-width:22px;padding:0 6px;border-radius:999px;
+  background:var(--bg4);color:var(--text2);}
+.ap-seg-btn.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 6px rgba(0,0,0,.18);}
+.ap-seg-btn.active .ap-seg-n{background:linear-gradient(135deg,var(--p),var(--pn));color:#fff;}
+.ap-seg-btn.fail.has .ap-seg-n{background:rgba(239,68,68,.18);color:var(--red);}
+
+.ap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:30px;}
+.ap-toolbar-text{font-size:12.5px;color:var(--text2);}
+.ap-toolbar-text b{color:var(--pn);}
+
+.ap-list{display:flex;flex-direction:column;gap:10px;}
+.ap-card{position:relative;align-items:center;}
+.ap-card .card-img{width:64px;height:64px;}
+.ap-card.selected{border-color:var(--pn);background:var(--bg3);}
+.ap-card.dim{opacity:.72;}
+.ap-check{width:20px;height:20px;flex-shrink:0;accent-color:var(--pn);}
+.ap-cap{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.b-time{background:rgba(59,130,246,.15);color:var(--blue);}
+.b-due{background:rgba(245,158,11,.16);color:var(--amber);}
+.b-posted{background:rgba(16,185,129,.15);color:var(--green);}
+.b-fail{background:rgba(239,68,68,.15);color:var(--red);}
+.b-warn{background:rgba(239,68,68,.12);color:var(--red);border:1px dashed rgba(239,68,68,.45);}
+
+/* sticky action bar (multi-select) — sits above bottom nav */
+.ap-selbar{position:fixed;left:0;right:0;z-index:25;display:none;gap:8px;align-items:center;
+  bottom:calc(64px + env(safe-area-inset-bottom));padding:10px 14px;
+  background:var(--bg2);border-top:1px solid var(--border);box-shadow:0 -6px 20px rgba(0,0,0,.2);}
+.ap-selbar.show{display:flex;}
+body.ap-selecting .main{padding-bottom:150px;}
+
+/* bottom sheet */
+.ap-backdrop{position:fixed;inset:0;z-index:50;background:rgba(5,2,12,.62);opacity:0;
+  pointer-events:none;transition:opacity .2s;}
+.ap-backdrop.show{opacity:1;pointer-events:auto;}
+.ap-sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;max-height:92vh;max-height:92dvh;
+  display:flex;flex-direction:column;background:var(--bg);border:1px solid var(--border);
+  border-bottom:none;border-radius:20px 20px 0 0;transform:translateY(105%);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1);max-width:560px;margin:0 auto;}
+.ap-sheet.show{transform:translateY(0);}
+.ap-grab{width:40px;height:4px;border-radius:4px;background:var(--border2);margin:8px auto 0;flex-shrink:0;}
+.ap-sheet-hdr{display:flex;align-items:center;gap:10px;padding:10px 16px 12px;
+  border-bottom:1px solid var(--border);flex-shrink:0;}
+.ap-sheet-title{flex:1;font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--pn),var(--pk));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ap-sheet-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;
+  overscroll-behavior:contain;}
+.ap-sheet-foot{flex-shrink:0;display:flex;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+  background:var(--bg2);border-top:1px solid var(--border);}
+body.ap-lock{overflow:hidden;}
+
+.ap-prod{display:flex;gap:12px;align-items:center;}
+.ap-prod .card-img{width:52px;height:52px;border-radius:10px;font-size:22px;}
+.ap-prod-name{font-size:14px;font-weight:700;line-height:1.35;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.ap-video{width:100%;border-radius:14px;overflow:hidden;background:#000;}
+.ap-video video{width:100%;display:block;max-height:340px;}
+
+.ap-count{font-size:11px;font-weight:800;padding:3px 8px;border-radius:7px;letter-spacing:0;
+  text-transform:none;background:rgba(16,185,129,.15);color:var(--green);}
+.ap-count.over{background:rgba(239,68,68,.15);color:var(--red);}
+.ap-bad{background:rgba(239,68,68,.22);color:var(--red);border-radius:3px;
+  outline:1.5px solid var(--red);padding:0 1px;}
+.ap-over{color:var(--red);text-decoration:line-through;text-decoration-color:rgba(239,68,68,.6);opacity:.8;}
+
+.ap-checks{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-top:10px;
+  border-top:1px dashed var(--border);}
+.ap-chk{display:flex;gap:8px;font-size:12.5px;line-height:1.5;color:var(--text2);}
+.ap-chk.bad{color:var(--red);font-weight:700;}
+.ap-chk-ic{flex-shrink:0;width:18px;text-align:center;}
+
+.ap-quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.ap-qbtn{border:1.5px solid var(--border);background:var(--bg3);color:var(--text);
+  font-family:var(--font);border-radius:12px;padding:10px 12px;text-align:left;cursor:pointer;
+  display:flex;flex-direction:column;gap:1px;min-height:52px;}
+.ap-qbtn b{font-size:14px;font-weight:800;}
+.ap-qbtn span{font-size:11.5px;color:var(--text2);}
+.ap-qbtn.active{border-color:var(--pn);background:rgba(200,125,255,.12);}
+.ap-qbtn.active b{color:var(--pn);}
+.ap-sheet input[type=datetime-local],.ap-sheet input[type=time]{width:100%;background:var(--bg3);
+  border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font);
+  font-size:15px;padding:11px 12px;outline:none;min-height:46px;color-scheme:dark;}
+:root[data-theme="light"] .ap-sheet input[type=datetime-local],
+:root[data-theme="light"] .ap-sheet input[type=time]{color-scheme:light;}
+.ap-sheet input.active{border-color:var(--pn);}
+.ap-when{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:10px;
+  padding:10px 12px;border-radius:10px;background:var(--bg3);font-size:13px;color:var(--text2);}
+.ap-when b{font-size:15px;color:var(--text);font-weight:800;}
+.ap-when.err{background:rgba(239,68,68,.1);color:var(--red);}
+.ap-note{font-size:11.5px;color:var(--text3);line-height:1.6;text-align:center;padding:2px 8px;}
+
+.ap-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.ap-pill{border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:var(--font);
+  font-size:13px;font-weight:700;padding:9px 12px;border-radius:999px;cursor:pointer;min-height:40px;}
+.ap-pill.active{border-color:var(--pn);background:rgba(200,125,255,.14);color:var(--pn);}
+.ap-switch{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:700;color:var(--text);
+  margin:0;cursor:pointer;}
+.ap-switch input{width:20px;height:20px;accent-color:var(--pn);}
+.ap-win{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:10px;}
+.ap-win-sep{color:var(--text3);font-weight:700;}
+
+.ap-plan{display:flex;flex-direction:column;gap:0;max-height:300px;overflow-y:auto;}
+.ap-plan-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:center;
+  padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.ap-plan-row:last-child{border-bottom:none;}
+.ap-plan-i{width:22px;height:22px;border-radius:7px;background:var(--bg4);color:var(--pn);
+  font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.ap-plan-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ap-plan-t{font-weight:800;color:var(--text);white-space:nowrap;}
+.ap-plan-day{grid-column:1 / -1;font-size:11px;font-weight:800;color:var(--text3);padding:10px 0 2px;
+  text-transform:uppercase;letter-spacing:.4px;}
+
+/* status rows readable in light theme (scoped to AutoPost only) */
+:root[data-theme="light"] #tab-autopost .row-info,:root[data-theme="light"] .ap-sheet .row-info{color:#1d4ed8;}
+:root[data-theme="light"] #tab-autopost .row-ok,:root[data-theme="light"] .ap-sheet .row-ok{color:#047857;}
+:root[data-theme="light"] #tab-autopost .row-err,:root[data-theme="light"] .ap-sheet .row-err{color:#b91c1c;}
+:root[data-theme="light"] #tab-autopost .row-warn,:root[data-theme="light"] .ap-sheet .row-warn{color:#92400e;}
+:root[data-theme="light"] .ap-backdrop{background:rgba(30,22,48,.42);}
+
 /* ── TOAST ── */
 #toast{position:fixed;bottom:76px;left:16px;right:16px;background:var(--bg2);
   border:1px solid var(--pn);border-radius:12px;padding:13px 16px;
@@ -519,6 +648,37 @@ body.hide-nav .bottom-nav{display:none;}
     </div>
   </div>
 
+  <!-- ═══════════ TAB 4: AutoPost ═══════════ -->
+  <div class="tab-page" id="tab-autopost">
+    <div class="tab-body">
+      <div class="ap-stats">
+        <div class="stat-box">
+          <div class="stat-label">⏰ รอโพสต์</div>
+          <div class="stat-value" id="ap-stat-wait">–</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">✅ โพสต์วันนี้</div>
+          <div class="stat-value green" id="ap-stat-today">–</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">⚠️ ล้มเหลว</div>
+          <div class="stat-value red" id="ap-stat-fail">–</div>
+        </div>
+      </div>
+
+      <div class="ap-seg" id="ap-seg" role="tablist">
+        <button class="ap-seg-btn" data-group="ready" role="tab">พร้อมตั้งเวลา<span class="ap-seg-n" id="ap-n-ready">0</span></button>
+        <button class="ap-seg-btn" data-group="scheduled" role="tab">ตั้งเวลาแล้ว<span class="ap-seg-n" id="ap-n-scheduled">0</span></button>
+        <button class="ap-seg-btn" data-group="posted" role="tab">โพสต์แล้ว<span class="ap-seg-n" id="ap-n-posted">0</span></button>
+        <button class="ap-seg-btn fail" data-group="failed" role="tab">ล้มเหลว<span class="ap-seg-n" id="ap-n-failed">0</span></button>
+      </div>
+
+      <div id="ap-status"></div>
+      <div class="ap-toolbar" id="ap-toolbar"></div>
+      <div class="ap-list" id="ap-list"></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- BOTTOM NAV -->
@@ -531,6 +691,89 @@ body.hide-nav .bottom-nav{display:none;}
   </div>
   <div class="nav-item" data-tab="add">
     <div class="nav-ic">🛒</div><div class="nav-lb">เพิ่มสินค้า</div>
+  </div>
+  <div class="nav-item" data-tab="autopost">
+    <div class="nav-ic">🤖</div><div class="nav-lb">AutoPost</div>
+  </div>
+</div>
+
+<!-- ═══════════ AutoPost: multi-select bar + bottom sheets ═══════════ -->
+<div class="ap-selbar" id="ap-selbar">
+  <button class="btn btn-ghost btn-sm" id="ap-sel-cancel" style="width:auto;">ยกเลิก</button>
+  <button class="btn btn-primary" id="ap-sel-spread" style="flex:1;" disabled>🗓️ กระจายเวลา</button>
+</div>
+
+<div class="ap-backdrop" id="ap-backdrop"></div>
+
+<!-- 8.2 ตั้งเวลาคลิปเดียว -->
+<div class="ap-sheet" id="ap-sheet-one" role="dialog" aria-modal="true" aria-labelledby="ap-one-title">
+  <div class="ap-grab"></div>
+  <div class="ap-sheet-hdr">
+    <div class="ap-sheet-title" id="ap-one-title">🕒 ตั้งเวลาโพสต์</div>
+    <button class="icon-btn" data-ap-close aria-label="ปิด">✕</button>
+  </div>
+  <div class="ap-sheet-body" id="ap-one-body"></div>
+  <div class="ap-sheet-foot" id="ap-one-foot">
+    <button class="btn btn-ghost" id="ap-one-unschedule" style="flex:1;display:none;">ยกเลิกเวลา</button>
+    <button class="btn btn-primary" id="ap-one-save" style="flex:2;">💾 ตั้งเวลาโพสต์</button>
+  </div>
+</div>
+
+<!-- 8.3 กระจายเวลาหลายคลิป -->
+<div class="ap-sheet" id="ap-sheet-spread" role="dialog" aria-modal="true" aria-labelledby="ap-sp-title">
+  <div class="ap-grab"></div>
+  <div class="ap-sheet-hdr">
+    <div class="ap-sheet-title" id="ap-sp-title">🗓️ กระจายเวลา</div>
+    <button class="icon-btn" data-ap-close aria-label="ปิด">✕</button>
+  </div>
+  <div class="ap-sheet-body">
+    <div id="ap-sp-setup" style="display:flex;flex-direction:column;gap:12px;">
+      <div class="section">
+        <div class="section-title"><span>เริ่มโพสต์คลิปแรก</span></div>
+        <div class="ap-quick" id="ap-sp-quick"></div>
+        <label style="margin-top:12px;">หรือกำหนดเอง (เวลาไทย)</label>
+        <input type="datetime-local" id="ap-sp-custom">
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span>ห่างกันทุกๆ</span></div>
+        <div class="ap-pills" id="ap-sp-step">
+          <button class="ap-pill" data-min="30">30 นาที</button>
+          <button class="ap-pill" data-min="60">1 ชม.</button>
+          <button class="ap-pill" data-min="120">2 ชม.</button>
+          <button class="ap-pill" data-min="180">3 ชม.</button>
+          <button class="ap-pill" data-min="240">4 ชม.</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <label class="ap-switch"><input type="checkbox" id="ap-sp-win-on"> โพสต์เฉพาะช่วงเวลา</label>
+        <div class="ap-win" id="ap-sp-win">
+          <input type="time" id="ap-sp-win-from" value="08:00" aria-label="เริ่ม">
+          <span class="ap-win-sep">–</span>
+          <input type="time" id="ap-sp-win-to" value="22:00" aria-label="สิ้นสุด">
+        </div>
+        <div class="settings-hint" style="margin:8px 0 0;">เลยช่วงนี้ ระบบจะเลื่อนคลิปถัดไปไปเริ่มวันถัดไป</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span>ตัวอย่างตารางโพสต์</span><span id="ap-sp-range" style="text-transform:none;letter-spacing:0;color:var(--text2);"></span></div>
+        <div id="ap-sp-warn"></div>
+        <div class="ap-plan" id="ap-sp-plan"></div>
+      </div>
+      <div class="ap-note">คอมจะโพสต์ภายใน ~15–30 นาทีหลังถึงเวลา และต้องเปิดคอมพร้อมต่อมือถือไว้</div>
+    </div>
+
+    <div id="ap-sp-progress" style="display:none;flex-direction:column;gap:10px;">
+      <div class="progress-track"><div class="progress-fill" id="ap-sp-bar"></div></div>
+      <div style="font-size:12.5px;color:var(--text2);" id="ap-sp-ptext">—</div>
+      <div class="batch-log" id="ap-sp-log" style="max-height:none;"></div>
+    </div>
+    <div id="ap-sp-summary"></div>
+  </div>
+  <div class="ap-sheet-foot">
+    <button class="btn btn-red btn-sm" id="ap-sp-stop" style="display:none;">⏹️ หยุด</button>
+    <button class="btn btn-primary" id="ap-sp-go">🗓️ ยืนยันตั้งเวลา</button>
   </div>
 </div>
 
@@ -607,6 +850,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   bindEvents();
   initOcrModelSelect();
+  apInit();
 
   if (appsUrl) {
     loadReadyList();
@@ -688,14 +932,17 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-page').forEach(el => el.classList.remove('show'));
   $('tab-' + tab).classList.add('show');
   document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
-  const titles = { post: '📱 พร้อมโพสต์', voice: '🎙️ สร้างเสียง', add: '🛒 เพิ่มสินค้า' };
+  const titles = { post: '📱 พร้อมโพสต์', voice: '🎙️ สร้างเสียง', add: '🛒 เพิ่มสินค้า', autopost: '🤖 AutoPost' };
   $('hdr-title').textContent = titles[tab];
   window.scrollTo(0, 0);
+  if (tab === 'autopost') apOnShow();
+  else if (apSelectMode) apExitSelect(true);
 }
 
 function onRefreshClick() {
   if (activeTab === 'post') loadReadyList();
   else if (activeTab === 'voice') loadVoicePendingList();
+  else if (activeTab === 'autopost') apLoad();
   else toast('ℹ️ แท็บนี้ไม่มีการรีเฟรช — เริ่มกรอกข้อมูลสินค้าใหม่ได้เลยครับ');
 }
 
@@ -1735,6 +1982,782 @@ function resetShopeeForm() {
   ['sp-name','sp-price','sp-price-sale','sp-rating','sp-sales','sp-shop',
    'sp-comm-rate','sp-comm-baht','sp-partner-count','sp-link-input'].forEach(id => $(id).value = '');
   renderShopeeImgGrid();
+}
+
+// ═══════════════════════════════════════
+// TAB 4 — AUTOPOST (ตั้งเวลาโพสต์ Shopee Video)
+// หน้าเว็บไม่ได้โพสต์เอง — แค่เขียน scheduledAt/postMode ลง Sheet ผ่าน Worker
+// สคริปต์ Python บนคอมจะหยิบคลิปที่ถึงเวลาไปโพสต์ทุก 15–30 นาที
+// ═══════════════════════════════════════
+const AP_CAP_MAX   = 150;
+const AP_TH_OFFSET = 7 * 3600 * 1000;   // Asia/Bangkok = UTC+7 (ไม่มี DST)
+const AP_DAY_MS    = 86400000;
+const AP_PAST_GRACE_MS = 5 * 60 * 1000; // ห้ามตั้งย้อนหลังเกิน 5 นาที
+const AP_POSTED_LIMIT  = 30;
+const AP_WD  = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+const AP_MON = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const AP_GROUPS = ['ready','scheduled','posted','failed'];
+
+let apItems    = [];          // [{ content, product, group, check }]
+let apLoaded   = false;
+let apLoading  = false;
+let apGroup    = 'ready';
+let apSelectMode = false;
+let apSelected = new Set();   // content ids (string)
+let apOne      = null;        // { item, pick:{mode, date} }
+let apSpread   = { pick: null, stepMin: 120, running: false, stop: false };
+let apTicker   = null;
+
+function apLsGet(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
+function apLsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+// ── เวลา (คิดเป็นเวลาไทยเสมอ ไม่ขึ้นกับ timezone ของเครื่อง) ──
+function apDate(v) {
+  if (!v) return null;
+  const d = v instanceof Date ? v : new Date(v);
+  return isNaN(d.getTime()) ? null : d;
+}
+function apTh(date) {
+  const d = new Date(date.getTime() + AP_TH_OFFSET);
+  return { y: d.getUTCFullYear(), m: d.getUTCMonth(), d: d.getUTCDate(),
+           h: d.getUTCHours(), mi: d.getUTCMinutes(), wd: d.getUTCDay() };
+}
+function apThDay(date) { return Math.floor((date.getTime() + AP_TH_OFFSET) / AP_DAY_MS); }
+function apFromTh(y, m, d, h, mi) { return new Date(Date.UTC(y, m, d, h, mi) - AP_TH_OFFSET); }
+function ap2(n) { return String(n).padStart(2, '0'); }
+function apHM(date) { const t = apTh(date); return ap2(t.h) + ':' + ap2(t.mi); }
+
+function apFmt(date) {
+  if (!date) return '—';
+  const diff = apThDay(date) - apThDay(new Date());
+  const hm = apHM(date);
+  if (diff === 0)  return 'วันนี้ ' + hm;
+  if (diff === 1)  return 'พรุ่งนี้ ' + hm;
+  if (diff === -1) return 'เมื่อวาน ' + hm;
+  const t = apTh(date);
+  const yNow = apTh(new Date()).y;
+  const yy = t.y !== yNow ? ' ' + String((t.y + 543) % 100) : '';
+  return `${AP_WD[t.wd]} ${t.d} ${AP_MON[t.m]}${yy} ${hm}`;
+}
+function apFmtDay(date) {
+  const diff = apThDay(date) - apThDay(new Date());
+  const t = apTh(date);
+  const base = `${AP_WD[t.wd]} ${t.d} ${AP_MON[t.m]}`;
+  return diff === 0 ? 'วันนี้ · ' + base : diff === 1 ? 'พรุ่งนี้ · ' + base : base;
+}
+function apRel(date) {
+  const ms = date.getTime() - Date.now();
+  const abs = Math.abs(ms), past = ms < 0;
+  let s;
+  if (abs < 60000) return past ? 'เมื่อสักครู่' : 'ตอนนี้';
+  if (abs < 3600000) s = Math.round(abs / 60000) + ' นาที';
+  else if (abs < AP_DAY_MS) s = Math.round(abs / 3600000) + ' ชม.';
+  else s = Math.round(abs / AP_DAY_MS) + ' วัน';
+  return past ? s + 'ที่แล้ว' : 'อีก ' + s;
+}
+// <input type="datetime-local"> ↔ Date (ตีความเป็นเวลาไทยเสมอ)
+function apToInput(date) {
+  const t = apTh(date);
+  return `${t.y}-${ap2(t.m + 1)}-${ap2(t.d)}T${ap2(t.h)}:${ap2(t.mi)}`;
+}
+function apFromInput(v) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(v || '');
+  return m ? apFromTh(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : null;
+}
+function apQuickPresets() {
+  const now = new Date();
+  const t = apTh(now);
+  const tmr9  = apFromTh(t.y, t.m, t.d + 1, 9, 0);
+  const tmr19 = apFromTh(t.y, t.m, t.d + 1, 19, 0);
+  const plus1 = new Date(Math.ceil((now.getTime() + 3600000) / 60000) * 60000);
+  return [
+    { mode: 'asap',  title: '⚡ เร็วที่สุด',   sub: 'รอบถัดไปของคอม', date: now },
+    { mode: 'plus1', title: '+1 ชม.',          sub: apFmt(plus1),      date: plus1 },
+    { mode: 'tmr9',  title: 'พรุ่งนี้ 09:00',  sub: 'ช่วงเช้า',         date: tmr9 },
+    { mode: 'tmr19', title: 'พรุ่งนี้ 19:00',  sub: 'ไพรม์ไทม์',        date: tmr19 },
+  ];
+}
+
+// ── ตรวจความพร้อม (ข้อ 7) ──
+function apCaption(c) { return String(c.caption || c.hook || ''); }
+// อนุญาต: ASCII, ไทย, emoji, เครื่องหมายทั่วไป — อย่างอื่น (ฮีบรู/เกาหลี/เขมร/รัสเซีย/ลาว ฯลฯ) = ผิด
+const AP_OK_CHAR = /[\u0000-\u007F -¿×÷฀-๿ -⁯₠-⃏℀-⅏←-⇿⌀-⏿①-⓿─-➿⤀-⥿⬀-⯿〰〽㊗㊙︎️⃣\u{1F000}-\u{1FAFF}\u{E0020}-\u{E007F}]/u;
+const AP_EMOJI = /\p{Extended_Pictographic}/u;
+function apIsBadChar(ch) { return !(AP_OK_CHAR.test(ch) || AP_EMOJI.test(ch)); }
+
+function apCheck(item) {
+  const cap = apCaption(item.content);
+  const len = cap.length; // นับแบบ UTF-16 (emoji = 2) — เผื่อไว้ก่อน ปลอดภัยกว่านับขาด
+  const bad = [];
+  for (const ch of cap) if (apIsBadChar(ch) && !bad.includes(ch)) bad.push(ch);
+  const p = item.product || {};
+  const hasLink = !!(p.productUrl || p.affiliateLink);
+  const issues = [];
+  if (!cap.trim()) issues.push({ key: 'empty', short: '📝 ไม่มีแคปชั่น' });
+  if (len > AP_CAP_MAX) issues.push({ key: 'len', short: `✂️ ${len}/${AP_CAP_MAX}` });
+  if (bad.length) issues.push({ key: 'lang', short: '🔤 มีภาษาอื่นปน' });
+  if (!hasLink) issues.push({ key: 'link', short: '🔗 ไม่มีลิงก์สินค้า' });
+  return { cap, len, bad, hasLink, issues };
+}
+
+// แคปชั่นพร้อมไฮไลต์ตัวอักษรผิด + ขีดฆ่าส่วนที่เกิน 150
+function apCaptionHtml(cap) {
+  let out = '', pos = 0, overOpen = false;
+  for (const ch of cap) {
+    if (!overOpen && pos >= AP_CAP_MAX) { out += '<span class="ap-over">'; overOpen = true; }
+    const esc = escapeHtml(ch);
+    out += apIsBadChar(ch) ? `<mark class="ap-bad">${esc}</mark>` : esc;
+    pos += ch.length;
+  }
+  if (overOpen) out += '</span>';
+  return out || '<span style="color:var(--text3);">— ไม่มีแคปชั่น —</span>';
+}
+
+// ── จัดกลุ่ม (ข้อ 6) ──
+function apClassify(c) {
+  if (c.postedAt) return 'posted';
+  if (c.postError) return 'failed';
+  if (c.postMode === 'scheduled' && c.scheduledAt) return 'scheduled';
+  if (c.videoStatus === 'done' && c.mp4DriveUrl && !c.scheduledAt) return 'ready';
+  return null;
+}
+function apByGroup(g) {
+  const list = apItems.filter(it => it.group === g);
+  if (g === 'ready')     return list.sort((a, b) => (apDate(b.content.createdAt)||0) - (apDate(a.content.createdAt)||0));
+  if (g === 'scheduled') return list.sort((a, b) => (apDate(a.content.scheduledAt)||0) - (apDate(b.content.scheduledAt)||0));
+  if (g === 'posted')    return list.sort((a, b) => (apDate(b.content.postedAt)||0) - (apDate(a.content.postedAt)||0)).slice(0, AP_POSTED_LIMIT);
+  return list.sort((a, b) => (apDate(b.content.updatedAt)||0) - (apDate(a.content.updatedAt)||0));
+}
+function apFind(id) { return apItems.find(it => String(it.content.id) === String(id)); }
+
+// ── โหลดข้อมูล ──
+async function apLoad(opts = {}) {
+  if (!appsUrl) {
+    apSetStatus('info', '⚙️ ใส่ Backend URL (Worker) ก่อนเริ่มใช้งานครับ');
+    toggleSettings(true);
+    return false;
+  }
+  if (apLoading) return false;
+  apLoading = true;
+  if (!opts.silent) {
+    $('ap-status').innerHTML = '';
+    $('ap-toolbar').innerHTML = '';
+    $('ap-list').innerHTML = `
+      <div class="loading-wrap">
+        <div class="spin"></div>
+        <div class="loading-text">กำลังโหลดคิวโพสต์...</div>
+      </div>`;
+  }
+  try {
+    const [productsRes, contentRes] = await Promise.all([
+      xhrGet(`${appsUrl}?action=read&sheet=Products&_=${Date.now()}`),
+      xhrGet(`${appsUrl}?action=read&sheet=Content&_=${Date.now()}`)
+    ]);
+    if (contentRes.error) throw new Error(contentRes.error);
+    const products = productsRes.rows || [];
+    const contents = contentRes.rows || [];
+    apItems = contents.map(c => {
+      const product = products.find(p => String(p.id) === String(c.productId)) || {};
+      const item = { content: c, product, group: apClassify(c) };
+      item.check = apCheck(item);
+      return item;
+    }).filter(it => it.group);
+    apLoaded = true;
+    // ล้างรายการที่เลือกไว้แต่ไม่อยู่ในกลุ่มพร้อมแล้ว
+    apSelected.forEach(id => { const it = apFind(id); if (!it || it.group !== 'ready') apSelected.delete(id); });
+    apRender();
+    return true;
+  } catch (err) {
+    $('ap-list').innerHTML = '';
+    apSetStatus('err', '❌ โหลดข้อมูลไม่สำเร็จ: ' + escapeHtml(err.message) +
+      ' <button class="copy-btn" onclick="apLoad()" style="margin-left:auto;">ลองใหม่</button>');
+    return false;
+  } finally {
+    apLoading = false;
+  }
+}
+
+function apSetStatus(type, html) {
+  const cls = { info: 'row-info', ok: 'row-ok', err: 'row-err', warn: 'row-warn' }[type] || 'row-info';
+  $('ap-status').innerHTML = html ? `<div class="${cls}" style="margin:0;align-items:center;">${html}</div>` : '';
+}
+
+// ── แสดงผล (8.1) ──
+function apRender() {
+  if (!apLoaded) return;
+  const todayN = apThDay(new Date());
+  const counts = {};
+  AP_GROUPS.forEach(g => counts[g] = apItems.filter(it => it.group === g).length);
+  const postedToday = apItems.filter(it => it.group === 'posted' && apDate(it.content.postedAt) &&
+    apThDay(apDate(it.content.postedAt)) === todayN).length;
+
+  $('ap-stat-wait').textContent  = counts.scheduled;
+  $('ap-stat-today').textContent = postedToday;
+  $('ap-stat-fail').textContent  = counts.failed;
+  AP_GROUPS.forEach(g => $('ap-n-' + g).textContent = g === 'posted' ? Math.min(counts[g], AP_POSTED_LIMIT) : counts[g]);
+  document.querySelectorAll('#ap-seg .ap-seg-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.group === apGroup);
+    b.setAttribute('aria-selected', b.dataset.group === apGroup);
+  });
+  document.querySelector('#ap-seg .fail').classList.toggle('has', counts.failed > 0);
+
+  if (apGroup !== 'ready' && apSelectMode) apExitSelect(true);
+  $('ap-status').innerHTML = '';
+  apRenderToolbar();
+
+  const list = apByGroup(apGroup);
+  const wrap = $('ap-list');
+  if (!list.length) {
+    const E = {
+      ready:     ['🎬', 'ยังไม่มีคลิปพร้อมตั้งเวลา', 'คลิปที่วิดีโอเสร็จแล้วและยังไม่ได้ตั้งเวลา<br>จะมาแสดงที่นี่'],
+      scheduled: ['🗓️', 'ยังไม่มีคลิปในคิว', 'ไปที่ "พร้อมตั้งเวลา" แล้วแตะคลิป<br>เพื่อตั้งเวลาโพสต์'],
+      posted:    ['📭', 'ยังไม่มีคลิปที่โพสต์แล้ว', 'เมื่อคอมโพสต์สำเร็จ<br>คลิปจะย้ายมาอยู่ที่นี่'],
+      failed:    ['🎉', 'ไม่มีคลิปที่ล้มเหลว', 'ถ้าคอมโพสต์ไม่สำเร็จ<br>จะแสดงสาเหตุไว้ที่นี่ให้ตั้งเวลาใหม่'],
+    }[apGroup];
+    wrap.innerHTML = `<div class="empty"><div class="empty-icon">${E[0]}</div>
+      <div class="empty-title">${E[1]}</div><div class="empty-desc">${E[2]}</div></div>`;
+    return;
+  }
+  wrap.innerHTML = list.map(apCardHtml).join('');
+  wrap.querySelectorAll('.ap-card').forEach(el => {
+    el.addEventListener('click', e => {
+      const id = el.dataset.id;
+      if (apSelectMode) {
+        if (e.target.classList.contains('ap-check')) apToggleSel(id, e.target.checked);
+        else apToggleSel(id);
+      } else {
+        apOpenOne(id);
+      }
+    });
+  });
+}
+
+function apStatusBadge(it) {
+  const c = it.content;
+  if (it.group === 'posted') return `<span class="badge b-posted">✅ ${escapeHtml(apFmt(apDate(c.postedAt)))}</span>`;
+  if (it.group === 'failed') return `<span class="badge b-fail">❌ โพสต์ไม่สำเร็จ</span>`;
+  if (it.group === 'scheduled') {
+    const d = apDate(c.scheduledAt);
+    if (d && d.getTime() <= Date.now()) return `<span class="badge b-due">⏳ รอคิวโพสต์</span>`;
+    return `<span class="badge b-time">🕒 ${escapeHtml(apFmt(d))}</span>`;
+  }
+  return '';
+}
+
+function apCardHtml(it) {
+  const p = it.product, c = it.content;
+  const id = escapeHtml(String(c.id));
+  const img = p.driveImageUrl || '';
+  const sel = apSelected.has(String(c.id));
+  const warns = (it.group === 'posted') ? [] : it.check.issues;
+  const extra = it.group === 'scheduled' && apDate(c.scheduledAt) && apDate(c.scheduledAt) > new Date()
+    ? `<span class="badge" style="background:var(--bg3);color:var(--text2);">${apRel(apDate(c.scheduledAt))}</span>` : '';
+  return `
+    <div class="card ap-card${sel ? ' selected' : ''}${it.group === 'posted' ? ' dim' : ''}" data-id="${id}">
+      ${apSelectMode ? `<input type="checkbox" class="ap-check" ${sel ? 'checked' : ''} aria-label="เลือกคลิปนี้">` : ''}
+      ${img
+        ? `<img class="card-img" src="${escapeHtml(img)}" alt="" onerror="this.outerHTML='<div class=&quot;card-img&quot;>🛍️</div>'">`
+        : `<div class="card-img">🛍️</div>`}
+      <div class="card-body">
+        <div class="card-name">${escapeHtml(p.name || c.productName || 'ไม่ทราบชื่อ')}</div>
+        <div class="ap-cap">${escapeHtml(it.check.cap) || '<i>ไม่มีแคปชั่น</i>'}</div>
+        <div class="card-badges">
+          ${apStatusBadge(it)}${extra}
+          ${warns.map(w => `<span class="badge b-warn">${w.short}</span>`).join('')}
+        </div>
+        ${it.group === 'failed' && c.postError
+          ? `<div style="font-size:11.5px;color:var(--red);line-height:1.4;">${escapeHtml(String(c.postError).slice(0, 140))}</div>` : ''}
+      </div>
+      ${apSelectMode ? '' : '<div class="card-arrow">›</div>'}
+    </div>`;
+}
+
+// ── โหมดเลือกหลายคลิป ──
+function apRenderToolbar() {
+  const tb = $('ap-toolbar');
+  const n = apByGroup('ready').length;
+  if (apGroup !== 'ready' || !n) {
+    tb.innerHTML = apGroup === 'scheduled' && apByGroup('scheduled').length
+      ? `<div class="ap-toolbar-text">เรียงจากเวลาใกล้สุด · คอมหยิบทุก 15–30 นาที</div>` : '';
+    tb.style.display = tb.innerHTML ? 'flex' : 'none';
+    return;
+  }
+  tb.style.display = 'flex';
+  if (!apSelectMode) {
+    tb.innerHTML = `<div class="ap-toolbar-text">แตะคลิปเพื่อตั้งเวลา</div>
+      <button class="copy-btn" id="ap-sel-start">☑️ เลือกหลายคลิป</button>`;
+    $('ap-sel-start').onclick = apEnterSelect;
+  } else {
+    tb.innerHTML = `<div class="ap-toolbar-text">เลือกแล้ว <b>${apSelected.size}</b>/${n} คลิป</div>
+      <div class="inline-row">
+        <button class="copy-btn" id="ap-sel-all">เลือกทั้งหมด</button>
+        <button class="copy-btn" id="ap-sel-none">ล้าง</button>
+      </div>`;
+    $('ap-sel-all').onclick  = () => { apByGroup('ready').forEach(it => apSelected.add(String(it.content.id))); apRender(); apUpdateSelbar(); };
+    $('ap-sel-none').onclick = () => { apSelected.clear(); apRender(); apUpdateSelbar(); };
+  }
+}
+function apEnterSelect() {
+  apSelectMode = true;
+  document.body.classList.add('ap-selecting');
+  $('ap-selbar').classList.add('show');
+  apRender(); apUpdateSelbar();
+}
+function apExitSelect(silent) {
+  apSelectMode = false;
+  apSelected.clear();
+  document.body.classList.remove('ap-selecting');
+  $('ap-selbar').classList.remove('show');
+  if (!silent) apRender();
+}
+function apToggleSel(id, force) {
+  id = String(id);
+  const on = force !== undefined ? force : !apSelected.has(id);
+  on ? apSelected.add(id) : apSelected.delete(id);
+  apRender(); apUpdateSelbar();
+}
+function apUpdateSelbar() {
+  const n = apSelected.size;
+  const btn = $('ap-sel-spread');
+  btn.disabled = n < 1;
+  btn.textContent = n ? `🗓️ กระจายเวลา ${n} คลิป` : '🗓️ เลือกคลิปก่อน';
+}
+
+// ── Bottom sheet ──
+function apOpenSheet(id) {
+  $('ap-backdrop').classList.add('show');
+  $(id).classList.add('show');
+  document.body.classList.add('ap-lock');
+}
+function apCloseSheets() {
+  if (apSpread.running) { toast('⏳ รอให้บันทึกเสร็จก่อน หรือกด ⏹️ หยุด'); return; }
+  $('ap-backdrop').classList.remove('show');
+  document.querySelectorAll('.ap-sheet').forEach(s => s.classList.remove('show'));
+  document.body.classList.remove('ap-lock');
+  const v = document.querySelector('#ap-one-body video');
+  if (v) v.pause();
+  apOne = null;
+}
+
+function apChecksHtml(ch) {
+  const row = (ok, text) => `<div class="ap-chk${ok ? '' : ' bad'}"><span class="ap-chk-ic">${ok ? '✅' : '❌'}</span><span>${text}</span></div>`;
+  const badList = ch.bad.slice(0, 8).map(b => `<mark class="ap-bad">${escapeHtml(b)}</mark>`).join(' ');
+  return `<div class="ap-checks">
+    ${row(ch.cap.trim() && ch.len <= AP_CAP_MAX, !ch.cap.trim() ? 'ไม่มีแคปชั่น (caption / hook ว่าง)'
+        : ch.len <= AP_CAP_MAX ? `ความยาวแคปชั่น ${ch.len}/${AP_CAP_MAX}`
+        : `แคปชั่นยาวเกิน ${ch.len}/${AP_CAP_MAX} — Shopee จะตัดส่วนที่ขีดฆ่าทิ้ง`)}
+    ${row(!ch.bad.length, ch.bad.length ? `พบตัวอักษรภาษาอื่นปน ${ch.bad.length} ตัว: ${badList}` : 'ไม่มีตัวอักษรภาษาอื่นปน')}
+    ${row(ch.hasLink, ch.hasLink ? 'สินค้ามีลิงก์ แนบสินค้าได้' : 'สินค้าไม่มี productUrl / affiliateLink — แนบสินค้าไม่ได้')}
+  </div>`;
+}
+
+function apQuickHtml(activeMode) {
+  return apQuickPresets().map(q => `
+    <button class="ap-qbtn${q.mode === activeMode ? ' active' : ''}" data-mode="${q.mode}">
+      <b>${q.title}</b><span>${escapeHtml(q.sub)}</span>
+    </button>`).join('');
+}
+
+// ── 8.2 ตั้งเวลาคลิปเดียว ──
+function apOpenOne(id) {
+  const it = apFind(id);
+  if (!it) return;
+  const c = it.content, p = it.product, ch = it.check;
+  const cur = it.group === 'scheduled' ? apDate(c.scheduledAt) : null;
+  apOne = { item: it, pick: cur ? { mode: 'custom', date: cur } : null };
+
+  const title = { ready: '🕒 ตั้งเวลาโพสต์', scheduled: '🕒 แก้เวลาโพสต์', posted: '✅ โพสต์แล้ว', failed: '🔁 ตั้งเวลาใหม่' }[it.group];
+  $('ap-one-title').textContent = title;
+
+  const img = p.driveImageUrl || '';
+  let html = `
+    <div class="ap-prod">
+      ${img ? `<img class="card-img" src="${escapeHtml(img)}" alt="" onerror="this.outerHTML='<div class=&quot;card-img&quot;>🛍️</div>'">` : '<div class="card-img">🛍️</div>'}
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
+        <div class="ap-prod-name">${escapeHtml(p.name || c.productName || 'ไม่ทราบชื่อ')}</div>
+        <div class="card-badges">${apStatusBadge(it)}
+          ${ch.hasLink ? '<span class="badge b-posted">✅ มีลิงก์สินค้า</span>' : '<span class="badge b-fail">❌ ไม่มีลิงก์สินค้า</span>'}</div>
+      </div>
+    </div>`;
+
+  if (it.group === 'failed' && c.postError) {
+    html += `<div class="row-err" style="margin:0;flex-direction:column;gap:2px;"><b>❌ โพสต์ครั้งก่อนไม่สำเร็จ</b><span>${escapeHtml(String(c.postError))}</span></div>`;
+  }
+  if (it.group !== 'posted' && ch.issues.length) {
+    html += `<div class="row-warn" style="margin:0;">⚠️ พบปัญหา ${ch.issues.length} ข้อ — ยังตั้งเวลาได้ แต่โพสต์อาจออกมาไม่สมบูรณ์</div>`;
+  }
+
+  if (c.mp4DriveUrl) {
+    html += `<div class="ap-video"><video src="${escapeHtml(c.mp4DriveUrl)}" controls playsinline preload="metadata"></video></div>
+      <button class="btn btn-ghost btn-sm" id="ap-one-drive">📂 เปิดวิดีโอใน Drive</button>`;
+  }
+
+  html += `
+    <div class="section">
+      <div class="section-title"><span>📝 แคปชั่นที่จะโพสต์</span>
+        <span class="ap-count${ch.len > AP_CAP_MAX ? ' over' : ''}">${ch.len}/${AP_CAP_MAX}</span></div>
+      <div class="section-text">${apCaptionHtml(ch.cap)}</div>
+      ${apChecksHtml(ch)}
+    </div>`;
+
+  if (it.group === 'posted') {
+    html += `<div class="row-ok" style="margin:0;">✅ โพสต์แล้วเมื่อ ${escapeHtml(apFmt(apDate(c.postedAt)))}</div>`;
+  } else {
+    html += `
+    <div class="section">
+      <div class="section-title"><span>🕒 เวลาโพสต์ (เวลาไทย)</span></div>
+      <div class="ap-quick" id="ap-one-quick">${apQuickHtml(null)}</div>
+      <label style="margin-top:12px;" for="ap-one-custom">หรือกำหนดเอง</label>
+      <input type="datetime-local" id="ap-one-custom" value="${cur ? apToInput(cur) : ''}">
+      <div id="ap-one-when"></div>
+    </div>
+    <div class="ap-note">คอมจะโพสต์ภายใน ~15–30 นาทีหลังถึงเวลา และต้องเปิดคอมพร้อมต่อมือถือไว้</div>`;
+  }
+  $('ap-one-body').innerHTML = html;
+  $('ap-one-body').scrollTop = 0;
+
+  const driveBtn = $('ap-one-drive');
+  if (driveBtn) driveBtn.onclick = () => window.open(c.mp4DriveUrl, '_blank');
+
+  const foot = $('ap-one-foot');
+  foot.style.display = it.group === 'posted' ? 'none' : 'flex';
+  $('ap-one-unschedule').style.display = it.group === 'scheduled' ? 'flex' : 'none';
+  $('ap-one-save').disabled = false;
+  $('ap-one-save').innerHTML = it.group === 'scheduled' ? '💾 บันทึกเวลาใหม่' : '💾 ตั้งเวลาโพสต์';
+
+  if (it.group !== 'posted') {
+    $('ap-one-quick').querySelectorAll('.ap-qbtn').forEach(b => b.onclick = () => {
+      const q = apQuickPresets().find(x => x.mode === b.dataset.mode);
+      apOne.pick = { mode: q.mode, date: q.date };
+      $('ap-one-custom').value = q.mode === 'asap' ? '' : apToInput(q.date);
+      apOneRefreshPick();
+    });
+    $('ap-one-custom').oninput = () => {
+      const d = apFromInput($('ap-one-custom').value);
+      apOne.pick = d ? { mode: 'custom', date: d } : null;
+      apOneRefreshPick();
+    };
+    apOneRefreshPick();
+  }
+  apOpenSheet('ap-sheet-one');
+}
+
+function apPickError(pick) {
+  if (!pick || !pick.date) return 'เลือกเวลาก่อนครับ';
+  if (pick.mode !== 'asap' && pick.date.getTime() < Date.now() - AP_PAST_GRACE_MS)
+    return 'เวลานี้ผ่านไปแล้ว — ตั้งย้อนหลังได้ไม่เกิน 5 นาที (หรือใช้ "เร็วที่สุด")';
+  return '';
+}
+
+function apOneRefreshPick() {
+  const pick = apOne && apOne.pick;
+  $('ap-one-quick').querySelectorAll('.ap-qbtn').forEach(b => b.classList.toggle('active', !!pick && b.dataset.mode === pick.mode));
+  $('ap-one-custom').classList.toggle('active', !!pick && pick.mode === 'custom');
+  const err = pick ? apPickError(pick) : '';
+  const when = $('ap-one-when');
+  if (!pick) when.innerHTML = '';
+  else if (err) when.innerHTML = `<div class="ap-when err">⚠️ ${err}</div>`;
+  else when.innerHTML = pick.mode === 'asap'
+    ? `<div class="ap-when"><span>จะโพสต์</span><b>เร็วที่สุด · รอบถัดไปของคอม</b></div>`
+    : `<div class="ap-when"><span>จะโพสต์</span><b>${escapeHtml(apFmt(pick.date))} <span style="font-size:12px;color:var(--text2);font-weight:600;">(${apRel(pick.date)})</span></b></div>`;
+  $('ap-one-save').disabled = !pick || !!err;
+}
+
+// ── เขียน Sheet (ข้อ 5) ──
+async function apWriteField(id, field, value) {
+  const res = await xhrPost(appsUrl, { action: 'updateStatus', sheet: 'Content', id, field, value });
+  if (!res || res.error || res.ok === false) throw new Error((res && res.error) || `บันทึก ${field} ไม่สำเร็จ`);
+  return res;
+}
+async function apSchedule(item, date) {
+  const id = item.content.id;
+  if (item.content.postError) await apWriteField(id, 'postError', '');
+  await apWriteField(id, 'scheduledAt', date.toISOString());
+  await apWriteField(id, 'postMode', 'scheduled');
+}
+async function apUnschedule(item) {
+  // ล้าง postMode ก่อน — คอมจะได้ไม่หยิบคลิปที่ค้างครึ่งทาง
+  await apWriteField(item.content.id, 'postMode', '');
+  await apWriteField(item.content.id, 'scheduledAt', '');
+}
+// เช็คค่าจริงจาก Sheet หลังโหลดใหม่ (Worker ตอบ ok เสมอ)
+function apVerify(id, date) {
+  const it = apFind(id);
+  if (!it) return !date;   // ไม่อยู่ในกลุ่มไหน = ไม่ได้ถูกตั้งเวลาแล้ว
+  const c = it.content;
+  if (!date) return !c.postMode && !c.scheduledAt;
+  const got = apDate(c.scheduledAt);
+  return c.postMode === 'scheduled' && !!got && Math.abs(got - date) < 60000;
+}
+
+async function apSaveOne() {
+  if (!apOne || !apOne.pick) return;
+  const err = apPickError(apOne.pick);
+  if (err) { toast('⚠️ ' + err); return; }
+  const item = apOne.item;
+  const date = apOne.pick.mode === 'asap' ? new Date() : apOne.pick.date;
+  const btn = $('ap-one-save');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> กำลังบันทึก...';
+  try {
+    await apSchedule(item, date);
+    await apLoad({ silent: true });
+    const ok = apVerify(item.content.id, date);
+    apCloseSheets();
+    if (ok) {
+      toast(`✅ ตั้งเวลาแล้ว: ${apFmt(date)}`);
+      apSwitchGroup('scheduled');
+    } else {
+      apSetStatus('warn', '⚠️ ส่งคำสั่งแล้ว แต่ค่าใน Sheet ยังไม่ตรง — กด 🔄 เพื่อตรวจอีกครั้ง');
+    }
+  } catch (e) {
+    toast('❌ ' + e.message);
+    btn.disabled = false;
+    btn.innerHTML = '💾 ตั้งเวลาโพสต์';
+  }
+}
+
+async function apUnscheduleOne() {
+  if (!apOne) return;
+  const item = apOne.item;
+  const btn = $('ap-one-unschedule');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>';
+  try {
+    await apUnschedule(item);
+    await apLoad({ silent: true });
+    const ok = apVerify(item.content.id, null);
+    apCloseSheets();
+    toast(ok ? '🗑️ ยกเลิกเวลาแล้ว — ย้ายกลับไป "พร้อมตั้งเวลา"' : '⚠️ ส่งคำสั่งแล้ว แต่ค่าใน Sheet ยังไม่ว่าง กด 🔄 ตรวจอีกครั้ง');
+  } catch (e) {
+    toast('❌ ' + e.message);
+  }
+  btn.disabled = false;
+  btn.innerHTML = 'ยกเลิกเวลา';
+}
+
+// ── 8.3 กระจายเวลา ──
+function apHmToMin(v) { const m = /^(\d{1,2}):(\d{2})/.exec(v || ''); return m ? (+m[1]) * 60 + (+m[2]) : null; }
+function apFitWindow(date, win) {
+  if (!win) return date;
+  const t = apTh(date);
+  const cur = t.h * 60 + t.mi;
+  const { from, to } = win;
+  const inWin = from <= to ? (cur >= from && cur <= to) : (cur >= from || cur <= to);
+  if (inWin) return date;
+  // นอกช่วง → ไปเวลาเริ่มช่วงของวันนี้ (ถ้ายังไม่ถึง) หรือวันถัดไป
+  const addDay = from <= to ? (cur > to ? 1 : 0) : 0;
+  return apFromTh(t.y, t.m, t.d + addDay, Math.floor(from / 60), from % 60);
+}
+function apBuildPlan(start, count, stepMin, win) {
+  const out = [];
+  let t = start;
+  for (let i = 0; i < count; i++) {
+    t = apFitWindow(t, win);
+    out.push(t);
+    t = new Date(t.getTime() + stepMin * 60000);
+  }
+  return out;
+}
+function apSpreadWin() {
+  if (!$('ap-sp-win-on').checked) return null;
+  const from = apHmToMin($('ap-sp-win-from').value), to = apHmToMin($('ap-sp-win-to').value);
+  return from === null || to === null || from === to ? null : { from, to };
+}
+function apSpreadItems() {
+  // เรียงตามลำดับที่แสดงในรายการ
+  return apByGroup('ready').filter(it => apSelected.has(String(it.content.id)));
+}
+
+function apOpenSpread() {
+  const items = apSpreadItems();
+  if (!items.length) { toast('⚠️ เลือกคลิปก่อนครับ'); return; }
+  apSpread.pick = null;
+  apSpread.stepMin = parseInt(apLsGet('bengen_ap_step', '120')) || 120;
+  $('ap-sp-win-on').checked = apLsGet('bengen_ap_win_on', '1') === '1';
+  $('ap-sp-win-from').value = apLsGet('bengen_ap_win_from', '08:00');
+  $('ap-sp-win-to').value   = apLsGet('bengen_ap_win_to', '22:00');
+  $('ap-sp-custom').value = '';
+  $('ap-sp-title').textContent = `🗓️ กระจายเวลา ${items.length} คลิป`;
+  $('ap-sp-setup').style.display = 'flex';
+  $('ap-sp-progress').style.display = 'none';
+  $('ap-sp-summary').innerHTML = '';
+  $('ap-sp-log').innerHTML = '';
+  $('ap-sp-stop').style.display = 'none';
+  $('ap-sp-go').style.display = 'flex';
+  $('ap-sp-quick').innerHTML = apQuickHtml(null);
+  $('ap-sp-quick').querySelectorAll('.ap-qbtn').forEach(b => b.onclick = () => {
+    const q = apQuickPresets().find(x => x.mode === b.dataset.mode);
+    apSpread.pick = { mode: q.mode, date: q.date };
+    $('ap-sp-custom').value = q.mode === 'asap' ? '' : apToInput(q.date);
+    apSpreadRefresh();
+  });
+  apSpreadRefresh();
+  apOpenSheet('ap-sheet-spread');
+  $('ap-sheet-spread').querySelector('.ap-sheet-body').scrollTop = 0;
+}
+
+function apSpreadRefresh() {
+  const items = apSpreadItems();
+  const pick = apSpread.pick;
+  $('ap-sp-quick').querySelectorAll('.ap-qbtn').forEach(b => b.classList.toggle('active', !!pick && b.dataset.mode === pick.mode));
+  $('ap-sp-custom').classList.toggle('active', !!pick && pick.mode === 'custom');
+  $('ap-sp-step').querySelectorAll('.ap-pill').forEach(b => b.classList.toggle('active', +b.dataset.min === apSpread.stepMin));
+  $('ap-sp-win').style.opacity = $('ap-sp-win-on').checked ? '1' : '.4';
+
+  const err = pick ? apPickError(pick) : 'เลือกเวลาเริ่มก่อนครับ';
+  const go = $('ap-sp-go');
+  go.disabled = !!err;
+  go.innerHTML = `🗓️ ยืนยันตั้งเวลา ${items.length} คลิป`;
+  const nIssue = items.filter(it => it.check.issues.length).length;
+  $('ap-sp-warn').innerHTML = nIssue
+    ? `<div class="row-warn" style="margin:0 0 8px;">⚠️ ${nIssue} คลิปมีปัญหาแคปชั่น/ลิงก์ — ยังตั้งเวลาได้</div>` : '';
+
+  if (err) {
+    $('ap-sp-range').textContent = '';
+    $('ap-sp-plan').innerHTML = `<div class="ap-when${pick ? ' err' : ''}" style="margin:0;">${pick ? '⚠️ ' : ''}${err}</div>`;
+    return;
+  }
+  const plan = apBuildPlan(pick.date, items.length, apSpread.stepMin, apSpreadWin());
+  apSpread.plan = plan;
+  $('ap-sp-range').textContent = items.length > 1 ? `${apFmt(plan[0])} → ${apFmt(plan[plan.length - 1])}` : '';
+  let lastDay = null, html = '';
+  items.forEach((it, i) => {
+    const d = plan[i], day = apThDay(d);
+    if (day !== lastDay) { html += `<div class="ap-plan-day">${escapeHtml(apFmtDay(d))}</div>`; lastDay = day; }
+    const t = (i === 0 && pick.mode === 'asap') ? 'เร็วที่สุด' : apHM(d);
+    html += `<div class="ap-plan-row"><span class="ap-plan-i">${i + 1}</span>
+      <span class="ap-plan-name">${escapeHtml(it.product.name || it.content.productName || 'ไม่ทราบชื่อ')}
+        ${it.check.issues.length ? '<span style="color:var(--red);">⚠️</span>' : ''}</span>
+      <span class="ap-plan-t">${t}</span></div>`;
+  });
+  $('ap-sp-plan').innerHTML = html;
+}
+
+function apSpLog(name, type, msg, replace) {
+  const colors = { loading: 'var(--text2)', ok: 'var(--green)', err: 'var(--red)', warn: 'var(--amber)' };
+  const log = $('ap-sp-log');
+  let row = replace ? log.lastElementChild : null;
+  if (!row) { row = document.createElement('div'); row.className = 'batch-log-item'; log.appendChild(row); }
+  row.style.color = colors[type];
+  row.textContent = `${name} — ${msg}`;
+  log.scrollTop = log.scrollHeight;
+}
+
+async function apRunSpread() {
+  const items = apSpreadItems();
+  if (!items.length || !apSpread.plan || apSpread.plan.length !== items.length) return;
+  if (apSpread.pick.mode !== 'asap' && apSpread.plan[0].getTime() < Date.now() - AP_PAST_GRACE_MS) {
+    toast('⚠️ เวลาเริ่มผ่านไปแล้ว เลือกใหม่ครับ'); apSpreadRefresh(); return;
+  }
+  const plan = apSpread.plan.slice();
+  apLsSet('bengen_ap_step', String(apSpread.stepMin));
+  apLsSet('bengen_ap_win_on', $('ap-sp-win-on').checked ? '1' : '0');
+  apLsSet('bengen_ap_win_from', $('ap-sp-win-from').value);
+  apLsSet('bengen_ap_win_to', $('ap-sp-win-to').value);
+
+  apSpread.running = true; apSpread.stop = false;
+  $('ap-sp-setup').style.display = 'none';
+  $('ap-sp-progress').style.display = 'flex';
+  $('ap-sp-go').style.display = 'none';
+  $('ap-sp-stop').style.display = 'flex';
+  $('ap-sp-stop').style.flex = '1';
+  $('ap-sp-log').innerHTML = '';
+
+  const done = [], failed = [];
+  for (let i = 0; i < items.length; i++) {
+    if (apSpread.stop) break;
+    const it = items[i];
+    const name = it.product.name || it.content.productName || ('#' + it.content.id);
+    $('ap-sp-ptext').textContent = `กำลังบันทึก ${i + 1}/${items.length} — ${name}`;
+    $('ap-sp-bar').style.width = Math.round((i / items.length) * 100) + '%';
+    apSpLog(name, 'loading', `⏳ ${apFmt(plan[i])}`);
+    try {
+      await apSchedule(it, plan[i]);
+      done.push({ id: it.content.id, name, date: plan[i] });
+      apSpLog(name, 'ok', `✅ ${apFmt(plan[i])}`, true);
+    } catch (e) {
+      failed.push({ name, error: e.message });
+      apSpLog(name, 'err', `❌ ${e.message}`, true);
+    }
+    $('ap-sp-bar').style.width = Math.round(((i + 1) / items.length) * 100) + '%';
+    if (i < items.length - 1) await sleep(350);   // ไม่ยิงพร้อมกัน
+  }
+
+  $('ap-sp-ptext').textContent = '🔎 กำลังตรวจค่าจริงใน Sheet...';
+  await apLoad({ silent: true });
+  const unverified = done.filter(d => !apVerify(d.id, d.date));
+  const okN = done.length - unverified.length;
+  const stopped = apSpread.stop;
+  apSpread.running = false;
+  $('ap-sp-stop').style.display = 'none';
+
+  const type = !failed.length && !unverified.length ? 'row-ok' : (okN ? 'row-warn' : 'row-err');
+  let html = `<div class="${type}" style="margin:0;flex-direction:column;align-items:flex-start;gap:6px;">
+    <div><b>${stopped ? '⏹️ หยุดแล้ว' : '🏁 เสร็จแล้ว'}</b> — ตั้งเวลาสำเร็จ ${okN}/${items.length} คลิป</div>`;
+  if (failed.length) html += `<div style="font-size:12px;">บันทึกไม่สำเร็จ:<br>${failed.map(f => `• ${escapeHtml(f.name)}: ${escapeHtml(f.error)}`).join('<br>')}</div>`;
+  if (unverified.length) html += `<div style="font-size:12px;">ส่งแล้วแต่ค่าใน Sheet ไม่ตรง:<br>${unverified.map(f => `• ${escapeHtml(f.name)}`).join('<br>')}</div>`;
+  html += `</div>`;
+  $('ap-sp-summary').innerHTML = html;
+  $('ap-sp-ptext').textContent = `สำเร็จ ${okN} · ล้มเหลว ${failed.length + unverified.length}`;
+  const go = $('ap-sp-go');
+  go.style.display = 'flex'; go.disabled = false;
+  go.innerHTML = okN ? '🗓️ ดูคิวที่ตั้งเวลาแล้ว' : 'ปิด';
+  go.dataset.after = '1';
+  toast(`🏁 ตั้งเวลาสำเร็จ ${okN}/${items.length} คลิป`);
+}
+
+function apSpreadGo() {
+  const go = $('ap-sp-go');
+  if (go.dataset.after === '1') {
+    go.dataset.after = '';
+    apCloseSheets();
+    apExitSelect(true);
+    apSwitchGroup('scheduled');
+    return;
+  }
+  apRunSpread();
+}
+
+// ── กลุ่ม / init ──
+function apSwitchGroup(g) {
+  if (!AP_GROUPS.includes(g)) g = 'ready';
+  apGroup = g;
+  apLsSet('bengen_ap_group', g);
+  if (g !== 'ready' && apSelectMode) apExitSelect(true);
+  apRender();
+}
+
+function apInit() {
+  apGroup = apLsGet('bengen_ap_group', 'ready');
+  if (!AP_GROUPS.includes(apGroup)) apGroup = 'ready';
+  document.querySelectorAll('#ap-seg .ap-seg-btn').forEach(b => b.addEventListener('click', () => apSwitchGroup(b.dataset.group)));
+  $('ap-sel-cancel').addEventListener('click', () => apExitSelect());
+  $('ap-sel-spread').addEventListener('click', apOpenSpread);
+  $('ap-backdrop').addEventListener('click', apCloseSheets);
+  document.querySelectorAll('[data-ap-close]').forEach(b => b.addEventListener('click', apCloseSheets));
+  $('ap-one-save').addEventListener('click', apSaveOne);
+  $('ap-one-unschedule').addEventListener('click', apUnscheduleOne);
+  $('ap-sp-go').addEventListener('click', apSpreadGo);
+  $('ap-sp-stop').addEventListener('click', () => { apSpread.stop = true; toast('⏹️ จะหยุดหลังจบคลิปปัจจุบัน...'); });
+  $('ap-sp-custom').addEventListener('input', () => {
+    const d = apFromInput($('ap-sp-custom').value);
+    apSpread.pick = d ? { mode: 'custom', date: d } : null;
+    apSpreadRefresh();
+  });
+  $('ap-sp-step').querySelectorAll('.ap-pill').forEach(b => b.addEventListener('click', () => { apSpread.stepMin = +b.dataset.min; apSpreadRefresh(); }));
+  ['ap-sp-win-on', 'ap-sp-win-from', 'ap-sp-win-to'].forEach(id => $(id).addEventListener('input', apSpreadRefresh));
+  $('ap-sp-win-on').addEventListener('change', apSpreadRefresh);
+
+  // อัปเดตป้าย "อีก xx นาที" / "รอคิวโพสต์" ทุกนาที (ไม่โหลดใหม่)
+  apTicker = setInterval(() => {
+    if (activeTab === 'autopost' && apLoaded && !document.querySelector('.ap-sheet.show')) apRender();
+  }, 60000);
+}
+
+function apOnShow() {
+  if (!apLoaded) apLoad();
+  else apRender();
 }
 
 function toast(msg, d = 2500) {
