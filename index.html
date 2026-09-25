@@ -2143,13 +2143,14 @@ const AP_CAP_MAX   = 150;
 const AP_TH_OFFSET = 7 * 3600 * 1000;   // Asia/Bangkok = UTC+7 (ไม่มี DST)
 const AP_DAY_MS    = 86400000;
 const AP_PAST_GRACE_MS = 5 * 60 * 1000; // ห้ามตั้งย้อนหลังเกิน 5 นาที
-const AP_POSTED_LIMIT  = 30;
+const AP_POSTED_PAGE   = 30;   // แท็บ "โพสต์แล้ว" แสดงทีละ 30 (กด "แสดงเพิ่ม" ได้)
 const AP_WD  = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
 const AP_MON = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 const AP_GROUPS = ['ready','scheduled','attention','posted'];
 const AP_CFG = {
   hostPollMs: 20000,      // อ่าน AutoPostStatus ขณะเปิดแท็บ
   contentPollMs: 60000,   // อ่าน Content ใหม่ขณะ state=posting
+  contentIdleMs: 300000,  // อ่าน Content ใหม่ทุก 5 นาทีแม้ไม่ได้โพสต์ (กันข้อมูลค้าง)
   checkPollMs: 3000,      // poll ระหว่างรอ "ตรวจตอนนี้" / สวิตช์
   checkTimeoutMs: 60000,
   pauseTimeoutMs: 45000,
@@ -2174,6 +2175,9 @@ let apHostRow  = null;        // แถว AutoPostStatus ดิบ
 let apHost     = null;        // status JSON ที่ parse แล้ว (null = ยังไม่เคยมี Agent)
 let apHostLoadedAt = 0;
 let apHostTimer = null;
+let apPostedShow = AP_POSTED_PAGE;
+let apPrevPost = null;        // { posting, id, today } จาก status รอบก่อน — ใช้จับว่าโพสต์เพิ่งเสร็จ
+let apReloadPending = false;  // โพสต์เสร็จตอนมี sheet เปิดอยู่ — รอปิดแล้วค่อยโหลดใหม่
 let apCheckRun = null;        // { reqId, cancelled, promise }
 let apLastCheck = null;       // { result, at }
 let apPauseBusy = false;
@@ -2655,7 +2659,7 @@ function apByGroup(g) {
   const t = (it, k) => (apDate(it.content[k]) || new Date(0)).getTime();
   if (g === 'ready')     return list.sort((a, b) => t(b, 'createdAt') - t(a, 'createdAt'));
   if (g === 'scheduled') return list.sort((a, b) => t(a, 'scheduledAt') - t(b, 'scheduledAt'));
-  if (g === 'posted')    return list.sort((a, b) => t(b, 'postedAt') - t(a, 'postedAt')).slice(0, AP_POSTED_LIMIT);
+  if (g === 'posted')    return list.sort((a, b) => t(b, 'postedAt') - t(a, 'postedAt')).slice(0, apPostedShow);
   return list.sort((a, b) => (AP_KIND_ORDER[a.kind] - AP_KIND_ORDER[b.kind]) || (t(a, 'scheduledAt') - t(b, 'scheduledAt')));
 }
 function apFind(id) { return apItems.find(it => String(it.content.id) === String(id)); }
@@ -2729,7 +2733,7 @@ function apRenderStats() {
   $('ap-stat-att').textContent  = counts.attention;
   $('ap-stat-att').classList.toggle('red', counts.attention > 0);
   $('ap-stat-att-btn').classList.toggle('alert', counts.attention > 0);
-  AP_GROUPS.forEach(g => $('ap-n-' + g).textContent = g === 'posted' ? Math.min(counts[g], AP_POSTED_LIMIT) : counts[g]);
+  AP_GROUPS.forEach(g => $('ap-n-' + g).textContent = counts[g]);
   document.querySelectorAll('#ap-seg .ap-seg-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.group === apGroup);
     b.setAttribute('aria-selected', b.dataset.group === apGroup);
@@ -2768,7 +2772,16 @@ function apRender() {
       <div class="empty-title">${E[1]}</div><div class="empty-desc">${E[2]}</div></div>`;
     return;
   }
-  wrap.innerHTML = list.map(it => it.group === 'attention' ? apAttCardHtml(it) : apCardHtml(it)).join('');
+  let more = '';
+  if (apGroup === 'posted') {
+    const total = apItems.filter(it => it.group === 'posted').length;
+    if (total > list.length) more = `<div style="text-align:center;padding:10px 0 4px;color:var(--text3);font-size:12px;">
+      แสดง ${list.length} จาก ${total} คลิปล่าสุด<br>
+      <button class="copy-btn" id="ap-posted-more" style="margin-top:8px;">แสดงเพิ่ม</button></div>`;
+  }
+  wrap.innerHTML = list.map(it => it.group === 'attention' ? apAttCardHtml(it) : apCardHtml(it)).join('') + more;
+  const moreBtn = $('ap-posted-more');
+  if (moreBtn) moreBtn.onclick = () => { apPostedShow += AP_POSTED_PAGE; apRender(); };
 }
 
 function apOnListClick(e) {
@@ -3592,14 +3605,34 @@ async function apHostTick() {
   if (apCheckRun || apPauseBusy) return;          // กำลัง poll อยู่แล้ว
   await apLoadHost();
   const busy = apLoading || apSpread.running || !!document.querySelector('.ap-sheet.show');
-  if (!busy && apHost && !apIsOffline() && apHost.state === 'posting' &&
-      Date.now() - apContentLoadedAt >= AP_CFG.contentPollMs - 1000) {
-    await apLoad({ silent: true });                 // จะได้เห็นคลิปย้ายไป "โพสต์แล้ว" เอง
+  if (apPostJustFinished()) apReloadPending = true;
+  const since = Date.now() - apContentLoadedAt;
+  const posting = apHost && !apIsOffline() && apHost.state === 'posting';
+  if (!busy && (apReloadPending ||
+      (posting && since >= AP_CFG.contentPollMs - 1000) || since >= AP_CFG.contentIdleMs)) {
+    const hadPending = apReloadPending;
+    const before = apItems.filter(it => it.group === 'posted').length;
+    if (await apLoad({ silent: true })) {         // คลิปย้ายไป "โพสต์แล้ว" เอง
+      apReloadPending = false;
+      const added = apItems.filter(it => it.group === 'posted').length - before;
+      if (hadPending && added > 0) toast(`✅ โพสต์สำเร็จ ${added} คลิป — อัปเดตรายการแล้ว`, 3000);
+    }
     return;
   }
   apRenderHostAll();
   // ป้ายเวลาแบบสัมพัทธ์บนการ์ด: อัปเดตทุก ~1 นาที
   if (!busy && Date.now() - apListRenderedAt >= 60000) apRender();
+}
+// จับจังหวะ "โพสต์เพิ่งจบ": state ออกจาก posting, เปลี่ยนคลิปที่กำลังโพสต์ หรือ postedToday เพิ่ม
+function apPostJustFinished() {
+  if (!apHost || apIsOffline()) return false;
+  const q = apHost.queue || {};
+  const cur = { posting: apHost.state === 'posting', id: String(apHost.currentContentId || ''),
+                today: Number(q.postedToday) || 0 };
+  const prev = apPrevPost;
+  apPrevPost = cur;
+  if (!prev) return false;
+  return (prev.posting && (!cur.posting || cur.id !== prev.id)) || cur.today > prev.today;
 }
 function apStartTimers() {
   apStopTimers();
