@@ -188,6 +188,64 @@ body.hide-nav .bottom-nav{display:none;}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--pn));width:0%;
   transition:width .3s;}
 
+/* ── VOICE: Manual mode + ฟังตัวอย่างเสียง ── */
+.vm-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--bg3);
+  border:1px solid var(--border);border-radius:12px;}
+.vm-seg-btn{border:none;background:transparent;color:var(--text2);font-family:var(--font);font-size:13px;
+  font-weight:700;padding:10px 4px;border-radius:9px;cursor:pointer;}
+.vm-seg-btn.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 6px rgba(0,0,0,.18);}
+.vm-pane{display:flex;flex-direction:column;gap:14px;}
+.vm-pane[hidden]{display:none;}
+.vm-lb-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+.vm-hint{font-size:11px;color:var(--text3);font-variant-numeric:tabular-nums;}
+#vm-script{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);
+  font-family:var(--font);font-size:14px;line-height:1.6;padding:11px 12px;outline:none;resize:vertical;}
+#vm-script:focus{border-color:var(--pn);}
+.vm-vsel{display:flex;gap:6px;}
+.vm-vsel select{flex:1;min-width:0;}
+.vm-vbtn{flex-shrink:0;width:44px;border-radius:10px;border:1px solid var(--border2);background:var(--bg3);
+  color:var(--pn);font-size:16px;cursor:pointer;}
+.vm-vbtn:active{background:var(--bg4);}
+.vm-sec{font-size:12px;font-weight:700;color:var(--pn);text-transform:uppercase;letter-spacing:.5px;
+  display:flex;justify-content:space-between;align-items:center;}
+.vm-takes{display:flex;flex-direction:column;gap:10px;}
+.vm-take{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:12px;
+  display:flex;flex-direction:column;gap:10px;}
+.vm-take.latest{border-color:var(--border2);}
+.vm-take-top{display:flex;align-items:center;gap:10px;}
+.vm-play{width:42px;height:42px;border-radius:50%;border:none;flex-shrink:0;cursor:pointer;color:#fff;
+  font-size:15px;background:linear-gradient(135deg,var(--p),var(--pn));display:flex;align-items:center;justify-content:center;}
+.vm-play.fresh{background:var(--bg4);color:var(--pn);border:1px solid var(--border2);}
+.vm-play:disabled{opacity:.6;}
+.vm-take-meta{flex:1;min-width:0;}
+.vm-take-name{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;}
+.vm-take-sub{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vm-x{border:none;background:none;color:var(--text3);font-size:16px;cursor:pointer;padding:4px;}
+.vm-wave{height:28px;display:flex;align-items:center;gap:2px;}
+.vm-wave i{flex:1;border-radius:2px;background:var(--border2);min-height:2px;}
+.vm-wave i.on{background:var(--pn);}
+.vm-speed{display:flex;gap:4px;}
+.vm-speed button{flex:1;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-family:var(--font);
+  font-size:12px;font-weight:700;padding:6px 0;border-radius:8px;cursor:pointer;font-variant-numeric:tabular-nums;}
+.vm-speed button.active{border-color:var(--pn);color:var(--pn);background:rgba(200,125,255,.14);}
+.vm-fname{display:flex;gap:6px;align-items:center;}
+.vm-fname input{font-size:12.5px;padding:9px 10px;}
+.vm-fname span{font-size:12px;color:var(--text3);flex-shrink:0;}
+.vm-empty{text-align:center;color:var(--text3);font-size:12.5px;padding:18px 8px;border:1px dashed var(--border);
+  border-radius:12px;line-height:1.6;}
+.vp-list{display:flex;flex-direction:column;gap:6px;}
+.vp-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;border:1.5px solid var(--border);
+  background:var(--bg3);}
+.vp-row.sel{border-color:var(--pn);background:rgba(200,125,255,.1);}
+.vp-row .vm-play{width:36px;height:36px;font-size:13px;}
+.vp-info{flex:1;min-width:0;}
+.vp-name{font-size:13.5px;font-weight:800;}
+.vp-desc{font-size:11.5px;color:var(--text2);}
+.vp-tag{font-size:10.5px;color:var(--text3);}
+.vp-pick{border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:var(--font);font-size:12px;
+  font-weight:700;padding:7px 11px;border-radius:8px;cursor:pointer;flex-shrink:0;}
+.vp-row.sel .vp-pick{background:linear-gradient(135deg,var(--p),var(--pn));color:#fff;border-color:transparent;}
+
 /* ── SHOPEE FETCH TAB ── */
 .img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .img-cell{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;
@@ -593,11 +651,57 @@ body.ap-lock{overflow:hidden;}
   <!-- ═══════════ TAB 2: สร้างเสียง ═══════════ -->
   <div class="tab-page" id="tab-voice">
     <div class="tab-body">
+      <div class="vm-seg" role="tablist" aria-label="โหมดสร้างเสียง">
+        <button class="vm-seg-btn" id="vm-seg-batch" data-mode="batch" role="tab">📋 Batch จาก Sheet</button>
+        <button class="vm-seg-btn" id="vm-seg-manual" data-mode="manual" role="tab">✋ Manual</button>
+      </div>
+
+      <!-- ── Manual: ทีละคลิป ไม่ผูกกับ Sheet ── -->
+      <div class="vm-pane" id="voice-pane-manual" hidden>
+        <div class="tab-intro">พิมพ์หรือวางบทเอง สร้างเสียง ฟังก่อน แล้วค่อยดาวน์โหลดเป็นไฟล์ .wav — ไม่บันทึกลง Sheet หรือ Drive</div>
+
+        <div>
+          <div class="vm-lb-row"><label for="vm-script">บทพากย์</label><span class="vm-hint" id="vm-count">0 ตัวอักษร</span></div>
+          <textarea id="vm-script" rows="5" placeholder="วางบทพากย์ที่นี่..."></textarea>
+          <div class="inline-row" style="margin-top:6px;">
+            <button class="copy-btn" id="vm-paste">📋 วาง</button>
+            <button class="copy-btn" id="vm-clear">ล้าง</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="vm-style">สไตล์การพูด <span style="color:var(--text3);">(ไม่ใส่ก็ได้)</span></label>
+          <div class="ap-pills" id="vm-presets" style="margin-bottom:8px;"></div>
+          <input type="text" id="vm-style" placeholder="เช่น พูดตื่นเต้น มีพลัง แบบรีวิวสินค้า">
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="vm-voice">เสียง</label>
+            <div class="vm-vsel"><select id="vm-voice"></select>
+              <button class="vm-vbtn" data-vp-target="vm-voice" aria-label="ฟังตัวอย่างเสียง">🔊</button></div>
+          </div>
+          <div>
+            <label for="vm-model">โมเดล</label>
+            <select id="vm-model"></select>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="vm-gen" disabled>🎙️ สร้างเสียง</button>
+
+        <div class="vm-sec"><span>เสียงที่สร้างไว้</span><span class="vm-hint" id="vm-ntake">0 take</span></div>
+        <div class="vm-takes" id="vm-takes"></div>
+        <div class="vm-hint" style="text-align:center;line-height:1.6;">take หายเมื่อปิดหน้า — ดาวน์โหลดอันที่ชอบเก็บไว้ก่อนนะครับ</div>
+      </div>
+
+      <!-- ── Batch: ดึงรายการจาก Sheet ── -->
+      <div class="vm-pane" id="voice-pane-batch">
       <div class="tab-intro">ดึงรายการที่มีบทพากย์รอสร้างเสียงจาก Sheet เลือกรายการ แล้วกดเริ่ม ระบบจะสลับโมเดลอัตโนมัติถ้าเจอ Limit</div>
 
       <div class="field-row">
         <div>
           <label>เสียง (Voice)</label>
+          <div class="vm-vsel">
           <select id="tts-voice">
             <option value="Kore">Kore — หนักแน่น มั่นใจ</option>
             <option value="Puck" selected>Puck — สดใส กระตือรือร้น</option>
@@ -630,6 +734,8 @@ body.ap-lock{overflow:hidden;}
             <option value="Sadaltager">Sadaltager — น่าเชื่อถือ</option>
             <option value="Sulafat">Sulafat — อบอุ่น</option>
           </select>
+          <button class="vm-vbtn" data-vp-target="tts-voice" aria-label="ฟังตัวอย่างเสียง">🔊</button>
+          </div>
         </div>
         <div>
           <label>โมเดล TTS หลัก</label>
@@ -674,6 +780,7 @@ body.ap-lock{overflow:hidden;}
       </div>
 
       <div id="batch-summary" style="display:none;"></div>
+      </div>
     </div>
   </div>
 
@@ -821,6 +928,24 @@ body.ap-lock{overflow:hidden;}
 </div>
 
 <div class="ap-backdrop" id="ap-backdrop"></div>
+
+<!-- ฟังตัวอย่างเสียงก่อนเลือก (ใช้ทั้ง Manual และ Batch) -->
+<div class="ap-backdrop" id="vp-backdrop"></div>
+<div class="ap-sheet" id="vp-sheet" role="dialog" aria-modal="true" aria-labelledby="vp-title">
+  <div class="ap-grab"></div>
+  <div class="ap-sheet-hdr">
+    <div class="ap-sheet-title" id="vp-title">🔊 ฟังตัวอย่างแล้วเลือกเสียง</div>
+    <button class="icon-btn" id="vp-close" aria-label="ปิด">✕</button>
+  </div>
+  <div class="ap-sheet-body">
+    <div class="vm-hint" id="vp-hint" style="line-height:1.6;"></div>
+    <div class="ap-pills" id="vp-filter">
+      <button class="ap-pill active" data-f="all">ทั้งหมด</button>
+      <button class="ap-pill" data-f="heard">ฟังแล้ว</button>
+    </div>
+    <div class="vp-list" id="vp-list"></div>
+  </div>
+</div>
 
 <!-- 8.2 ตั้งเวลาคลิปเดียว -->
 <div class="ap-sheet" id="ap-sheet-one" role="dialog" aria-modal="true" aria-labelledby="ap-one-title">
@@ -1000,6 +1125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bindEvents();
   initOcrModelSelect();
   apInit();
+  vmInit();
 
   if (appsUrl) {
     loadReadyList();
@@ -1086,11 +1212,15 @@ function switchTab(tab) {
   window.scrollTo(0, 0);
   if (tab === 'autopost') apOnShow();
   else apOnHide();
+  if (tab !== 'voice' && vmPlaying) { vmStop(); vmRenderTakes(); }
 }
 
 function onRefreshClick() {
   if (activeTab === 'post') loadReadyList();
-  else if (activeTab === 'voice') loadVoicePendingList();
+  else if (activeTab === 'voice') {
+    if (vmIsManual()) toast('ℹ️ โหมด Manual ไม่ต้องรีเฟรช — พิมพ์บทแล้วกดสร้างเสียงได้เลยครับ');
+    else loadVoicePendingList();
+  }
   else if (activeTab === 'autopost') apLoad();
   else toast('ℹ️ แท็บนี้ไม่มีการรีเฟรช — เริ่มกรอกข้อมูลสินค้าใหม่ได้เลยครับ');
 }
@@ -1464,6 +1594,491 @@ let exhaustedModels = new Set();
 let voicePendingRows = [];
 let batchRunning = false;
 let batchStopRequested = false;
+
+// ═══════════════════════════════════════
+// TAB 2 — VOICE: Manual (ทีละคลิป ไม่ผูกกับ Sheet) + ฟังตัวอย่างเสียงก่อนเลือก
+// ═══════════════════════════════════════
+const VM_LS_KEY   = 'bengen_vm';          // บท/สไตล์/เสียง/โมเดลล่าสุด
+const VM_MODE_KEY = 'bengen_voice_mode';  // batch | manual
+const VM_RATE     = 24000;                // Gemini TTS = PCM 16-bit mono 24 kHz
+const VM_CHARS_PER_SEC = 13;              // ประมาณความเร็วพูดภาษาไทย ใช้แค่โชว์ความยาวคร่าวๆ
+const VM_SPEEDS   = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.5];
+const VM_SAMPLE_TEXT = 'สวัสดีครับ วันนี้มีของดีมาแนะนำ กดตะกร้าส้มได้เลย';
+const VM_STYLES = [
+  { label: '🔥 รีวิวตื่นเต้น', text: 'พูดตื่นเต้น มีพลัง แบบรีวิวสินค้าใน TikTok' },
+  { label: '😊 เป็นกันเอง',   text: 'พูดสบายๆ เป็นกันเอง เหมือนเล่าให้เพื่อนฟัง' },
+  { label: '🛒 ไลฟ์ขายของ',   text: 'พูดเร็ว กระชับ เร้าใจ แบบแม่ค้าไลฟ์สด' },
+  { label: '🌙 นุ่มนวล',      text: 'พูดนุ่ม ช้า อบอุ่น' },
+];
+const VM_MODEL_LABEL = {
+  'gemini-3.1-flash-tts-preview': 'Gemini 3.1 Flash TTS',
+  'gemini-2.5-flash-preview-tts': 'Gemini 2.5 Flash TTS',
+};
+
+let vmTakes   = [];      // { n, pcm(Float32Array), voice, model, wantModel, styleLabel, time, speed, fname, urls{speed:blobUrl}, peaks }
+let vmNextN   = 1;
+let vmBusy    = false;
+let vmAudio   = null;    // <audio> ตัวเดียวใช้ร่วมกันทั้ง take และตัวอย่างเสียง
+let vmPlaying = null;    // 'take:3' | 'sample:Puck'
+let vpTarget  = null;    // id ของ <select> ที่เปิดหน้าเลือกเสียงมา
+let vpFilter  = 'all';
+let vpBusy    = null;    // ชื่อเสียงที่กำลังสร้างตัวอย่าง
+const vpCache = new Map();   // key → blob URL (ในหน่วยความจำ)
+let vpKeys    = new Set();   // key ที่มีใน IndexedDB แล้ว (ฟังซ้ำฟรี)
+
+function vmModelLabel(m) { return VM_MODEL_LABEL[m] || m; }
+function vmTtsText(text, style) { return style ? `${style}: ${text}` : text; }
+function vmIsRateLimit(err) {
+  return err.httpStatus === 429 || /429|RESOURCE_EXHAUSTED|exceeded your current quota/i.test(err.message || '');
+}
+
+// ── เก็บค่าที่กรอกไว้ในเครื่อง ──
+function vmLoadPrefs() {
+  try { return JSON.parse(localStorage.getItem(VM_LS_KEY) || '{}') || {}; } catch (e) { return {}; }
+}
+function vmSavePrefs() {
+  try {
+    localStorage.setItem(VM_LS_KEY, JSON.stringify({
+      script: $('vm-script').value, style: $('vm-style').value,
+      voice: $('vm-voice').value, model: $('vm-model').value,
+    }));
+  } catch (e) {}
+}
+
+// ── เสียง: PCM ↔ WAV, ยืดเวลา ──
+function vmPcmFromBase64(b64) {
+  const bin = atob(b64);
+  const n = bin.length >> 1;
+  const out = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8);
+    if (v >= 0x8000) v -= 0x10000;
+    out[i] = v / 32768;
+  }
+  return out;
+}
+function vmWavBlob(pcm) {
+  const buf = new ArrayBuffer(44 + pcm.length * 2);
+  const v = new DataView(buf);
+  const str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  str(0, 'RIFF'); v.setUint32(4, 36 + pcm.length * 2, true); str(8, 'WAVE');
+  str(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, VM_RATE, true); v.setUint32(28, VM_RATE * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  str(36, 'data'); v.setUint32(40, pcm.length * 2, true);
+  for (let i = 0; i < pcm.length; i++) {
+    const s = Math.max(-1, Math.min(1, pcm[i]));
+    v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+  }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+// เร่ง/ลดความเร็วแบบ WSOLA — เปลี่ยนความยาวโดยเสียงไม่แหลม/ทุ้มตาม
+function vmStretch(x, speed) {
+  if (Math.abs(speed - 1) < 1e-3) return x;
+  const N = 1024, Hs = N / 2, tol = 240, ov = N - Hs;
+  const win = new Float32Array(N);
+  for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / N);
+  const outLen = Math.round(x.length / speed);
+  const y = new Float32Array(outLen + N);
+  const w = new Float32Array(outLen + N);
+  let prev = 0;
+  for (let k = 0; ; k++) {
+    const outPos = k * Hs;
+    if (outPos >= outLen) break;
+    let pos = Math.round(k * Hs * speed);
+    if (pos + N >= x.length) break;
+    if (k > 0) {
+      // หาตำแหน่งที่ต่อจากเฟรมก่อนได้เนียนที่สุด (cross-correlation แบบข้ามทีละ 4 จุดให้เร็วพอบนมือถือ)
+      const nat = prev + Hs;
+      let best = pos, bestC = -Infinity;
+      for (let d = -tol; d <= tol; d += 2) {
+        const p = pos + d;
+        if (p < 0 || p + N >= x.length) continue;
+        let c = 0;
+        for (let i = 0; i < ov; i += 4) c += x[p + i] * x[nat + i];
+        if (c > bestC) { bestC = c; best = p; }
+      }
+      pos = best;
+    }
+    for (let i = 0; i < N; i++) { y[outPos + i] += x[pos + i] * win[i]; w[outPos + i] += win[i]; }
+    prev = pos;
+  }
+  const out = new Float32Array(outLen);
+  for (let i = 0; i < outLen; i++) out[i] = w[i] > 1e-3 ? y[i] / w[i] : 0;
+  return out;
+}
+function vmPeaks(pcm, bars = 40) {
+  const step = Math.max(1, Math.floor(pcm.length / bars));
+  const peaks = [];
+  let max = 1e-6;
+  for (let b = 0; b < bars; b++) {
+    let m = 0;
+    for (let i = b * step; i < Math.min(pcm.length, (b + 1) * step); i += 8) m = Math.max(m, Math.abs(pcm[i]));
+    peaks.push(m); max = Math.max(max, m);
+  }
+  return peaks.map(p => Math.max(6, Math.round(p / max * 100)));
+}
+
+// ── เล่นเสียง (ใช้ <audio> ตัวเดียว) ──
+function vmStop() {
+  if (vmAudio) { vmAudio.pause(); vmAudio.removeAttribute('src'); }
+  const was = vmPlaying;
+  vmPlaying = null;
+  if (was && was.startsWith('take:')) vmPaintProgress(+was.slice(5), 0);
+}
+function vmPlay(key, url, onDone) {
+  vmStop();
+  if (!vmAudio) {
+    vmAudio = new Audio();
+    vmAudio.addEventListener('timeupdate', () => {
+      if (vmPlaying && vmPlaying.startsWith('take:') && vmAudio.duration)
+        vmPaintProgress(+vmPlaying.slice(5), vmAudio.currentTime / vmAudio.duration);
+    });
+  }
+  vmPlaying = key;
+  vmAudio.onended = () => { vmPlaying = null; onDone && onDone(); };
+  vmAudio.src = url;
+  vmAudio.play().catch(err => {
+    if (vmPlaying !== key) return;              // กดเล่นอันอื่นต่อแล้ว — อันนี้ถูกยกเลิกเฉยๆ ไม่ใช่ error
+    vmPlaying = null;
+    if (err.name !== 'AbortError') toast('❌ เล่นเสียงไม่ได้: ' + err.message);
+    onDone && onDone();
+  });
+}
+
+// ── สร้างเสียงด้วย Gemini (สลับโมเดลเองถ้าติด Limit) ──
+async function vmTts(text, voice, model, allowFallback) {
+  const queue = allowFallback ? [model, ...TTS_MODELS.filter(m => m !== model)] : [model];
+  let lastErr;
+  for (const m of queue) {
+    try {
+      return { pcm: vmPcmFromBase64(await callGeminiTTS(text, voice, geminiKey, m)), model: m };
+    } catch (err) {
+      lastErr = err;
+      if (!vmIsRateLimit(err)) break;
+    }
+  }
+  if (vmIsRateLimit(lastErr)) lastErr.message = 'ติด Limit ' + (allowFallback ? 'ทุกโมเดล' : vmModelLabel(model)) + ' — รอสักพักแล้วลองใหม่';
+  throw lastErr;
+}
+
+// ── Manual: สร้าง take ──
+function vmUpdateCount() {
+  const n = [...$('vm-script').value.trim()].length;
+  $('vm-count').textContent = n ? `${n} ตัวอักษร · ~${Math.max(1, Math.round(n / VM_CHARS_PER_SEC))} วิ` : '0 ตัวอักษร';
+  $('vm-gen').disabled = !n || vmBusy;
+}
+function vmSyncPresets() {
+  const cur = $('vm-style').value.trim();
+  $('vm-presets').querySelectorAll('.ap-pill').forEach(b => b.classList.toggle('active', b.dataset.s === cur));
+}
+function vmStyleLabel(style) {
+  const p = VM_STYLES.find(s => s.text === style);
+  return p ? p.label.replace(/^\S+\s/, '') : (style || 'ไม่ระบุสไตล์');
+}
+function vmBaseName(t) {
+  return `${t.time} - ${vmModelLabel(t.model)} - ${t.voice}` + (t.speed !== 1 ? ` - ${t.speed.toFixed(1)}x` : '');
+}
+
+async function vmGenerate() {
+  const text = $('vm-script').value.trim();
+  if (!text) return;
+  if (!geminiKey) { toast('⚠️ ตั้งค่า Gemini API Key ก่อนครับ'); toggleSettings(true); return; }
+  vmBusy = true;
+  const btn = $('vm-gen');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> กำลังสร้างเสียง… (~10–20 วิ)';
+  const style = $('vm-style').value.trim();
+  const voice = $('vm-voice').value;
+  const wantModel = $('vm-model').value;
+  try {
+    const { pcm, model } = await vmTts(vmTtsText(text, style), voice, wantModel, true);
+    const d = new Date();
+    const time = `${d.getFullYear()}-${ap2(d.getMonth() + 1)}-${ap2(d.getDate())} - ${ap2(d.getHours())}.${ap2(d.getMinutes())}`;
+    vmTakes.unshift({ n: vmNextN++, pcm, voice, model, wantModel, styleLabel: vmStyleLabel(style),
+      time, speed: 1, fname: '', urls: {}, peaks: vmPeaks(pcm) });
+    vmRenderTakes();
+    toast(model !== wantModel ? `⛽ ${vmModelLabel(wantModel)} ติด Limit — ใช้ ${vmModelLabel(model)} แทน` : '✅ ได้ take ใหม่แล้ว — กด ▶ ฟังได้เลย', 3000);
+  } catch (err) {
+    toast('❌ สร้างเสียงไม่สำเร็จ: ' + err.message, 4000);
+  } finally {
+    vmBusy = false;
+    btn.innerHTML = '🎙️ สร้างเสียง';
+    vmUpdateCount();
+  }
+}
+
+function vmTakeUrl(t) {
+  if (!t.urls[t.speed]) t.urls[t.speed] = URL.createObjectURL(vmWavBlob(vmStretch(t.pcm, t.speed)));
+  return t.urls[t.speed];
+}
+function vmPaintProgress(n, frac) {
+  const bars = document.querySelectorAll(`#vm-take-${n} .vm-wave i`);
+  const on = Math.round(frac * bars.length);
+  bars.forEach((b, i) => b.classList.toggle('on', i < on));
+}
+function vmDur(sec) { sec = Math.round(sec); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+
+function vmRenderTakes() {
+  $('vm-ntake').textContent = vmTakes.length + ' take';
+  const wrap = $('vm-takes');
+  if (!vmTakes.length) {
+    wrap.innerHTML = '<div class="vm-empty">ยังไม่มีเสียง<br>กด “สร้างเสียง” แล้ว take จะขึ้นที่นี่</div>';
+    return;
+  }
+  wrap.innerHTML = vmTakes.map((t, i) => {
+    const playing = vmPlaying === 'take:' + t.n;
+    return `<div class="vm-take${i === 0 ? ' latest' : ''}" id="vm-take-${t.n}" data-n="${t.n}">
+      <div class="vm-take-top">
+        <button class="vm-play" data-act="play" aria-label="ฟัง take ${t.n}">${playing ? '❚❚' : '▶'}</button>
+        <div class="vm-take-meta">
+          <div class="vm-take-name">Take ${t.n} · ${escapeHtml(t.voice)} · ${vmDur(t.pcm.length / VM_RATE / t.speed)}</div>
+          <div class="vm-take-sub">${escapeHtml(vmModelLabel(t.model))} · ${escapeHtml(t.styleLabel)} · ${t.time.slice(-5).replace('.', ':')}</div>
+        </div>
+        <button class="vm-x" data-act="del" aria-label="ลบ take ${t.n}">✕</button>
+      </div>
+      ${t.model !== t.wantModel ? `<div class="row-warn" style="margin:0;padding:7px 10px;font-size:11.5px;">⛽ ${escapeHtml(vmModelLabel(t.wantModel))} ติด Limit — ใช้ ${escapeHtml(vmModelLabel(t.model))} แทน</div>` : ''}
+      <div class="vm-wave" aria-hidden="true">${t.peaks.map(h => `<i style="height:${h}%"></i>`).join('')}</div>
+      <div class="vm-speed" role="group" aria-label="ความเร็ว">${VM_SPEEDS.map(s =>
+        `<button data-act="speed" data-s="${s}" class="${s === t.speed ? 'active' : ''}">${s.toFixed(1)}x</button>`).join('')}</div>
+      <div class="vm-fname"><input type="text" data-fname="${t.n}" aria-label="ชื่อไฟล์ take ${t.n}" value="${escapeHtml(t.fname || vmBaseName(t))}"><span>.wav</span></div>
+      <button class="btn btn-ghost btn-sm" data-act="dl">⬇️ ดาวน์โหลด .wav</button>
+    </div>`;
+  }).join('');
+}
+
+function vmOnTakesClick(e) {
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const n = +b.closest('.vm-take').dataset.n;
+  const t = vmTakes.find(x => x.n === n);
+  if (!t) return;
+  const act = b.dataset.act;
+  if (act === 'play') {
+    if (vmPlaying === 'take:' + n) { vmStop(); vmRenderTakes(); return; }
+    vmPlay('take:' + n, vmTakeUrl(t), () => { vmPaintProgress(n, 0); vmRenderTakes(); });
+    vmRenderTakes();
+  } else if (act === 'speed') {
+    const custom = t.fname && t.fname !== vmBaseName(t);
+    const wasPlaying = vmPlaying === 'take:' + n;
+    t.speed = +b.dataset.s;
+    if (!custom) t.fname = '';
+    if (wasPlaying) vmPlay('take:' + n, vmTakeUrl(t), () => { vmPaintProgress(n, 0); vmRenderTakes(); });
+    vmRenderTakes();
+  } else if (act === 'del') {
+    if (vmPlaying === 'take:' + n) vmStop();
+    Object.values(t.urls).forEach(u => URL.revokeObjectURL(u));
+    vmTakes = vmTakes.filter(x => x.n !== n);
+    vmRenderTakes();
+  } else if (act === 'dl') {
+    const name = ((t.fname || vmBaseName(t)).trim() || vmBaseName(t)).replace(/[\\/:*?"<>|]/g, '-');
+    const a = document.createElement('a');
+    a.href = vmTakeUrl(t);
+    a.download = name + '.wav';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    toast('✅ บันทึก ' + name + '.wav แล้ว');
+  }
+}
+
+// ── ฟังตัวอย่างเสียง: เก็บไฟล์ไว้ใน IndexedDB ฟังซ้ำไม่เสียโควต้า ──
+function vpIdb() {
+  if (!window.indexedDB) return Promise.reject(new Error('no idb'));
+  if (!vpIdb.p) {
+    vpIdb.p = new Promise((res, rej) => {
+      const r = indexedDB.open('bengen_voice', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('samples');
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+    vpIdb.p.catch(() => { vpIdb.p = null; });
+  }
+  return vpIdb.p;
+}
+async function vpIdbDo(mode, fn) {
+  const db = await vpIdb();
+  return new Promise((res, rej) => {
+    const tx = db.transaction('samples', mode);
+    const req = fn(tx.objectStore('samples'));
+    tx.oncomplete = () => res(req && req.result);
+    tx.onerror = () => rej(tx.error);
+  });
+}
+function vpKey(model, voice, style) { return `${model}|${voice}|${style}`; }
+function vpContext() {
+  const manual = vpTarget === 'vm-voice';
+  const model = manual ? $('vm-model').value : $('tts-model').value;
+  const style = manual ? $('vm-style').value.trim() : '';
+  return { model, style };
+}
+function vpVoices() {
+  return Array.from($('tts-voice').options).map(o => ({ name: o.value, desc: o.textContent.split('—')[1]?.trim() || '' }));
+}
+
+function vpRender() {
+  const { model, style } = vpContext();
+  const cur = $(vpTarget).value;
+  const voices = vpVoices();
+  const heard = v => vpKeys.has(vpKey(model, v, style)) || vpCache.has(vpKey(model, v, style));
+  const nHeard = voices.filter(v => heard(v.name)).length;
+  $('vp-hint').innerHTML = `ประโยคตัวอย่าง: “${escapeHtml(VM_SAMPLE_TEXT)}”<br>${escapeHtml(vmModelLabel(model))}` +
+    (style ? ` · สไตล์: ${escapeHtml(style)}` : ' · ไม่ใส่สไตล์') +
+    `<br>กด ▶ ครั้งแรกของแต่ละเสียงใช้โควต้า 1 ครั้ง แล้วเก็บไว้ในเครื่อง ฟังซ้ำฟรี`;
+  $('vp-filter').querySelector('[data-f=all]').textContent = `ทั้งหมด ${voices.length}`;
+  $('vp-filter').querySelector('[data-f=heard]').textContent = `ฟังแล้ว ${nHeard}`;
+  $('vp-filter').querySelectorAll('.ap-pill').forEach(b => b.classList.toggle('active', b.dataset.f === vpFilter));
+  const list = voices.filter(v => vpFilter === 'all' || heard(v.name));
+  $('vp-list').innerHTML = list.length ? list.map(v => {
+    const h = heard(v.name), busy = vpBusy === v.name, playing = vmPlaying === 'sample:' + v.name;
+    return `<div class="vp-row${v.name === cur ? ' sel' : ''}" data-v="${escapeHtml(v.name)}">
+      <button class="vm-play${h ? '' : ' fresh'}" data-va="play" aria-label="ฟังเสียง ${escapeHtml(v.name)}" ${busy ? 'disabled' : ''}>${busy ? '<span class="spin"></span>' : playing ? '❚❚' : '▶'}</button>
+      <div class="vp-info"><div class="vp-name">${escapeHtml(v.name)}</div><div class="vp-desc">${escapeHtml(v.desc)}</div>
+        <div class="vp-tag">${busy ? 'กำลังสร้างตัวอย่าง…' : h ? '✓ เก็บไว้ในเครื่องแล้ว ฟังซ้ำฟรี' : 'กด ▶ ครั้งแรกใช้โควต้า 1 ครั้ง'}</div></div>
+      <button class="vp-pick" data-va="pick">${v.name === cur ? '✓ ใช้อยู่' : 'เลือก'}</button>
+    </div>`;
+  }).join('') : '<div class="vm-empty">ยังไม่ได้ฟังเสียงไหนด้วยโมเดล/สไตล์นี้</div>';
+}
+
+async function vpOpen(targetId) {
+  vpTarget = targetId;
+  vpFilter = 'all';
+  try { vpKeys = new Set(await vpIdbDo('readonly', s => s.getAllKeys())); } catch (e) {}
+  vpRender();
+  $('vp-backdrop').classList.add('show');
+  $('vp-sheet').classList.add('show');
+  document.body.classList.add('ap-lock');
+  $('vp-sheet').querySelector('.ap-sheet-body').scrollTop = 0;
+}
+function vpClose() {
+  if (vmPlaying && vmPlaying.startsWith('sample:')) vmStop();
+  $('vp-backdrop').classList.remove('show');
+  $('vp-sheet').classList.remove('show');
+  document.body.classList.remove('ap-lock');
+}
+
+async function vpPlaySample(voice) {
+  if (vmPlaying === 'sample:' + voice) { vmStop(); vpRender(); return; }
+  const { model, style } = vpContext();
+  const key = vpKey(model, voice, style);
+  let url = vpCache.get(key);
+  if (!url) {
+    let blob = null;
+    try { blob = await vpIdbDo('readonly', s => s.get(key)); } catch (e) {}
+    if (!blob) {
+      if (vpBusy) { toast('⏳ รอตัวอย่างเสียงก่อนหน้าเสร็จก่อนครับ'); return; }
+      if (!geminiKey) { toast('⚠️ ตั้งค่า Gemini API Key ก่อนครับ'); vpClose(); toggleSettings(true); return; }
+      vpBusy = voice; vpRender();
+      try {
+        const { pcm } = await vmTts(vmTtsText(VM_SAMPLE_TEXT, style), voice, model, false);
+        blob = vmWavBlob(pcm);
+        try { await vpIdbDo('readwrite', s => s.put(blob, key)); vpKeys.add(key); } catch (e) {}
+      } catch (err) {
+        toast('❌ สร้างตัวอย่างไม่สำเร็จ: ' + err.message, 4000);
+      } finally {
+        vpBusy = null;
+      }
+      if (!blob) { vpRender(); return; }
+    }
+    url = URL.createObjectURL(blob);
+    vpCache.set(key, url);
+  }
+  if (!$('vp-sheet').classList.contains('show')) return;   // ปิดหน้าไปแล้วระหว่างรอ
+  vmPlay('sample:' + voice, url, vpRender);
+  vpRender();
+}
+
+function vpOnListClick(e) {
+  const b = e.target.closest('[data-va]');
+  if (!b) return;
+  const voice = b.closest('.vp-row').dataset.v;
+  if (b.dataset.va === 'pick') {
+    $(vpTarget).value = voice;
+    if (vpTarget === 'vm-voice') vmSavePrefs();
+    vpClose();
+    toast('🎙️ เลือกเสียง ' + voice + ' แล้ว');
+  } else {
+    vpPlaySample(voice);
+  }
+}
+
+// ── โหมด + init ──
+function vmSetMode(mode) {
+  const manual = mode === 'manual';
+  $('voice-pane-manual').hidden = !manual;
+  $('voice-pane-batch').hidden = manual;
+  ['batch', 'manual'].forEach(m => {
+    const b = $('vm-seg-' + m);
+    b.classList.toggle('active', m === mode);
+    b.setAttribute('aria-selected', m === mode);
+  });
+  try { localStorage.setItem(VM_MODE_KEY, mode); } catch (e) {}
+  if (!manual && vmPlaying && vmPlaying.startsWith('take:')) { vmStop(); vmRenderTakes(); }
+}
+function vmIsManual() { return !$('voice-pane-manual').hidden; }
+
+function vmInit() {
+  $('vm-voice').innerHTML = $('tts-voice').innerHTML;
+  $('vm-model').innerHTML = Array.from($('tts-model').options)
+    .map(o => `<option value="${o.value}">${escapeHtml(vmModelLabel(o.value))}</option>`).join('');
+  $('vm-presets').innerHTML = VM_STYLES.map(s =>
+    `<button class="ap-pill" data-s="${escapeHtml(s.text)}">${escapeHtml(s.label)}</button>`).join('');
+
+  const p = vmLoadPrefs();
+  if (p.script) $('vm-script').value = p.script;
+  $('vm-style').value = p.style != null ? p.style : VM_STYLES[0].text;
+  if (p.voice && $('vm-voice').querySelector(`option[value="${CSS.escape(p.voice)}"]`)) $('vm-voice').value = p.voice;
+  else $('vm-voice').value = $('tts-voice').value;
+  if (p.model && $('vm-model').querySelector(`option[value="${CSS.escape(p.model)}"]`)) $('vm-model').value = p.model;
+
+  $('vm-seg-batch').addEventListener('click', () => vmSetMode('batch'));
+  $('vm-seg-manual').addEventListener('click', () => vmSetMode('manual'));
+  $('vm-script').addEventListener('input', () => { vmUpdateCount(); vmSavePrefs(); });
+  $('vm-style').addEventListener('input', () => { vmSyncPresets(); vmSavePrefs(); });
+  ['vm-voice', 'vm-model'].forEach(id => $(id).addEventListener('change', vmSavePrefs));
+  $('vm-presets').addEventListener('click', e => {
+    const b = e.target.closest('.ap-pill');
+    if (!b) return;
+    $('vm-style').value = b.dataset.s;
+    vmSyncPresets(); vmSavePrefs();
+  });
+  $('vm-clear').addEventListener('click', () => { $('vm-script').value = ''; vmUpdateCount(); vmSavePrefs(); $('vm-script').focus(); });
+  $('vm-paste').addEventListener('click', async () => {
+    try {
+      const txt = await navigator.clipboard.readText();
+      if (!txt) { toast('ℹ️ คลิปบอร์ดว่างอยู่'); return; }
+      $('vm-script').value = txt;
+      vmUpdateCount(); vmSavePrefs();
+    } catch (e) {
+      toast('ℹ️ วางอัตโนมัติไม่ได้ — กดค้างที่ช่องบทพากย์แล้วเลือก "วาง" ครับ', 3500);
+      $('vm-script').focus();
+    }
+  });
+  $('vm-gen').addEventListener('click', vmGenerate);
+  $('vm-takes').addEventListener('click', vmOnTakesClick);
+  $('vm-takes').addEventListener('input', e => {
+    const n = e.target.dataset && e.target.dataset.fname;
+    const t = n && vmTakes.find(x => x.n === +n);
+    if (t) t.fname = e.target.value;
+  });
+
+  document.querySelectorAll('[data-vp-target]').forEach(b => b.addEventListener('click', () => vpOpen(b.dataset.vpTarget)));
+  $('vp-close').addEventListener('click', vpClose);
+  $('vp-backdrop').addEventListener('click', vpClose);
+  $('vp-list').addEventListener('click', vpOnListClick);
+  $('vp-filter').addEventListener('click', e => {
+    const b = e.target.closest('.ap-pill');
+    if (!b) return;
+    vpFilter = b.dataset.f;
+    vpRender();
+  });
+
+  let mode = 'batch';
+  try { mode = localStorage.getItem(VM_MODE_KEY) || 'batch'; } catch (e) {}
+  vmSetMode(mode === 'manual' ? 'manual' : 'batch');
+  vmSyncPresets();
+  vmUpdateCount();
+  vmRenderTakes();
+}
 
 async function loadVoicePendingList() {
   if (!appsUrl) { toast('⚠️ ตั้งค่า Backend URL ก่อนครับ'); toggleSettings(true); return; }
